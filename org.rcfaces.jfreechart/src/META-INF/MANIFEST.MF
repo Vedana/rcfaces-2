@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JFreeChart interface for rcfaces
+Bundle-SymbolicName: org.rcfaces.jfreechart
+Bundle-Version: 1.0.0
+Bundle-Vendor: Rcfaces team
+Bundle-Localization: plugin
+Require-Bundle: org.rcfaces.core
+Implementation-Title: org.rcfaces.jfreechart
+Implementation-Vendor: Vedana
+Specification-Vendor: Rcfaces team
+
