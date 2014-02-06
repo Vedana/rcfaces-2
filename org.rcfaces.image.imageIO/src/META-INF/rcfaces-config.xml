@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcfaces-config>
+	<providers>
+  		<provider>
+  			<provider-id>org.rcfaces.core.IMAGE_CONTENT_PROVIDER</provider-id>
+  			<provider-class>org.rcfaces.core.internal.images.ImageContentAccessorHandlerImpl</provider-class>
+  			<requires>org.rcfaces.core.CONTENT_ACCESSOR_REGISTRY</requires>
+  		</provider>
+  	</providers>
+
+	<image-operations>
+		<operation>
+			<operation-id>disabled</operation-id>
+			<operation-name>Disabled operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.DisableOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>gray</operation-id>
+			<operation-name>Gray operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.GrayOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>contrast</operation-id>
+			<operation-name>Contrast operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ContrastOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>brightness</operation-id>
+			<operation-name>Brighthness operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.BrightnessOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>colorRescale</operation-id>
+			<operation-name>
+				Contrast and brightness operations
+			</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ContrastBrightnessOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>hover</operation-id>
+			<operation-name>Hover operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.HoverOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>selected</operation-id>
+			<operation-name>Selected operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.SelectedOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>scale</operation-id>
+			<operation-name>Scale operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ScaleOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>resize</operation-id>
+			<operation-name>Resize operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ResizeOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>setSize</operation-id>
+			<operation-name>SetSize operation</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.SetSizeOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>iefavicon</operation-id>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ICOConversionImageOperation
+			</operation-class>
+			<operation-force-suffix>ico</operation-force-suffix>
+			<operation-response-mimeType>
+				image/x-icon
+			</operation-response-mimeType>
+			<!-- Pas besoin 
+			<operation-encoder-mimeType>
+				image/x-icon
+			</operation-encoder-mimeType>
+			-->
+		</operation>
+		<operation>
+			<operation-id>jpeg</operation-id>
+			<operation-name>JPEG conversion</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.JPEGConversionImageOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>gif</operation-id>
+			<operation-name>GIF conversion</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.GIFConversionImageOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>png</operation-id>
+			<operation-name>PNG conversion</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.PNGConversionImageOperation
+			</operation-class>
+		</operation>
+		<operation>
+			<operation-id>ico</operation-id>
+			<operation-name>ICON conversion</operation-name>
+			<operation-class>
+				org.rcfaces.core.internal.images.operation.ICOConversionImageOperation
+			</operation-class>
+		</operation>
+	</image-operations>
+	
+	<adapters>
+		<adapter>
+			<adaptable-class>
+				java.awt.image.RenderedImage
+			</adaptable-class>
+			<adapterFactory-class>
+				org.rcfaces.core.internal.images.ImageAdapterFactory
+			</adapterFactory-class>
+		</adapter>
+		<!--
+		<adapter>
+			<adaptable-class>
+				java.awt.image.RenderedImage[]
+			</adaptable-class>
+			<adapterFactory-class>
+				org.rcfaces.core.internal.images.ImageAdapterFactory
+			</adapterFactory-class>
+		</adapter>
+		-->
+	</adapters>
+</rcfaces-config>
