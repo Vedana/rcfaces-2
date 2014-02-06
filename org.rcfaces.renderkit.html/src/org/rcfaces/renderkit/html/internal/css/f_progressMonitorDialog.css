@@ -1,0 +1,79 @@
+/*
+ * $Id: f_progressMonitorDialog.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_progressBar
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+
+.f_progressMonitorDialog {
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	-moz-outline-style: none;
+}
+
+.f_progressMonitorDialog_container {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_progressMonitorDialog_title {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	background: #17757B url("progressBar/titleVistaBg.gif") repeat-y scroll left 0;
+	height: 40px;
+	padding: 8px 0 4px 20px;
+	-moz-user-select: none;
+}
+
+.f_progressMonitorDialog_titleText {
+	color: white;
+	font: 14pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	-moz-user-select: none;
+}
+
+.f_progressMonitorDialog_body {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	height: 80px;
+	padding: 8px 0 8px 20px;
+}
+
+.f_progressMonitorDialog_bodyText1 {
+	display: block;
+	font-size: 10pt;
+	margin: 2px 0;
+	-moz-user-select: none;
+}
+
+.f_progressMonitorDialog_bodyText2 {
+	display: block;
+	font-size: 10pt;
+	margin: 0 0 4px;
+	-moz-user-select: none;
+}
+
+.f_progressMonitorDialog_cancel {
+}
+
+.f_progressMonitorDialog .f_shellDecorator_body_buttons {
+	padding-right: 20px;
+	text-align: right;
+}
+

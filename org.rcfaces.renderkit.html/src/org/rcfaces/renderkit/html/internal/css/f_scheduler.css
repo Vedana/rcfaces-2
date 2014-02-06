@@ -1,0 +1,158 @@
+/**
+ *
+ * @class f_scheduler
+ *
+ * @author jb.meslin@vedana.com 
+ * @version $Revision: 1.0
+ */
+ 
+.f_scheduler,
+.f_scheduler_north,
+.f_scheduler_west,
+.f_scheduler_center,
+.f_scheduler_center_periods,
+.f_scheduler_column_header,
+.f_scheduler_column_header_last,
+.f_scheduler_row_header,
+.f_scheduler_row_header_last,
+.f_scheduler_cell_first,
+.f_scheduler_cell_even,
+.f_scheduler_cell_even_last,
+.f_scheduler_cell_odd,
+.f_scheduler_cell_odd_last,
+.f_scheduler_cell_last_column,
+.f_scheduler_period
+ {
+	position: absolute;
+	border: 1px solid #666666;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_scheduler_period {
+	margin-left: 1px; 
+	border-color: #333333;
+}
+
+.f_scheduler_period LABEL {
+	display: table-cell;
+	position: relative;
+	vertical-align:middle;
+	width: 100%;
+}
+
+.f_scheduler_period_div_label {
+	display: block;
+	position: absolute;
+	text-align: center;
+}
+
+.f_scheduler,
+.f_scheduler_north,
+.f_scheduler_west,
+.f_scheduler_center,
+.f_scheduler_center_periods {
+	border : 0;	
+}
+
+.f_scheduler_center_periods {
+	margin-top : 1px;	
+}
+
+.f_scheduler_column_header,
+.f_scheduler_column_header_last {
+	
+	text-align: center;
+	padding-top: 3px;
+	background-color: #EEEEEE;
+	border-bottom: 0;
+}
+.f_scheduler_column_header {
+	border-right: 0;
+}
+.f_scheduler_row_header_label {
+	margin: 0 5px 0 5px;
+}
+
+.f_scheduler_column_header_label {
+	margin: 0 5px 0 5px;
+	vertical-align: middle;
+	background-color: transparent;
+}
+
+.f_scheduler_row_header,
+.f_scheduler_row_header_last {
+	background-color: #EEEEEE;
+	border-right: 0;
+}
+
+.f_scheduler_row_header {
+	border-bottom: 0;
+}
+
+.f_scheduler_cell_first,
+.f_scheduler_cell_even,
+.f_scheduler_cell_odd {
+	border-bottom: 0;
+	border-right: 0;
+}
+
+.f_scheduler_cell_even_last,
+.f_scheduler_cell_odd_last {
+	border-right: 0;
+}
+
+.f_scheduler_cell_odd,
+.f_scheduler_cell_odd_last {
+	border-top-color: #B7B7B7;
+}
+
+.f_scheduler_cell_last_column{
+	border-right: 1px solid #666666;
+}
+
+.f_scheduler_primaryTick {
+	position: absolute;
+	background: transparent url("scheduler/row_header_primaryTick.gif") right no-repeat;
+	width: 9px;
+	height: 1px;
+	right: 0;
+}
+
+.f_scheduler_secondaryTick {
+	position: absolute;
+	background: transparent url("scheduler/row_header_secondaryTick.gif") right no-repeat;
+	right: 0;
+	width: 5px;
+	height: 1px;
+}
+
+.f_scheduler_primaryTick_label,
+.f_scheduler_secondaryTick_label {
+	
+	position: relative;
+	font-size : 5px;
+	color : #999999;
+	right: 0;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.f_scheduler_primaryTick_label {
+	font-size : 8px;
+}
+
+
+.f_scheduler_primaryTick_div_label,
+.f_scheduler_secondaryTick_div_label {
+	position: absolute;
+	padding-right: 8px;
+	right: 0;
+	display: block;
+	vertical-align: middle;
+}
+
+.f_scheduler_primaryTick_div_label {
+	font-size : 8px;
+	padding-right: 15px;
+}

@@ -1,0 +1,40 @@
+/*
+ * $Id: f_helpButton.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_helpButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_helpButton {
+	display: inline;
+}
+
+.f_helpButton, 
+.f_helpButton_image,
+.f_helpButton_text {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+	cursor: pointer;
+}
+
+.f_helpButton_disabled,
+.f_helpButton_disabled INPUT {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_helpButton_disabled .f_imageButton_text {
+	color: #A1A192;
+}

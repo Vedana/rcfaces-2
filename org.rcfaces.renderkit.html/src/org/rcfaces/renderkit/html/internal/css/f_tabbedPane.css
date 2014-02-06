@@ -1,0 +1,234 @@
+/*
+ * $Id: f_tabbedPane.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_tabbedPane
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+ 
+.f_tabbedPane {
+	display: block;
+	text-align: left;
+	vertical-align: baseline;
+	border: 0;
+	border-bottom: 1px solid #919B9C;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+ 
+.f_tabbedPane_title {
+	border: 0;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.f_tabbedPane_titleRight, .f_tabbedPane_titleRight_selected {
+}
+
+.f_tabbedPane_titleRight,
+.f_tabbedPane_titleRight_selected,
+.f_tabbedPane_titleLeft,
+.f_tabbedPane_titleLeft_selected,
+.f_tabbedPane_titleNext,
+.f_tabbedPane_titleNext_sleft,
+.f_tabbedPane_titleNext_sright {
+	background: url(tabbedPane/xpT2.gif) repeat-y 0 0;
+}
+
+.f_tabbedPane_titleRight_selected {
+	background-position: -8px 0;
+}
+
+.f_tabbedPane_titleLeft {
+	background-position: -16px 0;
+}
+
+.f_tabbedPane_titleLeft_selected {
+	background-position: -24px 0;
+}
+
+.f_tabbedPane_titleNext {
+	background-position: -32px 0;
+}
+
+.f_tabbedPane_titleNext_sleft {
+	background-position: -40px 0;
+}
+
+.f_tabbedPane_titleNext_sright {
+	background-position: -48px 0;
+}
+
+
+.f_tabbedPane_ttitleText,
+.f_tabbedPane_ttitleText_over,
+.f_tabbedPane_ttitleText_selected,
+.f_tabbedPane_ttitleLeft,
+.f_tabbedPane_ttitleLeftA,
+.f_tabbedPane_ttitleLeftH,
+.f_tabbedPane_ttitleNextR,
+.f_tabbedPane_ttitleNextHR,
+.f_tabbedPane_ttitleRightA,
+.f_tabbedPane_ttitleNextLH,
+.f_tabbedPane_ttitleNextL,
+.f_tabbedPane_ttitleNextHL,
+.f_tabbedPane_ttitleNext,
+.f_tabbedPane_ttitleRight,
+.f_tabbedPane_ttitleRightH,
+.f_tabbedPane_ttitleNextRH {
+	background:url(tabbedPane/xpMid2.gif) repeat-x;
+}
+
+
+.f_tabbedPane_ttitleText {
+	background-position: 0 0;
+}
+
+.f_tabbedPane_ttitleText_over {
+	background-position: 0 -16px;
+}
+
+.f_tabbedPane_ttitleText_selected {
+	background-position: 0 -8px; 
+}
+
+.f_tabbedPane_ttitleLeft {
+	background-position: 0 -24px;
+}
+
+.f_tabbedPane_ttitleLeftA {
+	background-position: 0 -32px; 
+}
+
+.f_tabbedPane_ttitleLeftH {
+	background-position: 0 -40px;
+}
+
+.f_tabbedPane_ttitleNextR {
+	background-position: 0 -48px;
+}
+
+.f_tabbedPane_ttitleNextHR {
+	background-position: 0 -56px;
+}
+
+.f_tabbedPane_ttitleRightA {
+	background-position: 0 -64px;
+}
+
+.f_tabbedPane_ttitleNextLH {
+	background-position: 0 -72px;
+}
+
+.f_tabbedPane_ttitleNextL {
+	background-position: 0 -80px;
+}
+
+.f_tabbedPane_ttitleNextHL {
+	background-position: 0 -88px;
+}
+
+.f_tabbedPane_ttitleNext {
+	background-position: 0 -96px;
+}
+
+.f_tabbedPane_ttitleRight {
+	background-position: 0 -104px;
+}
+
+.f_tabbedPane_ttitleRightH {
+	background-position: 0 -112px;
+}
+
+.f_tabbedPane_ttitleNextRH {
+	background-position: 0 -120px;
+}
+
+.f_tabbedPane_ttitleRight_selected {
+	vertical-align: bottom;
+}
+
+.f_tabbedPane_titleText, 
+.f_tabbedPane_titleText_selected,
+.f_tabbedPane_titleText_disabled {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	text-align:center;  
+	padding-left: 20px;  
+	padding-right: 20px;  
+	cursor: pointer; 
+	height: 18px;
+	background-color: white;
+}
+
+.f_tabbedPane_titleText A, 
+.f_tabbedPane_titleText_selected A,
+.f_tabbedPane_titleText_disabled A {
+	position: relative;
+	text-decoration: none;
+	color: black;
+	vertical-align: middle;
+}
+
+.f_tabbedPane_titleText_selected A {
+	top: -2px;
+}
+
+.f_tabbedPane_titleText_disabled A {
+	color: #AAA;
+	-moz-user-focus: ignore;
+}
+
+.f_tabbedPane_tab {
+	position: relative;
+	display: block;
+	font-family: Verdana;
+	font-size: 7pt;
+	border: 1px solid #919B9C;
+	border-width: 1px 1px 0 1px;
+	background-color: white;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_tabbedPane_tab_mask {
+	position:absolute;
+	left: 0;
+	top: -1px;
+	width: 100px;
+	height: 1px;
+	font-size: 1pt;
+	line-height: 1px;
+	border-top: 1px solid white;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.f_tabbedPane_content {
+	position: relative;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* Alignement eventuel des images des onglets */
+.f_tabbedPane_titleIcon, 
+.f_tabbedPane_titleIcon, 
+.f_tabbedPane_titleIcon {
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+.f_tab_heading {
+	position: absolute;
+	left: -10000px;
+	top: -10000px;
+}

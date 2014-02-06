@@ -1,0 +1,486 @@
+/*
+ * $Id: f_grid.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ *
+ * @charset UTF-8
+ */
+
+/**
+ *
+ * @class f_grid
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_grid {
+	border: 1px solid #666666;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	-moz-outline-style: none;
+
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+	line-height: 18px;
+	text-align: left;
+	user-select: none;
+	background-color: white;
+ 	position: relative;
+	vertical-align: baseline;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.f_grid_disabled {
+ 	border: 1px solid #BBB;
+}
+
+.f_grid_table {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+ 	border-spacing: 0;
+	empty-cells: show;
+ 	margin: 0;
+ 	padding: 0;
+ 	border: 0;
+ 	table-layout: fixed;
+ 	background-color: white;
+ }
+
+.f_grid_table_tbody {
+ 	background:#D9D9D9;
+}
+
+.f_grid_empty_data_message {
+	text-align: center;
+	display: none;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	position: absolute;
+	margin: 0;
+	padding: 0;	
+}
+
+.f_grid_disabled .f_grid_dataBody_scroll {
+	background-color: #ECE9D8;
+}
+
+.f_grid_title,
+.f_grid_fttitle {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	margin: 0;
+	-moz-user-select: none;
+	margin: 0;
+	padding: 0;	
+	border: 0;
+	display: block;
+}
+
+.f_grid_fttitle {
+	width: 999999px; 
+}
+
+.f_grid_tcell {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	float: left;
+	margin: 0;
+	background: url('grid/titleNormal.gif') repeat-x bottom #EBEADB;
+
+	font-weight: bold;
+/*	text-overflow: ellipsis; Ca fait planter IE dans certains cas */
+	text-overflow: clip;
+	padding: 0 4px 0 3px;
+}
+
+.f_grid_tcell,
+.f_grid_sortManager {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	display: block;
+	color: #000;
+	vertical-align: middle;
+	margin: 0;
+	height: 20px;
+	overflow:hidden;
+	white-space:nowrap;
+	cursor: normal;
+
+	border-left: 1px solid #D9D9D9;
+}
+
+.f_grid_tcell_right {
+	width: 20px;
+}
+
+.f_grid_tcell_sorter {		
+	cursor: pointer;
+	cursor: hand;
+}
+
+.f_grid_disabled .f_grid_tcell_sorter {
+	cursor: default;
+}
+
+.f_grid_sortManager {
+	background: url('grid/titleNormal.gif') repeat-x bottom #EBEADB;
+}
+
+.f_grid_tcell_over,
+.f_grid_sortManager_over {
+	background: url('grid/titleOver.gif') repeat-x bottom white;
+}
+
+.f_grid_tcell_selected {
+	border: 1px solid #A5A597;
+	background-color: #DEDFD8;
+	padding: 1px 1px 1px 5px;
+}
+
+.f_grid_sortManager_selected,
+.f_grid_sortManager_selected_over {
+	border-left-color: #A5A597;
+	background-color: #DEDFD8;
+}
+
+.f_grid_timage {
+	margin-right: 4px;
+	vertical-align: middle;
+	border: 0;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+ 
+.f_grid_stext {
+ 	position: relative;
+ 	text-align: left;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_grid_stext_ascending {
+	background: url('grid/ascending.gif') no-repeat right center;
+}
+
+.f_grid_stext_descending {
+	background: url('grid/descending.gif') no-repeat right center;
+}
+
+.f_grid_ttext {
+/*	text-overflow: ellipsis; */
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	text-overflow: clip;
+	white-space:nowrap;
+	overflow: hidden;
+	vertical-align: middle;
+	line-height: 18px;
+	display: block;
+	color: #000;
+	text-decoration: none;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.f_grid_cell_cursor {
+	border: 1px dotted black;
+	padding: 0 3px;
+}
+
+.f_grid_cell_align_left {
+	text-align: left;	
+}
+
+.f_grid_cell_align_center {
+	text-align: center;
+}
+
+.f_grid_cell_align_right {
+	text-align: right;
+}
+
+.f_grid_label {
+	white-space: nowrap;
+	cursor: inherit;
+/*	text-overflow: ellipsis; */
+	text-overflow: clip;
+	overflow: hidden;
+	white-space:nowrap;
+	vertical-align: middle;
+/*	line-height: 18px; */
+}
+
+.f_grid_input {
+	cursor: pointer;
+	vertical-align: middle;
+	line-height: 18px;
+	padding: 0;
+	margin: 0 2px 0 0;
+	width: 16px;  /* Pour la compatibilité IE */
+	height: 16px;  /* Pour la compatibilité IE */
+	
+	outline: none;
+}
+
+.f_grid_row {
+/*	xxxheight: 20px; */
+}
+
+.f_grid_row_even, 
+.f_grid_row_even_normal {
+	background-color: #EDF3FE;
+}
+
+.f_grid_row_odd, 
+.f_grid_row_odd_normal {
+	background-color: #ffffff;
+}
+
+.f_grid_disabled .f_grid_row_even,
+.f_grid_disabled .f_grid_row_odd {
+	background-color: #ECE9D8;
+}
+
+.f_grid_row_selected {
+	color: #000;
+	background-color: #C0C0C0;
+}
+
+.f_grid_row_selected_focus {
+	color: HighlightText;
+	background-color: #3D80DF;	
+}
+
+.f_grid_row_selected_focus .f_grid_cell {
+	border-left-color: #346DBE;
+}
+
+.f_grid_disabled .f_grid_row_even_selected, 
+.f_grid_disabled .f_grid_row_odd_selected {
+	background-color: #a2a2a2;
+}
+
+.f_grid_row_normal_dndOver {
+	background-color: #c2c282;	
+	color: HighlightText;
+}
+
+.f_grid_row_even_normal,
+.f_grid_row_odd_normal,
+.f_grid_row_selected_focus,
+.f_grid_row_selected_focus,
+.f_grid_row_selected,
+.f_grid_row_selected {
+	cursor: pointer;
+}
+
+.f_grid_focus {
+	position: absolute;
+	width: 0;
+	height: 0;
+	top: 0px;
+	height: 0px;
+	-moz-outline-style: none;
+	-moz-outline-width: 0;
+	-moz-user-focus: normal;
+	-moz-user-select: none;
+
+	outline-style: none;
+	outline-width: 0;
+	user-focus: normal;
+	user-select: none;	
+}
+
+/* Fix Firefox 3.6 avec position relative */
+.f_grid_dataBody_scroll {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	overflow: auto;
+	overflow-y: auto;
+	overflow-x: auto;
+	text-align: left;
+	XX-moz-outline-style: none;
+	XX-moz-user-focus: ignore;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	position: relative; 
+}
+
+.f_grid_dataTitle_scroll {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	overflow: hidden;
+	background: url('grid/titleNormal.gif') repeat-x bottom #EBEADB;
+	text-align: left;
+	-moz-outline-style: none;
+	height: 20px;
+}
+
+.f_grid_imageCell {
+	margin: 0 2px 0 0;
+	vertical-align: middle;
+	height: auto;
+}
+
+.f_grid_colCursor {
+	position: absolute;
+	top: -2px;
+	right: -8px;
+	width: 16px;
+	height: 18px;
+	cursor: e-resize;
+	background: transparent url('blank.gif') repeat;
+	z-index:100;
+}
+
+.f_grid_disabled .f_grid_colCursor {
+	cursor: auto;
+}
+
+.f_grid_cell_shadow {
+	background-color: #EEE;
+}
+
+
+.f_grid_additional_button {
+	background: transparent url('expandBar/arrows.gif') scroll no-repeat -16px 0;
+
+	cursor: pointer;
+	vertical-align: middle;
+	line-height: 18px;
+	width: 16px;  /* Pour la compatibilité IE */
+	height: 16px;  /* Pour la compatibilité IE */	
+}
+
+.f_grid_additional_button_expanded {
+	background-position: 0 0;
+}
+
+.f_grid_additional_button_collapsed {
+	background-position: -16px 0;
+}
+
+.f_grid_additional_button_expanded_disabled {
+	background-position: -48px 0;
+}
+
+.f_grid_additional_button_collapsed_disabled {
+	background-position: -32px 0;
+}
+
+.f_grid_additionalRow {
+/*	xxxvertical-align: top;  */
+}
+
+.f_grid_additional_button_no_content {
+	visibility: hidden; 
+}
+
+.f_grid_sortManager {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 16px;
+	height: 20px;
+	z-index: 1;
+	cursor: pointer;
+}
+
+.f_grid_sortManager_image {
+	display: block;
+	position: absolute;
+	top: 2;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background: transparent url('grid/sort.gif') scroll no-repeat center center;
+}
+
+.f_grid_hiddenAV {
+	display: none;
+	height: 0;
+	line-height: 0.1;
+	font-size: 0.1px;
+}
+
+
+.f_grid_wrap .f_grid_label,
+.f_grid_wrap .f_cGrid_cell {
+	white-space: normal;
+}
+ 
+.f_grid_wrap .f_dataGrid_row {
+	height: auto;
+}
+
+.f_grid_hidden_caption {
+	display: none;  /* pour taille colonne  attention accessibilite*/
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	height: 1px;
+	overflow: hidden;
+	line-height: 0px;
+}
+
+.f_grid_hidden_title {
+	display: none;  /* pour taille colonne  attention accessibilite*/
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	height: 1px;
+	overflow: hidden;
+	line-height: 0px;
+}
+
+.f_grid_sorterHasImage .f_grid_stext_ascending {
+	background-image: none;
+}
+
+.f_grid_sorterHasImage .f_grid_stext_descending {
+	background-image: none;
+}
+
+.f_grid_sorterHasImage .f_grid_stext_sortable {
+	background-image: none;
+}
+
+.f_grid_tsorter {
+	position: absolute;
+	right: 0;
+}
+
+.f_grid_additional_hasImage .f_grid_additional_button {
+	background-image: none;
+}
+
+/*
+.f_grid_colgroup COL {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+*/
+
+.f_grid TH.f_cGrid_cell,
+.f_grid TH.f_grid_cell {
+	font-weight: normal;
+}
+

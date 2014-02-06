@@ -1,0 +1,1852 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<repository id="core" type="javascript" baseDirectory="org/rcfaces/renderkit/html/internal/javascript" remapSymbols="false" resourcesBundleBaseName="org.rcfaces.renderkit.html.internal.LocalStrings">
+	<module id="core" defaultCoreModule="true">
+		<file name="boot.js">
+		</file>
+		<file name="Array.js" depends="boot.js">
+			<class name="Array">
+			</class>
+		</file>
+		<file name="f_core.js" depends="boot.js">
+			<class name="f_core">
+				<required-style name="f_core.css" />				
+				<required-class name="Array" />
+			</class>
+		</file>
+		<file name="f_classLoader.js">
+			<class name="f_classLoader">
+				<required-class name="f_core" />
+			</class>
+		</file>
+		<file name="f_class.js">
+			<class name="f_class">
+				<required-class name="f_classLoader" />
+			</class>
+		</file>
+		<file name="f_aspect.js">
+			<class name="f_aspect">
+				<required-class name="f_class" />
+			</class>
+		</file>
+		<file name="f_bundle.js">
+			<class name="f_bundle" />
+		</file>
+		<file name="f_object.js">
+			<class name="f_object">
+				<required-class name="f_class" />
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="util/fa_abstractAppender.js">
+			<class name="fa_abstractAppender">
+				<required-class name="f_core" />
+			</class>
+		</file>
+		<file name="util/f_log.js">
+			<class name="f_log">
+				<required-class name="fa_abstractAppender" />
+			</class>
+		</file>
+		<file name="f_prop.js">
+			<class name="f_prop" />
+		</file>
+		<file name="f_error.js">
+			<class name="f_error">
+			</class>
+		</file>
+		<file name="util/f_resourceBundle.js">
+			<class name="f_resourceBundle">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="f_env.js">
+			<class name="f_env">
+				<required-class name="f_resourceBundle" />
+			</class>
+		</file>
+		<file name="util/f_key.js">
+			<class name="f_key">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="util/f_help.js">
+			<class name="f_help">
+				<required-class name="f_object" />
+				<required-class name="f_env" />
+			</class>
+		</file>
+		<file name="f_event.js">
+			<class name="f_event">
+				<required-class name="f_object" />
+				<required-class name="f_env" />
+				<required-class name="f_resourceBundle" />
+			</class>
+		</file>
+		<file name="f_actionList.js">
+			<class name="f_actionList">
+				<required-class name="f_object" />
+				<required-class name="f_event" />
+			</class>
+		</file>
+		<file name="util/f_imageRepository.js">
+			<class name="f_imageRepository">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<!-- On met cet aspect dans le CORE car il est necessaire ! -->
+		<file name="aspect/fa_namingContainer.js">
+			<class name="fa_namingContainer">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="f_messageObject.js">
+			<class name="f_messageObject">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="f_messageContext.js">
+			<class name="f_messageContext">
+				<required-class name="f_messageObject" />
+			</class>
+		</file>
+		<file name="ui/f_layoutManager.js">
+			<class name="f_layoutManager">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="util/f_locale.js" contentProvider="org.rcfaces.renderkit.html.internal.javascript.SystemLocaleContentProvider">
+			<class name="f_locale">
+				<required-class name="f_object" />
+			</class>
+		</file>
+	</module>
+
+<!-- Pas besoin ! Car on envoie tous les inputs hidden de la form !
+	<module id="com.sun.faces.RI_1_1_2">
+		<file name="f_core_RI_1_1_2.js" />
+	</module>
+	-->
+	
+<!-- Les Aspects par défaut  -->
+	<module id="aspect" defaultCoreModule="true">
+		<file name="aspect/fa_readOnly.js">
+			<class name="fa_readOnly">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_disabled.js">
+			<class name="fa_disabled">
+				<required-class name="f_aspect" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_selected.js">
+			<class name="fa_selected">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_groupName.js">
+			<class name="fa_groupName">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_required.js">
+			<class name="fa_required">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_immediate.js">
+			<class name="fa_immediate">
+				<required-class name="f_aspect" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_borderType.js">
+			<class name="fa_borderType">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_value.js">
+			<class name="fa_value">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_images.js">
+			<class name="fa_images">
+				<required-class name="f_aspect" />
+				<required-class name="f_imageRepository" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_collapsed.js">
+			<class name="fa_collapsed">
+				<required-class name="f_aspect" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_filterProperties.js">
+			<class name="fa_filterProperties">
+				<required-class name="f_aspect" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_serializable.js">
+			<class name="fa_serializable">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_clientData.js">
+			<class name="fa_clientData">
+				<required-class name="f_aspect" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="aspect/fa_eventTarget.js">
+			<class name="fa_eventTarget">
+				<required-class name="f_aspect" />
+				<required-class name="f_event" />
+			</class>
+		</file>
+		<file name="input/fa_subMenu.js">
+			<class name="fa_subMenu">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_focusStyleClass.js">
+			<class name="fa_focusStyleClass">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="input/fa_cardinality.js">
+			<class name="fa_cardinality">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+
+		<file name="aspect/fa_commands.js">
+			<class name="fa_commands">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+
+		<file name="aspect/fa_scrollPositions.js">
+			<class name="fa_scrollPositions">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		
+		<file name="aspect/fa_editable.js">
+			<class name="fa_editable">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+	
+		<file name="aspect/fa_clientValidatorParameters.js">
+			<class name="fa_clientValidatorParameters">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+			
+		<file name="aspect/fa_overStyleClass.js">
+			<class name="fa_overStyleClass">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		
+		<file name="aspect/fa_droppable.js">
+			<class name="fa_droppable">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		
+		<file name="aspect/fa_draggable.js">
+			<class name="fa_draggable">
+				<required-class name="f_aspect" />
+			</class>
+		</file>		
+
+		<file name="aspect/fa_tabIndex.js">
+			<class name="fa_tabIndex">
+				<required-class name="f_aspect" />
+			</class>
+		</file>	
+		
+		<file name="aspect/fa_aria.js">
+			<class name="fa_aria">
+			</class>
+		</file>		
+		
+		<file name="aspect/fa_criteriaManager.js">
+			<class name="fa_criteriaManager">
+			</class>
+		</file>		
+		
+		<file name="ui/fa_autoScroll.js">
+			<class name="fa_autoScroll">
+				<required-class name="f_aspect" />
+			</class>
+		</file>		
+		
+		<file name="ui/fa_autoOpen.js">
+			<class name="fa_autoOpen">
+				<required-class name="f_aspect" />
+			</class>
+		</file>		
+		
+		<file name="aspect/fa_toolTipContainer.js">
+			<class name="fa_toolTipContainer">
+				<required-class name="f_aspect" />
+			</class>
+		</file>	
+		
+		<file name="aspect/fa_basicToolTipContainer.js">
+			<class name="fa_basicToolTipContainer">
+				<required-class name="fa_toolTipContainer" />
+			</class>
+		</file>	
+		
+		<file name="input/fa_outlinedLabel.js">
+			<class name="fa_outlinedLabel">
+				<required-class name="f_aspect" />
+			</class>
+		</file>	
+		
+		<file name="ui/fa_audioDescription.js">
+			<class name="fa_audioDescription">
+				<required-class name="f_aspect" />
+			</class>
+		</file>	
+		
+	</module>
+	
+<!-- Components -->
+	<module id="component" defaultCoreModule="true">
+		<file name="util/f_viewErrorListener.js">
+			<class name="f_viewErrorListener">
+				<required-class name="f_error" />
+			</class>
+		</file>
+		<file name="input/f_focusManager.js">
+			<class name="f_focusManager">
+				<required-class name="f_object" />
+				<required-class name="f_messageContext" />
+			</class>
+		</file>
+		<file name="f_eventTarget.js">
+			<class name="f_eventTarget">
+				<required-class name="f_event" />
+				<required-class name="fa_eventTarget" />
+			</class>
+		</file>
+		<file name="f_component.js">
+			<class name="f_component">
+				<required-class name="f_eventTarget" />
+				<required-class name="f_env" />
+				<required-class name="f_prop" />
+				<required-class name="fa_serializable" />
+				<required-class name="fa_clientData" />
+				<required-class name="fa_namingContainer" />
+
+				<required-class id="toolTip" name="f_toolTipManager" />				
+			</class>
+		</file>
+		<file name="input/f_accelerator.js">
+			<class name="f_accelerator">
+				<required-class name="f_component" />
+				<required-class name="fa_immediate" />
+				<required-class name="f_key" />
+				<required-class name="fa_eventTarget" />
+			</class>
+		</file>
+	</module>
+	
+	<!-- Messages features -->
+	<module id="message" defaultCoreModule="true">
+		<file name="ui/fa_message.js">
+			<class name="fa_message">
+				<required-class name="f_aspect" />
+				<required-class name="f_messageContext" />
+			</class>
+		</file>
+	</module>
+
+<!-- CORE Module components (pas obligatoire !) -->
+	<module id="basicComponent" defaultCoreModule="true">
+		<file name="ui/f_filtredComponent.js">
+			<class name="f_filtredComponent">
+				<required-class name="f_component" />
+				<required-class name="fa_filterProperties"/>
+				<required-class name="fa_commands" />
+
+				<required-class id="filter" name="f_httpRequest" />
+				<required-class id="filter" name="f_waiting" />
+			</class>
+		</file>
+
+		<file name="ui/f_text.js">
+			<class name="f_text">
+				<required-class name="f_component" />
+				<required-class name="fa_audioDescription" />
+				<required-class name="fa_message" />
+			</class>
+		</file>
+		<file name="ui/f_heading.js">
+			<class name="f_heading">
+				<required-class name="f_text" />
+			</class>
+		</file>
+		<file name="ui/f_styledText.js">
+			<class name="f_styledText">
+				<required-class name="f_text" />
+			</class>
+		</file>
+		<file name="input/f_input.js">
+			<class name="f_input">
+				<required-class name="f_component" /> 
+				<required-class name="fa_focusStyleClass" />
+				<required-class name="fa_message" />
+				<required-class name="fa_tabIndex"/>
+				<required-class name="fa_basicToolTipContainer"/>
+
+				<required-style name="f_input.css" />
+			</class>
+		</file>
+		<file name="input/f_button.js">
+			<class name="f_button">
+				<required-class name="f_input" />
+				<required-class name="fa_immediate" />
+
+				<required-style name="f_button.css" />
+			</class>
+		</file>
+		<file name="input/f_checkButton.js">
+			<class name="f_checkButton">
+				<required-class name="f_button" />
+
+				<required-style name="f_checkButton.css" />
+			</class>
+		</file>
+		<file name="input/f_hyperLink.js">
+			<class name="f_hyperLink">
+				<required-class name="f_input" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_value" />
+
+				<required-style name="f_hyperLink.css" />
+			</class>
+		</file>
+		<file name="input/f_radioButton.js">
+			<class name="f_radioButton">
+				<required-class name="f_checkButton" />
+				<required-class name="fa_groupName" />
+				<required-class name="fa_required" />
+				<required-class name="fa_clientValidatorParameters" />
+	
+				<required-style name="f_radioButton.css" />
+			</class>
+		</file>
+		<file name="input/f_resetButton.js">
+			<class name="f_resetButton">
+				<required-class name="f_button" />
+
+				<required-style name="f_resetButton.css" />
+			</class>
+		</file>
+		<file name="input/f_submitButton.js">
+			<class name="f_submitButton">
+				<required-class name="f_button" />
+
+				<required-style name="f_submitButton.css" />
+			</class>
+		</file>
+		<file name="input/f_hiddenValue.js">
+			<class name="f_hiddenValue">
+				<required-class name="f_eventTarget" />
+				<required-class name="fa_serializable" />
+				<required-class name="fa_clientData" />
+				<required-class name="fa_value" />
+			</class>
+		</file>
+	</module>
+	<module id="extraComponent">
+		<file name="ui/f_fieldSet.js">
+			<class name="f_fieldSet">
+				<required-class name="f_component" />
+				<required-class name="fa_overStyleClass" />
+
+				<required-style name="f_fieldSet.css" />
+			</class>
+		</file>
+		<file name="ui/f_lineBreak.js">
+			<class name="f_lineBreak">
+				<required-class name="f_component" />
+			</class>
+		</file>
+		<file name="ui/f_ruler.js">
+			<class name="f_ruler">
+				<required-class name="f_component" />
+			</class>
+		</file>
+		<file name="ui/f_externalBox.js">
+			<class name="f_externalBox">
+				<required-class name="f_component" />
+			</class>
+		</file>
+	</module>
+	<module id="extraButton">
+		<file name="input/f_imageButton.js">
+			<class name="f_imageButton">
+				<required-class name="f_component" />
+				<required-class name="fa_borderType" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_images" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_value" />
+				<required-class name="fa_tabIndex" />
+				<required-class name="fa_aria" />
+				<required-class name="fa_basicToolTipContainer"/>				
+
+				<required-style name="f_imageButton.css" />
+			</class>
+		</file>
+		<file name="input/f_imageCheckButton.js">
+			<class name="f_imageCheckButton">
+				<required-class name="f_imageButton" />
+				<required-class name="fa_selected" />
+
+				<required-style name="f_checkImageButton.css" />
+			</class>
+		</file>
+		<file name="input/f_imageRadioButton.js">
+			<class name="f_imageRadioButton">
+				<required-class name="f_imageCheckButton" />
+				<required-class name="fa_groupName" />
+				<required-class name="fa_required" />
+
+				<required-style name="f_imageRadioButton.css" />
+			</class>
+		</file>
+		<file name="input/f_imageResetButton.js">
+			<class name="f_imageResetButton">
+				<required-class name="f_imageButton" />
+
+				<required-style name="f_imageResetButton.css" />
+			</class>
+		</file>
+		<file name="input/f_imageSubmitButton.js">
+			<class name="f_imageSubmitButton">
+				<required-class name="f_imageButton" />
+
+				<required-style name="f_imageSubmitButton.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="tooltip">		
+		
+		<file name="ui/f_toolTipManager.js">
+			<class name="f_toolTipManager">
+				<required-class name="f_object" />
+				<required-class name="fa_commands" />
+			</class>
+		</file>	
+
+		<file name="ui/f_toolTip.js">
+			<class name="f_toolTip">
+				<required-class name="f_component" />
+				<required-class name="f_toolTipManager"/>
+				<required-class name="fa_asyncRender"/>
+			</class>
+		</file>
+	</module>
+
+<!-- HELP Components -->
+	<module id="help">
+		<file name="input/f_helpButton.js">
+			<class name="f_helpButton">
+				<required-class name="f_imageButton" />
+				<required-class name="f_imageRepository" />
+
+				<required-style name="f_helpButton.css" />
+			</class>
+		</file>
+		<file name="ui/f_helpMessageZone.js">
+			<class name="f_helpMessageZone">
+				<required-class name="f_component" />
+
+				<required-style name="f_helpMessageZone.css" />
+			</class>
+		</file>
+	</module>
+	
+<!-- Items Aspect -->
+	<module id="itemAspect">
+		<file name="aspect/fa_itemClientDatas.js">
+			<class name="fa_itemClientDatas">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_items.js">
+			<class name="fa_items">
+				<required-class name="f_aspect" />
+				<required-class name="f_imageRepository" />
+				<required-class name="fa_itemClientDatas" />
+			</class>
+		</file>
+		<file name="aspect/fa_itemsWrapper.js">
+			<class name="fa_itemsWrapper">
+				<required-class name="f_aspect" />
+				<required-class name="fa_items" />
+			</class>
+		</file>
+	</module>
+
+<!-- Entries Aspect -->
+	<module id="entries">
+		<file name="input/fa_compositeEntry.js">
+			<class name="fa_compositeEntry">
+				<required-class name="f_aspect" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+			</class>
+		</file>
+		<file name="input/fa_compositeNumEntry.js">
+			<class name="fa_compositeNumEntry">
+				<required-class name="fa_compositeEntry" />
+			</class>
+		</file>
+		<file name="input/f_compositeNumEntry.js">
+			<class name="f_compositeNumEntry">
+				<required-class name="f_component" />
+				<required-class name="fa_required" />
+				<required-class name="fa_message" />
+				<required-class name="fa_clientValidatorParameters" />
+
+				<required-class name="fa_compositeNumEntry" />
+			</class>
+		</file>
+	</module>
+	
+<!-- Popups Components -->
+	<module id="popup">
+		<file name="input/f_popup.js">
+			<class name="f_popup">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="input/fa_menuCore.js">
+			<class name="fa_menuCore">
+				<required-class name="f_aspect" />
+				<required-class name="fa_groupName" />
+				<required-class name="fa_items" />
+				<required-class name="f_event" />
+				<required-class name="f_popup" />
+				<required-class name="fa_aria" />
+			</class>
+		</file>
+		<file name="input/f_menuBase.js">	
+			<class name="f_menuBase">
+				<required-class name="f_eventTarget" />
+				<required-class name="fa_menuCore" />
+			</class>
+		</file>
+		<file name="input/f_menu.js">
+			<class name="f_menu">
+				<required-class name="f_menuBase" />
+			</class>
+		</file>
+	</module>
+
+	<module id="selection">
+		<file name="input/fa_clientFullState.js">
+			<class name="fa_clientFullState">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="input/fa_selectionProvider.js">
+			<class name="fa_selectionProvider">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_itemsManager.js">
+			<class name="fa_itemsManager">
+				<required-class name="f_aspect" />
+				<required-class name="fa_items" />
+				<required-class name="fa_cardinality" />
+			</class>
+		</file>
+		<file name="input/fa_selectionManager.js">
+			<class name="fa_selectionManager">
+				<required-class name="fa_itemsManager" />
+				<required-class name="fa_selectionProvider" />
+				<required-class name="fa_clientFullState" />
+
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="input/fa_checkManager.js">
+			<class name="fa_checkManager">
+				<required-class name="fa_itemsManager" />
+				<required-class name="fa_clientFullState" />
+
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="input/fa_additionalInformationManager.js">
+			<class name="fa_additionalInformationManager">
+				<required-class name="fa_itemsManager" />
+				<required-class name="fa_clientFullState" />
+
+				<required-class name="f_prop" />
+			</class>
+		</file>
+	</module>
+
+	<module id="menu">
+		<file name="input/f_menuBarBase.js">	
+			<class name="f_menuBarBase">
+				<required-class name="f_component" />
+				<required-class name="fa_menuCore" />
+			</class>
+		</file>
+		<file name="input/f_menuBar.js">
+			<class name="f_menuBar">
+				<required-class name="f_menuBarBase" />
+				<required-class name="f_popup" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_immediate" />
+			</class>
+		</file>
+		<!--
+		<file name="input/f_comboEx.js">
+			<class name="f_comboEx">
+				<required-class name="f_component" />
+				<required-class name="f_popup" />
+				<required-class name="f_imageRepository" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+
+				<required-style name="f_comboEx.css" />
+			</class>
+		</file>
+		-->
+		<file name="input/f_imageCombo.js">
+			<class name="f_imageCombo">
+				<required-class name="f_imageButton" />
+				<required-class name="fa_subMenu" />
+				<required-class name="f_menu" />
+				<required-class name="fa_itemsWrapper" />
+				<required-class name="fa_items" />
+			</class>
+		</file>
+		<file name="input/f_customButton.js">
+			<class name="f_customButton">
+				<required-class name="f_component" />
+				<required-class name="fa_borderType" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_value" />
+				<required-class name="fa_subMenu" />
+				<required-class name="f_menu" />
+			</class>
+		</file>
+	</module>
+
+
+	<!-- VALIDATOR Components -->
+	<module id="validator">
+		<file name="input/fa_converter.js">
+			<class name="fa_converter">
+			</class>
+		</file>
+		<file name="input/f_clientValidator.js">
+			<class name="f_clientValidator">
+				<required-class name="f_component" />
+				<required-class name="f_messageObject" />
+				<required-class name="fa_converter" />
+			</class>
+		</file>
+		<file name="input/f_vb.js">
+			<class name="f_vb">
+				<required-class name="f_clientValidator" />
+			</class>
+		</file>
+	</module>
+
+	<module id="popupComponent">
+		<file name="input/f_textSelection.js">
+			<class name="f_textSelection">
+			</class>
+		</file>
+		<file name="input/f_abstractEntry.js">
+			<class name="f_abstractEntry">
+				<required-class name="f_input" />
+				<required-class name="fa_required" />
+				<required-class name="fa_subMenu" />
+				<required-class name="fa_selectionProvider" />
+				<required-class name="fa_immediate" />
+
+				<required-class name="f_textSelection" />
+				<required-class id="menu" name="f_menu" />
+			</class>
+		</file>
+		<file name="input/f_textArea.js">
+			<class name="f_textArea">
+				<required-class name="f_abstractEntry" />
+
+				<required-class id="menu" name="f_menu" />
+
+				<required-style name="f_textArea.css" />
+			</class>
+		</file>
+		<file name="input/f_textEntry.js">
+			<class name="f_textEntry">
+				<required-class name="f_abstractEntry" />
+				<required-class name="fa_required"/>
+				
+				<required-class id="validator" name="f_clientValidator" />
+				<required-class id="features" name="f_clientValidator" />
+				<required-class id="features" name="f_vb" />
+
+				<required-class id="menu" name="f_menu" />
+
+				<required-style name="f_textEntry.css" />
+			</class>
+		</file>
+		<file name="input/f_passwordEntry.js">
+			<class name="f_passwordEntry">
+				<required-class name="f_input" />
+				
+				<required-style name="f_passwordEntry.css" />
+			</class>
+		</file>
+	</module>
+
+<!-- Fonctionnalité HTTP -->
+	<module id="ajax">
+		<file name="util/f_waiting.js">
+			<class name="f_waiting">
+				<required-class name="f_object" />
+				<required-class name="f_resourceBundle" />
+			</class>
+		</file> 
+		     
+
+		<file name="ajax/f_httpRequest.js">
+			<class name="f_httpRequest">
+				<required-class name="f_object" />
+			</class>
+		</file>
+	</module>
+
+	<module id="effects">
+		<file name="ui/f_effect.js">
+			<class name="f_effect">
+				<required-class name="f_object" />
+			</class>
+		</file>
+		<file name="ui/f_timerEffect.js">
+			<class name="f_timerEffect">
+				<required-class name="f_effect" />
+			</class>
+		</file>
+		<file name="ui/f_slideUpEffect.js">
+			<class name="f_slideUpEffect">
+				<required-class name="f_timerEffect" />
+			</class>
+		</file>
+		<file name="ui/f_slideUpTransEffect.js">
+			<class name="f_slideUpTransEffect">
+				<required-class name="f_slideUpEffect" />
+			</class>
+		</file>
+	</module>
+
+	<module id="asyncRender">
+		<file name="ajax/f_asyncClassLoader.js" depends="f_classLoader.js">
+		</file> 
+		     
+
+		<!-- Aspect des Interactions -->
+		<file name="ajax/fa_asyncRender.js" depends="ajax/f_asyncClassLoader.js">
+			<class name="fa_asyncRender">
+				<required-class name="f_aspect" />
+				<required-class name="f_waiting" />
+				<required-class name="f_httpRequest" />
+			</class>
+		</file> 
+		     
+
+		<!-- C'est tellement négligable par rapport à interactive ! -->
+		<file name="ui/f_box.js">
+			<class name="f_box">
+				<required-class name="f_component" />
+				<required-class name="fa_asyncRender" />
+				<required-class name="fa_subMenu" />
+				<required-class name="fa_overStyleClass" />
+
+				<required-class id="menu" name="f_menu" />
+				<required-class id="effect" name="f_effect" />
+
+				<required-style name="f_box.css" />
+			</class>
+		</file>
+	</module>
+		
+	<module id="image">
+		<file name="ui/f_image.js">
+			<class name="f_image">
+				<required-class name="f_filtredComponent" />
+				<required-class name="fa_basicToolTipContainer"/>
+
+				<required-style name="f_image.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="items">
+		<file name="input/f_abstractList.js">
+			<class name="f_abstractList">
+				<required-class name="f_input"/>
+				<required-class name="fa_commands" />
+				<required-class name="fa_filterProperties"/>
+				<required-class name="fa_required"/>
+				<required-class name="fa_immediate"/>
+				
+				<required-class id="filter" name="f_httpRequest" />
+				<required-class id="filter" name="f_waiting" />
+			</class>
+		</file>
+		<file name="input/f_combo.js">
+			<class name="f_combo">
+				<required-class name="f_abstractList"/>
+				<required-class name="fa_selectionProvider"/>
+
+				<required-style name="f_combo.css" />
+			</class>
+		</file>
+		<file name="input/f_list.js">
+			<class name="f_list">
+				<required-class name="f_abstractList" />
+				<required-class name="fa_selectionProvider"/>
+
+				<required-style name="f_list.css" />
+			</class>
+		</file>
+		
+		<file name="ui/f_keyLabel.js">
+			<class name="f_keyLabel">
+				<required-class name="f_filtredComponent" />
+
+				<required-style name="f_keyLabel.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="suggest">
+		<file name="input/f_suggestTextEntry.js">
+			<class name="f_suggestTextEntry">
+				<required-class name="f_textEntry" />
+				<required-class name="fa_filterProperties" />
+				<required-class name="fa_commands" />
+				<required-class name="f_httpRequest" />
+				<required-class name="f_menu" />
+				<required-class name="f_error" />
+				
+				<required-class id="indexDb" name="f_indexedData" />				
+			</class>
+		</file>
+	</module>
+
+<!-- CARDBOX Components -->
+	<module id="cardBox">
+		<file name="ui/f_cardBox.js">
+			<class name="f_cardBox">
+				<required-class name="f_component" />
+				<required-class name="fa_immediate" />
+				
+				<required-style name="f_cardBox.css" />
+			</class>
+		</file>
+		<file name="ui/f_card.js">
+			<class name="f_card">
+				<required-class name="f_cardBox" />
+				<required-class name="fa_asyncRender" />
+			</class>
+		</file>
+	</module>
+
+<!-- TABBEDPANE Components -->
+	<module id="tabbedPane">
+		<file name="ui/f_tabbedPane.js">
+			<class name="f_tabbedPane">
+				<required-class name="f_cardBox" />
+				<required-class name="f_imageRepository" />
+			</class>
+		</file>
+		<file name="ui/f_tab.js">
+			<class name="f_tab">
+				<required-class name="f_tabbedPane" />
+				<required-class name="f_card" />
+			</class>
+		</file>
+	</module>
+	
+<!-- VALIDATOR Components 
+	
+	<module id="xvalidator" groupAll="true">
+		<file name="vfv-calendar.js">
+			<class name="vfv-calendar" />
+		</file>
+		<file name="vfv-dateFormatSymbols.js">
+			<class name="vfv-dateFormatSymbols" />
+		</file>
+		<file name="vfv-decimalFormat.js">
+			<class name="vfv-decimalFormat" />
+		</file>
+		<file name="vfv-decimalFormatSymbols.js">
+			<class name="vfv-decimalFormatSymbols" />
+		</file>
+		<file name="vfv-digitList.js">
+			<class name="vfv-digitList" />
+		</file>
+		<file name="vfv-locale.js">
+			<class name="vfv-locale" />
+		</file>
+		<file name="vfv-numberFormat.js">
+			<class name="vfv-numberFormat" />
+		</file>
+		<file name="vfv-parsePosition.js">
+			<class name="vfv-parsePosition" />
+		</file>
+		<file name="vfv-simpleDateFormat.js">
+			<class name="vfv-simpleDateFormat" />
+		</file>
+		<file name="vfv-string.js">
+			<class name="vfv-string" />
+		</file>
+		<file name="f_vx.js">
+			<class name="f_vx">
+				<required-class name="f_vb" />
+			</class>
+		</file>
+	</module>
+	-->
+	
+<!-- Messages features -->
+	<module id="messageComponents">
+		<file name="ui/fa_messageText.js">
+			<class name="fa_messageText">
+				<required-class name="fa_message" />
+			</class>
+		</file>
+		<file name="ui/fa_message1.js">
+			<class name="fa_message1">
+				<required-class name="fa_messageText" />
+			</class>
+		</file>
+		<file name="ui/f_message.js">
+			<class name="f_message">
+				<required-class name="f_component" />
+				<required-class name="fa_message1" />
+				<required-class name="f_prop" />
+			</class>
+		</file>
+		<file name="ui/f_messages.js">
+			<class name="f_messages">
+				<required-class name="f_component" />
+				<required-class name="fa_messageText" />
+
+				<required-class name="f_message" />
+			</class>
+		</file>
+		<file name="ui/f_styledMessage.js">
+			<class name="f_styledMessage">
+				<required-class name="f_component" />
+				<required-class name="fa_message1" />
+			</class>
+		</file>
+		<file name="ui/f_messageFieldSet.js">
+			<class name="f_messageFieldSet">
+				<required-class name="f_fieldSet" />
+				<required-class name="fa_message1" />
+			</class>
+		</file>
+	</module>
+
+	<module id="xml">
+		<file name="ajax/f_xml.js">
+			<class name="f_xml">
+			</class>
+		</file>
+	</module>
+
+	<module id="xmlDigester">
+		<file name="ajax/f_xmlDigester.js">
+			<class name="f_xmlDigester">
+				<required-class name="f_xml" />
+			</class>
+		</file>
+	</module>
+	
+<!-- Gestion du multi-window ! -->
+	<module id="multiWindow">
+		<file name="f_multiWindowClassLoader.js">
+			<class name="f_multiWindowClassLoader">
+				<required-class name="f_classLoader" />
+			</class>
+		</file>
+	</module>
+
+<!-- PAGER Components -->
+	<module id="pager">
+		<file name="input/fa_pager.js">
+			<class name="fa_pager">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="aspect/fa_pagedComponent.js">
+			<class name="fa_pagedComponent">
+				<required-class name="fa_filterProperties" />
+				<required-class name="fa_namingContainer" />
+			</class>
+		</file>
+		<file name="input/f_pager.js">
+			<class name="f_pager">
+				<required-class name="f_component" />
+				<required-class name="fa_pager" />
+				<required-class name="fa_pagedComponent" />
+				<required-class name="f_resourceBundle" />
+				<required-class name="fa_tabIndex" />
+			</class>
+		</file>
+		<file name="input/f_imagePagerButton.js">
+			<class name="f_imagePagerButton">
+				<required-class name="f_imageButton" />
+				<required-class name="fa_pager" />
+				<required-class name="fa_pagedComponent" />
+			</class>
+		</file>
+		<file name="input/f_criteriaList.js">
+			<class name="f_criteriaList">
+				<required-class name="f_pager" />
+			</class>
+		</file>
+		<file name="input/f_imageCriteriaButton.js">
+			<class name="f_imageCriteriaButton">
+				<required-class name="f_imagePagerButton" />
+			</class>
+		</file>
+	</module>
+
+<!-- DATALIST Components -->
+	<module id="componentsList">
+		<file name="input/f_componentsList.js">
+			<class name="f_componentsList">
+				<required-class name="f_component" />
+				<required-class name="fa_pagedComponent" />
+				<required-class id="ajax" name="fa_asyncRender" />
+				<required-class id="ajax" name="f_httpRequest" />
+				<required-class id="ajax" name="f_waiting" />
+			</class>
+		</file>
+	</module>
+
+
+<!-- Dialog Components -->
+
+	<module id="dialog">
+		 <file name="ui/f_shellManager.js">
+			<class name="f_shellManager">
+				<required-class name="f_core" />
+			</class>
+		 </file>
+		 <file name="ui/f_shellDecorator.js">
+			<class name="f_shellDecorator">
+				<required-class name="f_core" />
+				<required-class name="f_object" />
+				<required-class name="f_shellManager" />
+			</class>
+		 </file>
+		 <file name="ui/f_frameShellDecorator.js">
+			<class name="f_frameShellDecorator">
+				<required-class name="f_shellDecorator" />
+			</class>
+		 </file>
+		 <file name="ui/f_divShellDecorator.js">
+			<class name="f_divShellDecorator">
+				<required-class name="f_shellDecorator" />
+			</class>
+		 </file>
+		 <file name="ui/f_shell.js">
+			<class name="f_shell">
+				<required-class name="f_core" />
+				<required-class name="f_object" />
+				<required-class name="fa_eventTarget" />
+				<required-class name="f_shellManager" />
+				<required-class name="f_shellDecorator" />
+
+				<required-class name="f_frameShellDecorator" />
+				<required-class name="f_divShellDecorator" />
+			</class>
+		 </file>
+		 <file name="ui/f_dialog.js">
+			<class name="f_dialog">
+				<required-class name="f_shell" />
+			</class>
+		 </file>
+		 <file name="ui/f_waitingShell.js">
+			<class name="f_waitingShell">
+				<required-class name="f_dialog" />
+			</class>
+		 </file>
+		 <file name="ui/f_messageDialog.js">
+			<class name="f_messageDialog">
+				<required-class name="f_dialog" />
+			</class>
+		 </file>
+		 <file name="ui/f_viewDialog.js">
+			<class name="f_viewDialog">
+				<required-class name="f_dialog" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_clientData" />
+			</class>
+		 </file>
+	</module>
+
+<!-- GRID Components -->
+
+	<module id="dataGrid">
+		<file name="input/f_additionalInformation.js">
+			<class name="f_additionalInformation">
+				<required-class name="f_component" />
+			</class>
+		</file>
+		<file name="input/f_criteriaPopupManager.js">
+			<class name="f_criteriaPopupManager">
+				<required-class name="f_waiting" />
+			</class>
+		</file>
+		<file name="input/f_gridColumn.js">
+			<class name="f_gridColumn">
+				<required-class name="f_object" />
+				<required-class name="fa_eventTarget" />
+			</class>
+		</file>
+		<file name="input/fa_gridToolTipContainer.js">
+			<class name="fa_gridToolTipContainer">
+				<required-class name="fa_toolTipContainer" />
+			</class>
+		</file>
+		<file name="input/f_grid.js">
+			<class name="f_grid">
+				<required-class name="f_component" />
+				<required-class name="f_gridColumn" />
+				<required-class name="f_resourceBundle" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_pagedComponent" />
+				<required-class name="fa_commands" />
+				<required-class name="fa_subMenu" />
+				<required-class name="fa_selectionProvider" />
+				<required-class name="fa_selectionManager" />
+				<required-class name="fa_additionalInformationManager" />
+				<required-class name="f_additionalInformation" />
+				<required-class name="f_error" />
+				<required-class name="fa_scrollPositions" />
+				<required-class name="fa_autoScroll" />
+				<required-class name="fa_autoOpen" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_aria" />
+				<required-class name="fa_tabIndex" />
+		
+				<required-class id="menu" name="f_menu" />
+				
+				<required-class id="ajax" name="f_httpRequest" />
+				<required-class id="ajax" name="f_waiting" />
+				
+				<required-class id="additional" name="fa_asyncRender" />
+				<required-class id="additional" name="f_additionalInformation" />
+			
+				<required-class id="dnd" name="f_dragAndDropEngine" />
+
+				<required-class name="fa_gridToolTipContainer" />				
+				<required-class id="toolTip" name="f_toolTipManager" />				
+
+				<required-style name="f_grid.css" />
+			</class>
+		</file>
+			
+		<file name="input/f_dataGrid.js">
+			<class name="f_dataGrid">
+				<required-class name="f_grid" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_checkManager" />
+				<required-class name="fa_criteriaManager" />
+
+				<required-style name="f_dataGrid.css" />
+				
+				<required-class id="indexDb" name="f_indexedData" />				
+			</class>
+		</file>
+			
+		<file name="input/f_componentsGrid.js">
+			<class name="f_componentsGrid">
+				<required-class name="f_grid" />
+
+				<required-class id="asyncRender" name="fa_asyncRender" />
+
+				<required-style name="f_componentsGrid.css" />
+			</class>
+		</file>
+
+		<file name="input/f_dataGridPopup.js">
+			<class name="f_dataGridPopup">
+				<required-class name="f_dataGrid" />
+			</class>
+		</file>
+		
+		<file name="input/fa_dataGridPopup.js">
+			<class name="fa_dataGridPopup">
+				<required-class name="f_aspect" />
+				<required-class name="fa_filterProperties" />
+				<required-class name="f_popup" />
+				<required-class name="f_dataGridPopup" />
+				<required-class name="f_pager" />
+			</class>
+		</file>
+					
+		<file name="input/f_keyEntry.js">
+			<class name="f_keyEntry">
+				<required-class name="f_textEntry" />
+
+				<required-class name="fa_commands" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_editable" />
+				<required-class name="fa_clientValidatorParameters" />
+				
+				<required-class id="indexDb" name="f_indexedData" />				
+				
+				<required-style name="f_comboGrid.css" />
+			</class>
+		</file>
+					
+		<file name="input/f_comboGrid.js">
+			<class name="f_comboGrid">
+				<required-class name="f_keyEntry" />
+
+				<required-class name="fa_dataGridPopup" />
+				
+				<required-style name="f_comboGrid.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="gridHelp">
+
+		 <file name="ui/f_columnSortConfigurator.js">
+			<class name="f_columnSortConfigurator">
+				<required-class name="f_grid" />
+			</class>
+		 </file>
+		 <file name="ui/f_columnSortDialog.js">
+			<class name="f_columnSortDialog">
+				<required-class name="f_dialog" />
+				<required-class name="f_grid" />
+				<required-class name="f_columnSortConfigurator" />
+			</class>
+		 </file>
+	</module>
+	
+<!-- TREE Components -->
+	<module id="tree">
+		<file name="input/fa_treeDnd.js">
+			<class name="fa_treeDnd">
+				<required-class name="fa_droppable" />
+				<required-class name="fa_draggable" />
+				<required-class name="fa_autoScroll" />
+				<required-class name="fa_autoOpen" />
+			</class>
+		</file>
+		<file name="input/f_tree.js">
+			<class name="f_tree">
+				<required-class name="f_component" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_subMenu" />
+				<required-class name="fa_selectionManager" />
+				<required-class name="fa_checkManager" />
+				<required-class name="fa_itemClientDatas" />
+				<required-class name="fa_scrollPositions" />
+				<required-class name="fa_overStyleClass" />
+				<required-class name="fa_filterProperties" />
+				<required-class name="fa_tabIndex" />
+				<required-class name="fa_outlinedLabel" />
+				<required-class name="fa_treeDnd" />
+				
+				<required-class name="f_imageRepository" />
+				<required-class name="f_error" />
+				
+				<required-class id="menu" name="f_menu" />
+				
+				<required-class id="ajax" name="f_httpRequest" />
+				<required-class id="ajax" name="f_waiting" />
+				
+				<required-class id="dnd" name="f_dragAndDropEngine" />
+
+				<required-class id="accents" name="f_vb" />
+			</class>
+		</file>
+	</module>
+	
+<!-- ToolBar Components -->
+	<module id="toolbar">
+		<file name="input/f_toolBar.js">
+			<class name="f_toolBar">
+				<required-class name="f_component" />
+			</class>
+		</file>
+		<file name="input/f_toolFolder.js">
+			<class name="f_toolFolder">
+				<required-class name="f_component" />
+				<required-class name="fa_subMenu" />
+				<required-class id="menu" name="f_menu" />
+			</class>
+		</file>
+		<file name="input/f_itemsToolFolder.js">
+			<class name="f_itemsToolFolder">
+				<required-class name="f_component" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_items" />
+				<required-class name="fa_groupName" />
+				<required-class name="fa_subMenu" />
+				<required-class id="menu" name="f_menu" />
+			</class>
+		</file>
+		
+	</module>
+
+	<module id="itemsList">
+		<file name="input/f_itemsList.js">
+			<class name="f_itemsList">
+				<required-class name="f_component" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_items" />
+			</class>
+		</file>
+	</module>
+
+	
+<!-- Spinner component -->
+	<module id="spinner">
+		<file name="input/fa_spinner.js">
+			<class name="fa_spinner">
+				<required-class name="f_aspect" />
+			</class>
+		</file>
+		<file name="input/f_spinner.js">
+			<class name="f_spinner">
+				<required-class name="f_textEntry" />
+				<required-class name="fa_spinner" />
+				
+				<required-style name="f_spinner.css" />
+			</class>
+		</file>
+	</module>
+
+<!-- Calendar Components -->
+	<module id="calendar">		
+		<file name="util/f_time.js">
+			<class name="f_time">
+			</class>
+		</file>
+		<file name="util/f_period.js">
+			<class name="f_period">
+			</class>
+		</file>
+		<file name="util/f_dateFormat.js">
+			<class name="f_dateFormat">
+				<required-class name="f_locale" />
+			</class>
+		</file>
+		<file name="input/f_calendarObject.js">
+			<class name="f_calendarObject">
+				<required-class name="f_object" />
+				<required-class name="fa_eventTarget" />
+				<required-class name="fa_items" />
+				<required-class name="fa_selectionProvider" />
+				<required-class name="fa_commands" />
+
+				<required-class name="f_period" />
+
+				<required-class name="f_locale" />
+				<required-class name="f_resourceBundle" />
+				<required-class name="f_dateFormat" />
+
+				<required-class id="ajax" name="f_httpRequest" />
+				<required-class id="ajax" name="f_waiting" />
+
+				<required-style name="f_calendar.css" />
+			</class>
+		</file>
+		<file name="input/f_calendar.js">
+			<class name="f_calendar">
+				<required-class name="f_component" />
+				<required-class name="f_calendarObject" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_items" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_itemsWrapper" />
+			</class>
+		</file>
+		<file name="input/fa_calendarPopup.js">
+			<class name="fa_calendarPopup">
+				<required-class name="f_aspect" />
+				<required-class name="f_calendar" />
+				<required-class name="f_calendarObject" />
+				<required-class name="f_popup" />
+				<required-class name="fa_itemsWrapper" />
+				<required-class name="fa_selectionProvider" />
+				<required-class name="f_dateFormat" />
+			</class>			
+		</file>
+		<file name="input/f_dateChooser.js">
+			<class name="f_dateChooser">
+				<required-class name="f_imageButton" />
+				<required-class name="fa_calendarPopup" />
+
+				<required-style name="f_dateChooser.css" />
+			</class>
+		</file>
+		<file name="input/f_dateEntry.js">
+			<class name="f_dateEntry">
+				<required-class name="f_compositeNumEntry" />
+				<required-class name="fa_calendarPopup" />
+
+				<required-style name="f_dateEntry.css" />
+			</class>
+		</file>
+		<file name="input/f_timeEntry.js">
+			<class name="f_timeEntry">
+				<required-class name="f_compositeNumEntry" />
+				<required-class name="f_time" />
+			</class>
+		</file>
+		<file name="input/f_numberEntry.js">
+			<class name="f_numberEntry">
+				<required-class name="f_compositeNumEntry" />
+			</class>
+		</file>
+	</module>
+	
+<!-- ExpandBar Components -->
+	<module id="expandBar">
+		<file name="ui/f_expandBar.js">
+			<class name="f_expandBar">
+				<required-class name="f_component" />
+
+				<required-class name="fa_disabled" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_collapsed" />
+				<required-class name="fa_groupName" />
+				<required-class name="fa_overStyleClass" />
+				<required-class name="fa_asyncRender" />
+
+				<required-class id="effect" name="f_effect" />
+
+				<required-style name="f_expandBar.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="consoleLog">
+		<file name="util/f_consoleAppender.js">
+			<class name="f_consoleAppender">
+				<required-class name="f_log" />
+
+				<required-style name="f_consoleAppender.css" />
+			</class>
+		</file>
+	</module>
+
+	<module id="frameSetLog">
+		<file name="util/f_frameSetAppender.js">
+			<class name="f_frameSetAppender">
+				<required-class name="f_log" />
+			</class>
+		</file>
+	</module>
+
+	<module id="serverLog">
+		<file name="util/f_serverAppender.js">
+			<class name="f_serverAppender">
+				<required-class name="f_log" />
+				<required-class name="f_httpRequest" />
+			</class>
+		</file>
+	</module>
+
+	<module id="fireBugLog">
+		<file name="util/f_fireBugAppender.js">
+			<class name="f_fireBugAppender">
+				<required-class name="f_log" />
+			</class>
+		</file>
+	</module>
+
+	<module id="progressBars">
+		<file name="ui/f_progressBar.js">
+			<class name="f_progressBar">
+				<required-class name="f_component" />
+				<required-class name="f_log" />
+			</class>
+		</file>
+	</module>
+
+	<module id="service">
+		<file name="util/f_progressMonitor.js">
+			<class name="f_progressMonitor">
+				<required-class name="f_log" />
+			</class>
+		</file>
+		<file name="util/f_subProgressMonitor.js">
+			<class name="f_subProgressMonitor">
+				<required-class name="f_log" />
+				<required-class name="f_progressMonitor" />				
+			</class>
+		</file>
+
+		<file name="ajax/f_service.js">
+			<class name="f_service">
+				<required-class name="f_object" />
+				<required-class name="fa_serializable" />				
+				<required-class name="fa_clientData" />				
+				<required-class name="fa_filterProperties" />				
+				<required-class name="fa_commands" />				
+				<required-class name="f_xml" />				
+				<required-class name="f_httpRequest" />				
+				<required-class name="f_error" />
+				<required-class name="f_progressMonitor" />				
+				<required-class name="f_subProgressMonitor" />				
+			</class>
+		</file>
+	</module>
+
+	<module id="progressMonitors">
+		<file name="ui/f_progressIndicatorMonitor.js">
+			<class name="f_progressIndicatorMonitor">
+				<required-class name="f_progressMonitor" />
+			</class>
+		</file>
+		<file name="ui/fa_progressIndicator.js">
+			<class name="fa_progressIndicator">
+				<required-class name="f_progressIndicatorMonitor" />				
+			</class>
+		</file>
+		<file name="ui/f_progressIndicator.js">
+			<class name="f_progressIndicator">
+				<required-class name="f_component" />
+				<required-class name="f_log" />
+				<required-class name="fa_progressIndicator" />				
+			</class>
+		</file>
+
+		<file name="ui/f_progressMonitorDialog.js">
+			<class name="f_progressMonitorDialog">
+				<required-class name="f_dialog" />
+				<required-class name="f_progressBar" />
+				<required-class name="fa_progressIndicator" />
+			</class>
+		 </file>
+	</module>
+
+	<module id="clientStorage">
+		<file name="util/f_clientStorage.js">
+			<class name="f_clientStorage">
+				<required-class name="f_object" />
+
+				<required-style name="f_clientStorage.css" />
+			</class>
+		</file>
+		<file name="util/f_cookieClientStorage.js">
+			<class name="f_cookieClientStorage">
+				<required-class name="f_clientStorage" />
+			</class>
+		</file>
+	</module>
+
+	<module id="flash">
+		<file name="util/f_flashObject.js">
+			<class name="f_flashObject" />
+		</file>
+		<file name="util/f_flashClientStorage.js">
+			<class name="f_flashClientStorage">
+				<required-class name="f_clientStorage" />
+				<required-class name="f_flashObject" />
+			</class>
+		</file>
+	</module>
+
+	<module id="extraClientStorage">
+		<file name="util/f_userDataClientStorage.js">
+			<class name="f_userDataClientStorage">
+				<required-class name="f_clientStorage" />
+			</class>
+		</file>
+		<file name="util/f_domClientStorage.js">
+			<class name="f_domClientStorage">
+				<required-class name="f_clientStorage" />
+			</class>
+		</file>
+	</module>
+
+	<module id="md5">
+		<file name="util/f_md5.js">
+			<class name="f_md5" />
+		</file>
+	</module>
+
+	<module id="json">
+		<file name="util/f_json.js">
+			<class name="f_json" />
+		</file>
+	</module>
+
+	<module id="textEditor">
+		<file name="input/f_textEditor.js">
+			<class name="f_textEditor">
+				<required-class name="f_component" /> 
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				
+				<required-style name="f_textEditor.css" />
+			</class>
+		</file>
+		<file name="input/f_textEditorImageButton.js">
+			<class name="f_textEditorImageButton">
+				<required-class name="f_imageButton" /> 
+				<required-class name="fa_selected" /> 
+				<required-class name="f_textEditor" /> 
+				
+			<!--	<required-style name="f_textEditorImageButton.css" /> -->
+			</class>
+		</file>
+		<file name="input/f_textEditorCombo.js">
+			<class name="f_textEditorCombo">
+				<required-class name="f_combo" /> 
+				<required-class name="f_textEditor" /> 
+				
+			<!--	<required-style name="f_textEditorCombo.css" /> -->
+			</class>
+		</file>
+	</module>
+	
+	<module id="scheduler">
+		 <file name="input/f_scheduler.js">
+			<class name="f_scheduler">
+				<required-class name="f_component" />
+				<required-class name="fa_items" />
+				<required-class name="fa_selectionManager" />
+				<required-class name="f_core" />
+				<required-class name="f_dateFormat"/>
+				<required-class name="f_resourceBundle" />
+				<required-style name="f_scheduler.css" />
+			</class>
+			
+		 </file>
+	</module>
+
+	<module id="dragAndDrop">
+	
+		 <file name="dnd/f_dndEvent.js">
+			<class name="f_dndEvent">
+				<required-class name="f_core" />
+			</class>		
+		 </file>
+			
+		<file name="ui/fa_screenAutoScroll.js">
+			<class name="fa_screenAutoScroll">
+				<required-class name="fa_autoScroll" />
+			</class>
+		</file>			
+	
+		 <file name="dnd/f_dragAndDropEngine.js">
+			<class name="f_dragAndDropEngine">
+				<required-class name="f_object" />
+				<required-class name="fa_screenAutoScroll" />
+
+				<required-class name="f_dndEvent" />
+				<required-class name="fa_draggable" />
+				<required-class name="fa_droppable" />
+			</class>
+			
+		 </file>
+		 <file name="dnd/f_dragAndDropInfo.js">
+			<class name="f_dragAndDropInfo">
+				<required-class name="f_dragAndDropEngine" />
+				<required-class name="f_object" />
+			</class>
+			
+		 </file>
+		 <file name="dnd/f_cursorDnDInfo.js">
+			<class name="f_cursorDnDInfo">
+				<required-class name="f_dragAndDropInfo" />
+			</class>
+			
+		 </file>
+		 <file name="dnd/f_abstractElementDnDInfo.js">
+			<class name="f_abstractElementDnDInfo">
+				<required-class name="f_dragAndDropInfo" />
+			</class>			
+		 </file>
+		 <file name="dnd/f_popupDnDInfo.js">
+			<class name="f_popupDnDInfo">
+				<required-class name="f_abstractElementDnDInfo" />
+			</class>			
+		 </file>
+		 <file name="dnd/f_iconDnDInfo.js">
+			<class name="f_iconDnDInfo">
+				<required-class name="f_abstractElementDnDInfo" />
+			</class>			
+		 </file>
+			
+	</module>
+
+	<module id="focusSection">
+		 <file name="ui/f_focusSectionPopup.js">
+			<class name="f_focusSectionPopup">
+				<required-class name="f_focusManager" />
+
+				<required-class name="f_popup" />
+			</class>		
+		 </file>
+	</module>
+
+	<module id="indexedDb">
+		 <file name="db/f_indexedDbEngine.js">
+			<class name="f_indexedDbEngine">
+				<required-class name="f_core" />
+			</class>		
+		 </file>
+			
+		<file name="db/f_indexedData.js">
+			<class name="f_indexedData">
+				<required-class name="f_indexedDbEngine" />
+
+				<required-class id="accents" name="f_vb" />
+			</class>
+		</file>			
+	</module>
+<!-- 
+	<module id="partialRendering">
+		<file name="core/f_partialRenderingEngine.js">
+			<class name="f_partialRenderingEngine" />
+		</file>
+	</module>
+	 -->
+</repository>

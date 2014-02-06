@@ -1,0 +1,28 @@
+/*
+ * $Id: f_messageDialog.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_messageDialog
+ *
+ * @author Fred Lefevere-Laoide (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_messageDialog_body {
+	text-align: center;
+}
+
+.f_messageDialog_title_td,
+.f_messageDialog_image_td,
+.f_messageDialog_text_td,
+.f_messageDialog_actions_td {
+	vertical-align: middle;
+}
+
+.f_messageDialog_form {
+	padding: 0;
+	border: 0;
+	margin: 0;
+}

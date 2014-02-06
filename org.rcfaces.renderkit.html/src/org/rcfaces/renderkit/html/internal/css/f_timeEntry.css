@@ -1,0 +1,42 @@
+/*
+ * $Id: f_timeEntry.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_timeEntry
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_timeEntry {
+	margin: 0;
+	border: 1px solid #7F9DB9;
+	text-align: left;
+	display: inline;
+}
+
+.f_timeEntry_input {
+	border: 0;
+	background-color: transparent;
+	text-align: right;
+	margin: 0;
+}
+
+.f_timeEntry_HH,
+.f_timeEntry_mm,
+.f_timeEntry_ss {
+	width: 16px;
+} 
+
+.f_timeEntry_SSS {
+	width: 24px;
+}
+
+
+/*
+.f_timeEntry_error {
+	color: red;
+}
+*/

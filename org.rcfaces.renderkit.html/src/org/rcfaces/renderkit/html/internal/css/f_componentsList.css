@@ -1,0 +1,28 @@
+/*
+ * $Id: f_componentsList.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_componentsList
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_componentsList {
+	border: 1px solid #666666;
+	margin: 0;
+	padding: 0;	
+	text-align: left;
+	vertical-align: top;
+}
+
+.f_componentsList_disabled {
+ 	border: 1px solid #BBB;		
+}
+
+.f_componentsList_cell {
+	text-align: left;
+	vertical-align: top;
+}

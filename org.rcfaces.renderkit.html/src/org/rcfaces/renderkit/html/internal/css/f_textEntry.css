@@ -1,0 +1,37 @@
+/*
+ * $Id: f_textEntry.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_textEntry
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+
+.f_textEntry {
+	margin: 0;
+}
+
+.f_textEntry_disabled {
+	border: 1px solid black;
+	margin: 1px;
+}
+
+.f_textEntry_readonly {
+	border: 1px solid black;
+	margin: 1px;
+}
+
+.f_textEntry_empty_message {
+	color: #888;
+	font-style: italic;
+}
+
+/*
+.f_textEntry_error {
+	color: red;
+}
+*/

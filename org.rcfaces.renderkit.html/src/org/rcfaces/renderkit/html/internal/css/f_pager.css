@@ -1,0 +1,42 @@
+/*
+ * $Id: f_pager.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_datePager
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_pager {
+	-moz-user-select: none;
+	user-select: none;
+	border: 1px dotted #999999;
+	background-color: #EEEEEE;
+	font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	text-align: left;
+	vertical-align: baseline;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_pager_button {
+	color: #666;
+	text-decoration: none;
+}
+
+.f_pager_button_goto_disabled {
+	font-weight: bold;
+	color: black;
+}
+
+.f_pager_button_first_disabled, 
+.f_pager_button_last_disabled, 
+.f_pager_button_prev_disabled, 
+.f_pager_button_next_disabled {
+	color: #AAA;
+}
+

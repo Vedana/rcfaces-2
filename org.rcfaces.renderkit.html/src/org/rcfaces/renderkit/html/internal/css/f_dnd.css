@@ -1,0 +1,82 @@
+/*
+ * $Id: f_dnd.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ *
+ * @charset UTF-8
+ */
+
+/**
+ *
+ * @class f_dnd
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+
+.f_elementDnDInfo {
+	position: absolute;
+	z-index: 5000;
+}
+
+.f_popupDnDInfo {
+	z-index: 5010;
+	white-space: nowrap;
+}
+
+.f_popupDnDInfo_border {
+	border: 1px solid #767676;
+	background: white url("dnd/bg-grey.gif") repeat-x bottom left;
+	padding: 2px 4px;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	
+	opacity: 0.85;
+	-ms-filter: "alpha(opacity=85)"; /* IE 8 */
+    filter : alpha(opacity=85); /* IE < 8 */
+}
+
+.f_elementDnDInfo .f_popupDnDInfo_effect {
+	background: transparent url("blank.gif") no-repeat center center;
+}
+
+.f_elementDnDInfo_0 .f_popupDnDInfo_effect {
+	background-image: url("dnd/none.gif");
+}
+
+.f_elementDnDInfo_1 .f_popupDnDInfo_effect {
+	display: none;
+}
+
+.f_elementDnDInfo_2 .f_popupDnDInfo_effect {
+	background-image: url("dnd/copy.gif");
+}
+
+.f_elementDnDInfo_4 .f_popupDnDInfo_effect {
+	background-image: url("dnd/link.gif");
+}
+
+.f_elementDnDInfo_8 .f_popupDnDInfo_effect {
+	background-image: url("dnd/move.gif");
+}
+
+.f_popupDnDInfo_action,
+.f_popupDnDInfo_info {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	color: #3633DB;
+	vertical-align: top;
+	white-space: nowrap;
+}
+.f_popupDnDInfo_info {
+	padding-left: 2px;
+	color: #000066;
+}
+
+
+.f_iconDnDInfo {
+	opacity: 0.50;
+   -ms-filter: "alpha(opacity=50)"; /* IE 8 */
+    filter : alpha(opacity=50); /* IE < 8 */
+}
+
+

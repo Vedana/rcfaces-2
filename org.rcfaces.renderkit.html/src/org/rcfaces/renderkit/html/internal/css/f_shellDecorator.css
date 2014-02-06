@@ -1,0 +1,119 @@
+/*
+ * $Id: f_shellDecorator.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_shellDecorator
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_shellDecorator_frame {
+	visibility: hidden;
+	position: absolute;
+	z-index: 1000;
+}
+
+.f_shellDecorator_frame_border {
+	border: 1px black solid;
+}
+
+.f_shellDecorator_frame_transparent {
+	background-color: transparent;
+}
+
+.f_shellDecorator_body {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	overflow: none;
+}
+
+.f_shellDecorator_body_transparent {
+	background-color: transparent;
+}
+
+.f_shellDecorator_body_cell {
+	overflow: auto;
+	background-color: white;
+	vertical-align: top;
+}
+
+.f_shellDecorator_background {
+}
+
+.f_shellDecorator_background_transparent {
+}
+
+.f_shellDecorator_title {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	background: #ABC4DF url("shell/titleBackground.gif") repeat-x 0 -2px; 
+	height: 24px;
+	user-select: none;
+	-moz-user-select: none;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_shellDecorator_title_focused {
+	
+}
+
+.f_shellDecorator_title_cell {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	vertical-align: top;
+	height: 24px;
+	border-bottom: 1px black solid;
+	-moz-user-select: none;
+}
+
+
+.f_shellDecorator_title_text {
+	padding: 6px 0 0 20px;
+	cursor: default;
+}
+
+.f_shellDecorator_close {
+	float: right;
+	margin: 6px 4px 0 0;
+	padding: 0;
+	border: 0;
+	width: 28px;
+	height: 16px;
+	cursor: pointer;
+
+	background: transparent url('shell/closeRed.gif') no-repeat 0 0;	
+}
+
+.f_shellDecorator_close_over {
+	background-position: -28px 0;	
+}
+
+.f_shellDecorator_close_selected,
+.f_shellDecorator_close_selected_over {
+	background-position: -56px 0;	
+}
+
+.f_shellDecorator_body_buttons {
+	margin: 0;
+	padding: 8px 0 0 0;
+	text-align: center;
+	vertical-align: middle;	
+	border-top: 1px #DFDFDF solid;
+	
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+
+	background-color: #F0F0F0;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	height: 42px;
+}

@@ -1,0 +1,54 @@
+/*
+ * $Id: f_imageButton.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imageButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_imageButton {
+	cursor: pointer;
+}
+
+.f_imageButton,
+.f_imageButton_image,
+.f_imageButton_text {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+	background-color: transparent;
+}
+
+.f_imageButton_disabled,
+.f_imageButton_disabled INPUT,
+.f_imageButton_disabled A {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_imageButton_disabled .f_imageButton_text {
+	color: #A1A192;
+}
+
+/*
+.f_imageButton_text {
+	border: 1px solid transparent;
+}
+
+.f_imageButton_focus .f_imageButton_text,
+.f_imageButton_selected_focus .f_imageButton_text {
+	border: 1px dotted black;
+}
+*/
+
+

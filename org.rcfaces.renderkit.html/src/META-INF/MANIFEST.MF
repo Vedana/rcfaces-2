@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Html renderkit for rcfaces
+Bundle-SymbolicName: org.rcfaces.renderkit.html
+Bundle-Version: 1.0.0
+Bundle-Vendor: Rcfaces team
+Bundle-Localization: plugin
+Require-Bundle: org.rcfaces.core
+Implementation-Title: org.rcfaces.renderkit.html
+Implementation-Vendor: Vedana
+Specification-Vendor: Rcfaces team

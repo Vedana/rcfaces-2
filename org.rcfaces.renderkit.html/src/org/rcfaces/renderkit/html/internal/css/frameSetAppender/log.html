@@ -1,0 +1,452 @@
+<html>
+	<head>		
+		<style type="text/css">
+BODY {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.logEven {
+	background-color: #eeeeee;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	white-space: normal;
+}
+.logOdd {
+	background-color: #dedede;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	white-space: normal;
+}
+.logNewPage {
+	background-color: #ffaeae;
+	font-size: 9pt;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	white-space: normal;
+	font-style: italic;
+	border-top: 1px solid black;
+	padding-bottom: 6px;
+}
+
+.logWait,
+.logSpan {
+	font-size: 13px;
+	font-weight: bold;
+	display: block;
+}
+
+.logWait {
+	color: #A00;
+}
+
+#profiling {
+	position: relative;
+	left: 0;
+	top: 0;
+	height: 100px;
+	overflow: auto;
+	font-size: x-small;
+	background-color: #FFC;
+}
+.profilingEntry {
+}
+.profilingSeparator {
+	height: 3px;
+	line-height: 1pt;
+	font-size: 1pt;
+	color: black;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+		</style>		
+		<script type="text/javascript">	
+window._rcfacesFrameSetAppend=function(type, name, value) {
+	switch(type) {
+	case "profiler":
+		if (name.indexOf("fa_eventTarget.fireEvent.")==0) {
+			return;
+		}
+
+		if (!value) {
+			value=new Date();
+		}
+		appendProfile.call(this, name, value);
+		return;
+		
+	case "newPage":
+		window.parent.updateLocation(this.document.location);
+		return;
+		
+	case "loadFrame":
+		//appendLine("Enter frame "+this.document.location, "loadFrameEntry");
+		return;
+		
+	case "console":
+		appendLog.apply(this, arguments[1]);
+		return;
+	}
+	
+	alert("Unkown type '"+type+"'.");
+}
+
+function updateLevels(showDebug, showInfo, showWarning, showError, showProfile) {
+	window.showError=showError;
+	window.showWarning=showWarning;
+	window.showInfo=showInfo;
+	window.showDebug=showDebug;
+	window.showProfile=showProfile;
+	
+	filterLIs();
+}
+
+function appendLine(txt, className) {
+	var d=document.createElement("DIV");
+	d.innerHTML=txt;
+
+	appendEntry(d, className);
+}
+
+
+function appendProfile(name, date) { 
+	var time=date.getTime();
+
+	if (name.indexOf("f_core.submit.enter")==0) {
+		window._submitProfile=time;
+		window._startProfile=undefined;
+		window._endProfile=undefined;
+
+	} else if (name=="f_core.loading") {
+		window._startProfile=time;
+		window._loggedWindow=this;
+
+		appendLine("Change url:  "+this.document.location, "logNewPage");
+				
+	} else if (name=="f_core.SubmitEvent") {
+		if (!window._submitProfile) {
+			window._submitProfile=time;
+		}
+	} else if (name=="f_core.onExit.enter") {
+		if (!window._submitProfile) {
+			window._endProfile=time;
+			window._startProfile=undefined;
+		}
+	} else if (name=="f_core.onInit.enter") {
+		window._loadProfile=time;
+	}
+
+	var div=document.body; //document.getElementById("profiling");
+
+	var li=document.createElement("DIV");
+	
+	var h=date.getHours();
+	if (h<10) h="0"+h;
+	var m=date.getMinutes();
+	if (m<10) m="0"+m;
+	var s=date.getSeconds();
+	if (s<10) s="0"+s;
+	var ms=date.getMilliseconds();
+	if (ms<10) ms="0"+ms;
+	if (ms<100) ms="0"+ms;
+
+	var title="["+h+":"+m+":"+s+"."+ms+"]";
+
+	if (this!=window._loggedWindow) {
+		title+=" {"+this.document.location+"}";
+	}
+
+	title+="  PROFILE";
+
+	var span=document.createElement("SPAN");
+	span.className="logWait";
+	span.appendChild(document.createTextNode(title));
+	
+	li.appendChild(span);
+	li._level=-1;
+		
+	var txt=name+": ";
+	if (window._startProfile>0) {
+		txt+=" [start "+(time-window._startProfile)+"]";
+	}
+	if (window._loadProfile>0) {
+		txt+=" [load "+(time-window._loadProfile)+"]";
+	}
+	if (window._submitProfile>0) {
+		txt+="  [submit "+(time-window._submitProfile)+"]";
+	} else if (window._endProfile>0) {
+		txt+="  [end "+(time-window._endProfile)+"]";
+	}
+	
+	if (name=="f_core.onInit.exit") {
+		window._submitProfile=undefined;
+		window._startProfile=undefined;
+		window._endProfile=undefined;
+		window._loadProfile=undefined;
+	}
+		
+	li.appendChild(document.createTextNode(txt));
+
+	filterLI(li);
+
+	appendEntry(li);	
+}
+
+function clearLogs() {
+	var list=document.body;
+	while (list.hasChildNodes()) {
+		list.removeChild(list.lastChild);
+	}
+}
+
+function appendLog(level, name, msg, ex, win) {
+	var li=document.createElement("DIV");
+	
+	var date=new Date();
+	var h=date.getHours();
+	if (h<10) h="0"+h;
+	var m=date.getMinutes();
+	if (m<10) m="0"+m;
+	var s=date.getSeconds();
+	if (s<10) s="0"+s;
+	var ms=date.getMilliseconds();
+	if (ms<10) ms="0"+ms;
+	if (ms<100) ms="0"+ms;
+
+	var title="["+h+":"+m+":"+s+"."+ms+"]";
+	
+	if (win!=window._loggedWindow) {
+		title+=" {"+win.document.location+"}";
+	}
+
+	switch(level) {
+	case 0:
+		title+=" FATAL";
+		break;
+	case 1:
+		title+=" ERROR";
+		break;
+	case 2:
+		title+=" WARN";
+		break;
+	case 3:
+		title+=" INFO";
+		break;
+	case 4:
+		title+=" DEBUG";
+		break;
+	case 5:
+		title+=" TRACE";
+		break;
+	default: 
+		if (level) {
+			title+=" [Level: "+level+"]";
+		}
+		break;
+	}
+	li._level=level;
+	
+	if (msg) {
+		if (typeof(name)!="string" && name.f_getName) {
+			var className=name.f_getName();
+			name=className;
+		}
+
+		title+=" "+name;
+		
+	} else {
+		msg=name;
+	}
+
+	var span=document.createElement("SPAN");
+	span.className="logSpan";
+	span.appendChild(document.createTextNode(title));
+	
+	li.appendChild(span);
+	
+	if (typeof(msg)=="string") {
+		var sp=msg.split("\n");
+		for(var i=0;i<sp.length;i++) {
+			if (i>0) {
+				li.appendChild(document.createElement("BR"));
+			}
+			
+			var s=sp[i];
+			li.appendChild(document.createTextNode(s));
+		}
+	}
+			
+	if (ex) {
+		if (typeof(ex)!="string") {
+			li.appendChild(document.createElement("HR"));
+			
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.style.color="#666";
+			span.appendChild(document.createTextNode("Exception: "));
+			li.appendChild(span);
+		}
+						
+		if (ex.fileName && ex.lineNumber) {
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.appendChild(document.createTextNode("    ("));
+
+			var link=document.createElement("A");
+			link.target="_blank";
+			link.href="view-source:"+ex.fileName+"#"+ex.lineNumber;
+			span.appendChild(link);
+			link.appendChild(document.createTextNode(ex.fileName+":"+ex.lineNumber));
+
+			span.appendChild(document.createTextNode(")"));
+			li.appendChild(span);
+		}			
+		
+		li.appendChild(document.createElement("BR"));
+				
+		if (ex.name) {
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.style.color="#888";
+			span.appendChild(document.createTextNode("Name: "));
+
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.appendChild(document.createTextNode(ex.name));
+		}
+
+		var m=ex.message;
+		if (!m && typeof(ex)=="string") {
+			m=ex;
+		}
+		if (typeof(m)=="string") {
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.style.display="block";
+			
+			var span2=document.createElement("SPAN");
+			span2.style.color="#666";
+			span2.appendChild(document.createTextNode("Message: "));
+			span.appendChild(span2);
+			
+			var sp=m.split('\n');
+			for(var i=0;i<sp.length;i++) {
+				if (i>0) {
+					span.appendChild(document.createElement("BR"));
+				}
+				
+				var s=sp[i];
+				span.appendChild(document.createTextNode(sp[i]));
+			}
+			li.appendChild(span);
+		}
+					
+		var m=ex.stack;
+		if (typeof(m)=="string") {
+			var span=document.createElement("SPAN");
+			span.style.fontSize="small";
+			span.style.display="block";
+			
+			var span2=document.createElement("SPAN");
+			span2.style.color="#666";
+			span2.appendChild(document.createTextNode("Stack: "));
+			span.appendChild(span2);
+
+			var sp=m.split('\n');
+			for(var i=0;i<sp.length;i++) {
+				if (i>0) {
+					span.appendChild(document.createElement("BR"));
+				}
+				
+				var s=sp[i];
+				span.appendChild(document.createTextNode(sp[i]));
+			}
+			li.appendChild(span);
+		}
+	}	
+	
+	filterLI(li);
+	
+	appendEntry(li);
+}
+function appendEntry(li, className) {
+	
+	if (!className) {	
+		if (!window._cnt) {
+			window._cnt=1;
+		} else {
+			window._cnt++;
+		}
+		
+		className=(window._cnt % 2)?"logEven":"logOdd";
+	}
+	li.className=className;
+	
+	var div=document.body; //document.getElementById("profiling");
+
+	div.appendChild(li);
+	li.scrollIntoView(false);	
+}
+
+filterLIs=function() {
+	var nodes=document.body.childNodes;
+	
+	for(var i=0;i<nodes.length;i++) {
+		var li=nodes[i];
+		
+		if (li.tagName!="DIV") {
+			continue;
+		}
+		
+		this.filterLI(li);
+	}
+}
+filterLI=function(li) {
+	var visible=true;
+	
+	switch(li._level) {
+	case 0:
+		visible=true;
+		break;
+		
+	case 1:
+		visible=window.showError;
+		break;
+
+	case 2:
+		visible=window.showWarning;
+		break;
+		
+	case 3:
+		visible=window.showInfo;
+		break;
+		
+	case 4:
+		visible=window.showDebug;
+		break;
+		
+	case -1:
+		visible=window.showProfile;
+		break;
+	}
+	
+	
+	if (!visible) {
+		if (li.style.display!="none") {
+			li.style.display="none";
+		}
+		return;
+	}
+	
+	if (li.style.display=="none") {
+		li.style.display="block";
+	}
+	return;
+}
+
+function initLogs() {
+	window.parent.fireUpdateLevels(window);
+}
+		</script>
+	</head>
+	
+	<body onload="initLogs()">
+	</body>
+</html>

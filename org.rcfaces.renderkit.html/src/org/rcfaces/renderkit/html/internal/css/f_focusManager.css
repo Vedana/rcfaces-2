@@ -1,0 +1,47 @@
+.f_focusSection {
+	position: absolute;
+	left: 50px;
+	top: 50px;
+	opacity: 0.8;
+	border: 2px solid #1F6D92;
+	border-radius: 4px;
+	background: #FFFFFF;
+	color: #1F6D92;
+}
+
+.f_focusSection OL,
+.f_focusSection UL {
+	padding: 0 10px 0 32px;
+	margin: 0;
+}
+
+.f_focusSection A, .f_focusSection A:hover {
+	text-decoration: none;
+}
+
+.f_focusSection LABEL {
+	color: #1F6D92;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+.f_focusSection A:active,
+.f_focusSection A:active LABEL,
+.f_focusSection A:focus,
+.f_focusSection A:focus LABEL {
+	color: red;
+	font-weight: bold;
+}
+
+.f_focusSection A:active,
+.f_focusSection A:focus {
+	outline: red 1px dotted;
+}
+
+.f_focusSection_title {
+	background-color: #1F6D92;
+	color: white;
+	font-size: 14px;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+	text-align: center;
+	font-weight: bold;
+}

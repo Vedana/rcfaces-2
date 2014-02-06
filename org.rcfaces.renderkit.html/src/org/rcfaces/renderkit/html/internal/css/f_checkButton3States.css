@@ -1,0 +1,29 @@
+/*
+ * $Id: f_checkButton3States.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_checkButton3States
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+ 
+.f_checkButton3States {
+	cursor: pointer;
+	display: inline;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_checkButton3States_input {
+	vertical-align: middle;
+}
+
+.f_checkButton3States_text {
+	vertical-align: middle;
+	cursor: pointer;
+	padding-left: 4px;
+}

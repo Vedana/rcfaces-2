@@ -1,0 +1,54 @@
+/*
+ * $Id: f_imagePagerButton.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imagePagerButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+
+.f_imagePagerButton {
+	cursor: pointer;
+}
+ 
+.f_imagePagerButton_image,
+.f_imagePagerButton_text,
+.f_imagePagerButton {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	-moz-user-focus: normal;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_imagePagerButton_disabled,
+.f_imagePagerButton_disabled INPUT,
+.f_imagePagerButton_disabled A {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_imagePagerButton_disabled .f_imagePagerButton_text {
+	color: #A1A192;
+}
+
+/*
+.f_imagePagerButton_text {
+	border: 1px solid transparent;
+}
+
+.f_imagePagerButton_focus .f_imagePagerButton_text,
+.f_imagePagerButton_selected_focus .f_imagePagerButton_text {
+	border: 1px dotted black;
+}
+*/
+

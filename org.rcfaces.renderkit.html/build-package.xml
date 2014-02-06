@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Packager Camelia" basedir=".">
+	<property name="java.target" value="1.6" />
+
+	<target name="buildVersion">
+		
+		
+		<property name="build.version.path" value="target/generated-sources" />
+
+		<delete failonerror="false" dir="${build.version.path}" />
+		<mkdir dir="${build.version.path}" />
+		<mkdir dir="${build.version.path}/src-html" />
+
+		<copy todir="${build.version.path}/src-html">
+			<fileset dir="src">
+				<exclude name="**/*.db" />
+				<exclude name="**/*_" />
+			</fileset>
+
+			<fileset dir="src-jsf${jsfVersion}">
+
+			</fileset>
+
+		</copy>
+
+		<mkdir dir="${build.version.path}/bin-bootstrap" />
+
+		<path id="generated.classpath">
+			<path location="${build.version.path}/bin-bootstrap" />
+			<path path="${compile_classpath}" />
+		</path>
+
+
+
+		<javac taskname="Build bootstrap" includeantruntime="false" debug="true" destdir="${build.version.path}/bin-bootstrap" optimize="no" nowarn="true" failonerror="true" target="1.6" encoding="utf-8">
+
+			<classpath>
+				<path path="${compile_classpath}" />
+			</classpath>
+			<src path="${build.version.path}/src-html" />
+
+
+			<include name="org/rcfaces/**/component/**" />
+			<include name="org/rcfaces/**/capability/**" />
+			<include name="org/rcfaces/**/manager/**" />
+			<include name="org/rcfaces/**/event/**" />
+			<include name="org/rcfaces/**/model/**" />
+		</javac>
+
+		<path id="generated.classpath">
+			<path location="${build.version.path}/bin-bootstrap" />
+			<path path="${compile_classpath}" />
+		</path>
+
+
+		<java taskname="Build template" classname="com.vedana.camelia.generator.components_${jsfVersion}.CameliaGenerator${jsfVersion}" failonerror="true">
+
+			<classpath refid="generated.classpath" />
+
+			<arg value="+template" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+repository" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+renderKit:core" />
+			<arg value="-" />
+
+			<arg value="+repository" />
+			<arg path="../org.rcfaces.renderkit.html/metadatas" />
+
+			<arg value="+classPath" />
+			<arg pathref="generated.classpath" />
+
+			<arg value="+renderKit:html" />
+			<arg path="../org.rcfaces.renderkit.html/src-jsf${jsfVersion}-generated" />
+		</java>
+		
+		
+		     
+		<!-- java taskname="OptimizeJs Level1" classname="com.vedana.camelia.generator.js.parser.JsOptimizer" failonerror="true">
+			<classpath refid="generated.classpath" />
+
+			<arg value="-source:html" />
+			<arg path="src/org/rcfaces/renderkit/html/internal/javascript/" />
+
+			<arg value="-dest:html" />
+			<arg path="build/js_optimizer1-html/org/rcfaces/renderkit/html/internal/javascript" />
+
+			<arg value="-extension" />
+			<arg value="js" />
+
+			<arg value="-label" />
+			<arg value="LEVEL1" />
+
+			<arg value="-version" />
+			<arg value="I2222" />
+		</java>
+
+
+		<delete file="${build.version.path}/bin-htmlc1" failonerror="false" />
+		<copy todir="${build.version.path}/src-htmlc1" includeemptydirs="no">
+			<fileset dir="${build.version.path}/src-html">
+				<exclude name="**/*.js" />
+				<exclude name="**/symbols" />
+				<exclude name="**/*old" />
+			</fileset>
+
+			<fileset dir="build/js_optimizer1-html">
+			</fileset>
+		</copy>
+		<manifest file="${build.version.path}/src-htmlc1/META-INF/MANIFEST.MF" mode="update">
+			<section name="org.rcfaces.renderkit.html">
+				<attribute name="Rcfaces-Javascript-Level" value="1" />
+			</section>
+		</manifest -->
+
+
+
+	</target>
+
+</project>

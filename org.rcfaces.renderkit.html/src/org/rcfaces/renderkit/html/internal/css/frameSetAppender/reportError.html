@@ -1,0 +1,277 @@
+<html>
+	<head>
+		<title>RCFaces bug report</title>
+		
+		<style type="text/css">
+LI {
+	list-style-type: none;
+}		
+
+.file {
+	padding: 8px 0 0 0;
+}
+
+.file LI {
+	padding-left: 8px;
+}
+#actionURL {
+	background-color: #FBB;
+}
+
+		</style>
+		
+		<script type="text/javascript">
+function copyErrors() {
+
+	var token=document.location.toString();
+	var pos=token.lastIndexOf("tokenId=");
+	if (pos>=0) {
+		token=token.substring(pos+8);
+		pos=token.indexOf('&');
+		if (pos>=0) {
+			token=token.substring(0, pos);
+		}
+
+		var htmlToken=document.getElementsByName("token")[0];
+		htmlToken.value=token;	
+	}
+	
+	var opener=window.opener;
+
+	if (opener.rcfacesBuildId) {
+		document.getElementsByName("rcfacesVersion")[0].value=opener.rcfacesBuildId;
+	}
+	
+	document.getElementsByName("date")[0].value=new Date();
+	document.getElementsByName("browser")[0].value=window.navigator.userAgent.toString();
+	document.getElementsByName("url")[0].value=opener.document.location.toString();
+	
+	var source="<html>"+opener.document.documentElement.innerHTML+"</html>"
+	
+	var log="";
+	var i=source.indexOf("f_consoleAppender_table");
+	if (i>0) {
+		var sourceIC=source.toLowerCase();
+		i=sourceIC.lastIndexOf("<div", i);
+		
+		var e=source.lastIndexOf("f_consoleAppender_item");
+		if (e>i) {
+			e=sourceIC.indexOf("</div></div>", e)+12;
+			
+			log=source.substring(i, e);
+			source=source.substring(0, i)+source.substring(e);
+		}
+	}
+	
+	if (log) {
+		i=log.indexOf("f_consoleAppender_item");
+		if (i>=0) {
+			var logIC=log.toLowerCase();
+			i=logIC.lastIndexOf("<li",i);
+			
+			e=logIC.lastIndexOf("</li");
+			
+			log=log.substring(i, e);
+			
+			log=log.replace(/\<\/li\>/g, "\n");
+			log=log.replace(/\<li[^\>]*\>/gi,"");
+			log=log.replace(/\<span[^\>]*\>/gi,"");
+			log=log.replace(/\<\/span\>/gi,"\n");
+			
+		}
+	}
+	
+	var htmlTextArea=document.getElementsByName("html")[0];
+	htmlTextArea.value=source;
+
+	var logTextArea=document.getElementsByName("log")[0];
+	logTextArea.value=log;
+
+	var cookiesArea=document.getElementsByName("cookies")[0];
+	cookiesArea.value=window.opener.document.cookie;
+	
+	var css="";
+	var links=window.opener.document.styleSheets;
+	for(var i=0;i<links.length;i++) {
+		var link=links[i];
+		
+		if (!link.href || link.href==window.opener.document.location || link.href.indexOf("rcfaces.css")>=0) {
+			continue;
+		}
+		
+		if (css.length) {
+			css+="\n";
+		}
+		
+		css+="-------------------------------------------------------------------------------\n";
+		css+="URL = "+link.href+"\n";
+		
+		var rules=link.cssRules;
+		if (!rules) {
+			rules=link.rules;
+		}
+		for(var j=0;j<rules.length;j++) {
+			var rule=rules[j];
+			
+			if (rule.cssText) {
+				css+=rule.cssText+"\n";
+			} else {
+				css+=rule.selectorText+" { "+rule.style.cssText+" }\n";
+			}
+		}
+	}
+
+	var cssTextArea=document.getElementsByName("styles")[0];
+	cssTextArea.value=css;
+	
+	var sc="";
+	var scripts=window.opener.document.getElementsByTagName("script");
+	for(var i=0;i<scripts.length;i++) {
+		var script=scripts[i];
+		
+		if (!script.src) {
+			continue;
+		}
+
+		var t=script.src.substring(script.src.lastIndexOf('/')+1);
+		
+		if (!t.indexOf("vfs-") || !t.indexOf("vfm-") || !t.indexOf("f_") || !t.indexOf("fa_")) {
+			continue;
+		}
+		
+		var request;
+		try { 
+			request=new ActiveXObject("Msxml2.XMLHTTP");
+			
+		} catch (e) {
+			try { 
+				request=new ActiveXObject("Microsoft.XMLHTTP"); 
+			} catch (e) {
+				try { 
+					request=new XMLHttpRequest(); 
+				} catch(e) {
+					break;
+				}
+			}
+		}
+	  
+		request.open("GET", script.src, false);
+		request.send(null);
+		
+		var content=request.responseText;
+	
+		if (sc.length) {
+			sc+="\n";
+		}
+	
+		sc+="-------------------------------------------------------------------------------\n";
+		sc+="URL = "+script.src+"   size="+content.length+" bytes\n";
+		sc+=content+"\n";		
+	}	
+
+	var scriptTextArea=document.getElementsByName("scripts")[0];
+	scriptTextArea.value=sc;
+	
+	document.getElementById("actionURL").innerHTML=document.forms[0].action;
+	
+	document.getElementById("butSubmit").disabled=false;
+
+	document.getElementsByName("title")[0].focus();	
+}
+		</script>
+	</head>
+	<body onload="copyErrors()">
+		<form action="http://www.rcfaces.org/report/report" method="post" enctype="multipart/form-data">
+		
+			<p>
+				Theses informations will be sent to the url: <span id="actionURL" />.
+			</p>
+			<input id="butSubmit" type="submit" disabled value="Send the REPORT ..." />
+			
+			<input type="hidden" name="version" value="1.0.0" />
+
+			<p> Informations :
+				<ul> 
+					<li>
+						Report identifier: <input type="text" name="token" size="20" readOnly />
+					</li>
+					<li>
+						RCFaces version: <input type="text" size="20" name="rcfacesVersion" readOnly />
+					</li>
+					<li>
+						Date: <input type="text" name="date" size="36" readOnly />
+					</li>
+					<li>
+						Browser: <input type="text" name="browser" size="100" readOnly />
+					</li>
+					<li>
+						URL: <input type="text" name="url" size="100" readOnly />
+					</li>
+				</ul>
+			</p>
+
+			<p> Specify a title, a bug identifier (if known) and a comment:
+				<ul> 
+					<li>
+						Title: <input name="title" size="80" />
+					</li>
+					<li>
+						BugId: <input name="bugId" size="20" />
+					</li>
+					<li>
+						<textArea name="notes" cols="80" rows="5" ></textArea>
+					</li>
+				</ul>
+			</p>
+
+			<p> Add files:
+				<ul> 
+					<li>
+						<ul class="file">Files #1:
+							<li>Local file: <input name="file1" type="file" /> </li>						
+							<li>Description: <input name="comment1" type="text" size="80" /> </li>
+						</ul>
+					</li>
+					<li>
+						<ul class="file">Files #2:
+							<li>Local file: <input name="file2" type="file" /> </li>						
+							<li>Description: <input name="comment2" type="text" size="80" /> </li>
+						</ul>
+					</li>
+					<li>
+						<ul class="file">Files #3:
+							<li>Local file: <input name="file3" type="file" /> </li>						
+							<li>Description: <input name="comment3" type="text" size="80" /> </li>
+						</ul>
+					</li>
+					<li>
+						<ul class="file">Files #4:
+							<li>Local file: <input name="file4" type="file" /> </li>						
+							<li>Description: <input name="comment4" type="text" size="80" /> </li>
+						</ul>
+					</li>
+				</ul>
+			</p>
+		
+			<p>Attached informations:   <i>(you can edit theses entries in order to remove confidential informations)</i>
+				<ul> 
+					<li>
+						<textArea name="log" cols="80" rows="20"></textArea>
+					</li>
+					<li>			
+						<textArea name="html" cols="80" rows="20"></textArea>
+					</li>
+					<li>			
+						<textArea name="styles" cols="80" rows="20"></textArea>
+					</li>
+					<li>			
+						<textArea name="scripts" cols="80" rows="20"></textArea>
+					</li>
+					<li>			
+						<textArea name="cookies" cols="80" rows="20"></textArea>
+					</li>
+				</ul>
+			</p>			
+		</form>
+	</body>
+</html>

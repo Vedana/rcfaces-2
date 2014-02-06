@@ -1,0 +1,34 @@
+/*
+ * $Id: f_fieldSet.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_fieldSet
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_fieldSet {
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_fieldSet_cellBody {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: top;
+}
+
+.f_fieldSet_content {
+	position:relative;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+
+
+

@@ -1,0 +1,326 @@
+/*
+ * $Id: f_calendar.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_calendar
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_calendar {
+	font-family: arial, helvetica;
+	-moz-user-select: none;
+	user-select: none;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	user-select: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_calendar_weekImage,
+.f_calendar_prevUnit,
+.f_calendar_nextUnit,
+.f_calendar_prevMonth,
+.f_calendar_nextMonth,
+.f_calendar_prevYear,
+.f_calendar_nextYear {
+	cursor: pointer;
+	border: 0;
+}
+
+IMG.f_calendar_prevUnitImg,
+IMG.f_calendar_nextUnitImg,
+IMG.f_calendar_prevUnitImg_disabled,
+IMG.f_calendar_nextUnitImg_disabled,
+IMG.f_calendar_weekImage,
+IMG.f_calendar_prevMonth,
+IMG.f_calendar_nextMonth,
+IMG.f_calendar_prevMonth_disabled,
+IMG.f_calendar_nextMonth_disabled,
+IMG.f_calendar_prevYear,
+IMG.f_calendar_nextYear,
+IMG.f_calendar_prevYear_disabled,
+IMG.f_calendar_nextYear_disabled {
+	background: url('calendar/arrows.gif') 0 0 no-repeat;
+	border: 0;
+}
+
+IMG.f_calendar_weekImage {
+	background-position: -64px 0;
+}
+
+IMG.f_calendar_week_disabled .f_calendar_weekImage {
+	background-position: -80px 0;
+}
+
+IMG.f_calendar_prevMonth,
+IMG.f_calendar_prevYear {
+	background-position: 0 0;
+}
+
+IMG.f_calendar_nextMonth,
+IMG.f_calendar_nextYear {
+	background-position: -16px 0;
+}
+
+IMG.f_calendar_prevMonth_disabled,
+IMG.f_calendar_prevYear_disabled {
+	background-position: -32px 0;
+}
+
+IMG.f_calendar_nextMonth_disabled,
+IMG.f_calendar_nextYear_disabled {
+	background-position: -48px 0;
+}
+
+IMG.f_calendar_prevUnitImg {
+	background-position: -96px 0;
+}
+
+IMG.f_calendar_nextUnitImg {
+	background-position: -112px 0;
+}
+
+IMG.f_calendar_prevUnitImg_disabled {
+	background-position: -128px 0;
+}
+
+IMG.f_calendar_nextUnitImg_disabled {
+	background-position: -144px 0;
+}
+
+.f_calendar_cursorYearLabel,
+.f_calendar_cursorMonthLabel {
+	font-size: 9pt;
+	font-weight: bold;
+	text-decoration: none;
+	color: black;
+	display: block;
+}
+
+.f_calendar_cursorMonthLabel:hover,
+.f_calendar_cursorYearLabel:hover {
+	text-decoration: underline;
+}
+
+.f_calendar_today,
+.f_calendar_month,
+.f_calendar_month_disabled,
+.f_calendar_month_cursor,
+.f_calendar_month_cursor_disabled,
+.f_calendar_month_selected,
+.f_calendar_month_cursor_selected {
+	font-family: arial, helvetica;
+	font-size: 8pt;
+	color: #383838;
+	text-decoration: none;
+	display: block;
+	padding: 1px;
+}
+
+.f_calendar_month_disabled,
+.f_calendar_month_cursor_disabled {
+	color: #9C9C9C;
+	cursor: pointer;
+	-moz-user-focus: none;
+	user-focus: none;
+}
+
+.f_calendar_month_selected,
+.f_calendar_month_cursor_selected {
+	background-color: #DDEEFE;
+}
+
+.f_calendar_month_cursor,
+.f_calendar_month_cursor_selected {
+	border: #999 1px solid;
+	padding: 0;
+}
+
+.f_calendar_month_cursor_disabled {
+	border: #9C9C9C 1px solid;
+	padding: 0;
+}
+
+.f_calendar_month:hover {
+	text-decoration: underline;
+}
+
+.f_calendar_week  {
+	display: block;
+}
+
+.f_calendar_weekDay {
+	font-weight: bold;
+	font-size: 8pt;
+	color: black;
+	text-decoration: none;
+}
+
+.f_calendar_weekDay:hover {
+	text-decoration: underline;
+}
+
+.f_calendar_cday {
+	padding: 1px;
+}
+
+.f_calendar_cday
+.f_calendar_cday_disabled,
+.f_calendar_cday_hidden,
+.f_calendar_cday_selected,
+.f_calendar_cday_selected_disabled,
+.f_calendar_cday_outside,
+.f_calendar_cday_outside_disabled,
+.f_calendar_cday_selected_outside,
+.f_calendar_cday_selected_outside_disabled {
+	width: 19px;
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+
+.f_calendar_cday A,
+.f_calendar_cday_disabled A,
+.f_calendar_cday_hidden A,
+.f_calendar_cday_selected A,
+.f_calendar_cday_selected_disabled A,
+.f_calendar_cday_outside A,
+.f_calendar_cday_outside_disabled A,
+.f_calendar_cday_selected_outside A,
+.f_calendar_cday_selected_outside_disabled A {
+	font-size: 8pt;
+	height: 16px;
+	color: black;
+	text-decoration: none;
+	display: block;
+	padding: 1px;
+}
+
+.f_calendar_cday_hidden A {
+	visibility: hidden;
+}	
+
+.f_calendar_cday_disabled A,
+.f_calendar_cday_outside_disabled A,
+.f_calendar_cday_selected_disabled A,
+.f_calendar_cday_selected_outside_disabled A {
+	color: #9C9C9C;
+	cursor: normal;
+	user-focus: none !important;
+	text-decoration: line-through;
+}
+
+.f_calendar_cday_outside A,
+.f_calendar_cday_outside_disabled A,
+.f_calendar_cday_selected_outside A,
+.f_calendar_cday_selected_outside_disabled A {
+	color: #CCC;
+}
+
+.f_calendar_cday_selected A,
+.f_calendar_cday_selected_outside A,
+.f_calendar_cday_selected_disabled A,
+.f_calendar_cday_selected_outside_disabled A {
+	background-color: #CDDEEE;
+}
+
+.f_calendar_cday_cursor A {
+	border: #999 1px solid;
+	padding: 0;
+}
+
+.f_calendar_cday A:hover,
+.f_calendar_cday_outside A:hover,
+.f_calendar_cday_selected A:hover,
+.f_calendar_cday_selected_outside A:hover {
+	text-decoration: underline;
+	border: #CCC solid 1px;
+	padding: 0;
+}
+
+
+.f_calendar_cday_outside A:hover,
+.f_calendar_cday_selected_outside A:hover {
+	color: #888;
+}
+
+.f_calendar_month_selected {
+}
+
+.f_calendar_nextUnit,
+.f_calendar_prevUnit,
+.f_calendar_nextUnitImg,
+.f_calendar_prevUnitImg {
+	font-size: 8pt;
+	text-decoration: none;
+	color: black;
+	cursor: pointer;
+	height: 18px;
+	vertical-align: middle;
+}
+
+.f_calendar_nextUnit IMG,
+.f_calendar_prevUnit IMG,
+.f_calendar_unitLabel IMG {
+	margin-top: 2px;
+}
+
+.f_calendar_unitLabel IMG {
+	width: 1px;
+}
+
+.f_calendar_prevUnit:hover,
+.f_calendar_nextUnit:hover {
+	text-decoration: underline;
+}
+
+.f_calendar_unitLabel {
+	font-size: 8pt;
+	color: #9C9C9C;
+	vertical-align: middle;
+	height: 18px;
+}
+
+.f_calendar_cmonth {
+	width: 28px;
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+
+.f_calendar_today {
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+	border-top: 1px solid #CCC;
+	padding: 3px 1px;
+}
+
+.f_calendar_today:hover {
+	text-decoration: underline;
+}
+
+.f_calendar_rday {
+	height: 20px;
+}
+
+.f_calendar_yearCursor,
+.f_calendar_monthCursor,
+.f_calendar_monthList {
+	padding: 2px 1px 0 1px;
+}
+
+.f_calendar_dayList {
+	padding: 2px;
+}

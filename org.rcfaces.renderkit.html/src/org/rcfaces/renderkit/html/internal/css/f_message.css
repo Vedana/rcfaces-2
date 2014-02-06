@@ -1,0 +1,26 @@
+/*
+ * $Id: f_message.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_message
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_message {
+	-moz-user-select: none;
+	user-select: none;
+	display: inline;
+}
+
+.f_message_summary {
+	color: red;
+	font-weight: bold;
+}
+
+.f_message_detail {
+	color: red;
+}

@@ -1,0 +1,32 @@
+/**
+ *
+ * @class f_itemsList
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_itemsList {
+	display: block;
+	margin: 0;
+	padding: 0;	
+	overflow: auto;
+	background-color: white;
+	position: relative;
+}
+
+.f_itemsList_item,
+.f_itemsList_container {
+	display: block;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+}
+
+.f_itemsList_item {
+	padding: 2px;
+}
+
+

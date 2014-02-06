@@ -1,0 +1,36 @@
+/*
+ * $Id: f_criteriaList.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_criteriaList
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+ 
+.f_criteriaList {
+	border: 1px dotted #999999;
+	background-color: #EEEEEE;
+	font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif; 
+	text-align: left;
+	vertical-align: baseline;
+
+	box-sizing: border-box;	
+	
+	user-select: none;
+	
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.f_criteriaList_list {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	list-style-type: none;
+	user-select: none;
+}
+ 

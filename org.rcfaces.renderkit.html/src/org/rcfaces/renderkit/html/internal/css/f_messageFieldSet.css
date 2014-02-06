@@ -1,0 +1,29 @@
+/*
+ * $Id: f_messageFieldSet.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_messageFieldSet
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+.f_messageFieldSet {
+	text-align: left;
+	vertical-align: baseline;
+}
+
+/*
+.f_messageFieldSet_body {
+	top: 0;
+	left: 0;
+}
+
+.f_messageFieldSet_cellBody {
+	position:relative;
+}
+
+*/
+

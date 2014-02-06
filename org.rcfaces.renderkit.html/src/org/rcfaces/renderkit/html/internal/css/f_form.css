@@ -1,0 +1,23 @@
+/*
+ * $Id: f_form.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+ 
+ /**
+ *
+ * @class f_imageCriteriaButton
+ *
+ * @author Olivier Oeuillot 
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+.f_form {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.f_form_full {
+	width: 100%;
+	height: 100%;
+}

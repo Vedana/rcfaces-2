@@ -1,0 +1,34 @@
+/*
+ * $Id: f_checkButton.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_checkButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_checkButton {
+	-moz-user-select: none;
+	user-select: none;
+	text-align: left;
+	vertical-align: baseline;
+	display: inline;
+}
+ 
+.f_checkButton_input {
+	vertical-align: middle;
+}
+
+.f_checkButton_text {
+	vertical-align: middle;
+	display: inline;
+	cursor: pointer;
+}
+
+.f_checkButton_disabled .f_checkButton_text {
+	color: #A1A192;
+	cursor: default;
+}

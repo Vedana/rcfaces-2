@@ -1,0 +1,48 @@
+/*
+ * $Id: f_imageCombo.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imageCombo
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+.f_imageCombo {
+	cursor: pointer;
+}
+
+.f_imageCombo, 
+.f_imageCombo_text,
+.f_imageCombo_image {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_imageCombo_disabled,
+.f_imageCombo_disabled INPUT {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_imageCombo_disabled .f_imageCombo_text {
+	color: #A1A192;
+}
+
+.f_imageCombo_marker {
+	background: url('imageCombo/popDown.gif') no-repeat 0 0;
+}
+
+.f_imageCombo_disabled .f_imageCombo_marker {
+	color: #A1A192;
+	background-position: -5px 0;
+}

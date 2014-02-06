@@ -1,0 +1,28 @@
+/*
+ * $Id: f_core.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_core
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_accessKey {
+	text-decoration: inherit;
+	accelerator:true;
+}
+
+.f_outlinedLabel {
+	background-color: #FF7;
+	border: 1px solid #DD5;
+	border-radius: 2px;
+}
+
+.f_audioDescription {
+	position: absolute;
+	left: -100000px;
+	top: -100000px;
+}

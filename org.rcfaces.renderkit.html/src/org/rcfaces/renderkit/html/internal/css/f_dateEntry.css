@@ -1,0 +1,49 @@
+/*
+ * $Id: f_dateEntry.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_dateEntry
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_dateEntry {
+	margin: 0;
+	border: 1px solid #7F9DB9;
+	text-align: left;
+	display: inline;
+}
+
+.f_dateEntry_input {
+	border: 0;
+	background-color: transparent;
+	text-align: right;
+	margin: 0;
+}
+
+.f_dateEntry_hh,
+.f_dateEntry_mm,
+.f_dateEntry_ss,
+.f_dateEntry_dd,
+.f_dateEntry_MM,
+.f_dateEntry_yy {
+	width: 16px;
+} 
+
+.f_dateEntry_SSS {
+	width: 24px;
+}
+
+.f_dateEntry_yyyy {
+	width: 32px;
+}
+
+
+/*
+.f_dateEntry_error {
+	color: red;
+}
+*/

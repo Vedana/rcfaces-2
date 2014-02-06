@@ -1,0 +1,90 @@
+.fb_rounded_1, .fb_rounded_2, .fb_rounded_3,
+.fb_rounded_8, .fb_rounded_4,
+.fb_rounded_7, .fb_rounded_6, .fb_rounded_5 {
+	background: url('border/fieldset1.gif') no-repeat 0 0;
+	font-size: 1pt;
+	line-height: 1px;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.fb_rounded_2, .fb_rounded_6 {
+	background-repeat: repeat-x;
+}
+
+.fb_rounded_4, .fb_rounded_8 {
+	background: url('border/fieldset2.gif') repeat-y;
+}
+
+.fb_rounded_1 IMG,
+.fb_rounded_3 IMG {
+	border: none;
+}
+
+.fb_rounded_cimage,
+.fb_rounded_cmarker,
+.fb_rounded_ctext {
+	padding: 0 1px;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.fb_rounded .fb_rounded_1 {	
+	background-position: 0 -30px;
+}
+
+.fb_rounded .fb_rounded_2 {
+	background-position: 0 -70px;
+	width: 100%;
+}
+
+.fb_rounded .fb_rounded_3 {
+	background-position: -8px -50px;
+}
+
+.fb_rounded .fb_rounded_4 {
+	background-position: -24px 0;
+}
+
+.fb_rounded .fb_rounded_5 {
+	background-position: -8px -10px;
+}
+
+.fb_rounded .fb_rounded_6 {
+	background-position: 0 -20px;
+}
+
+.fb_rounded .fb_rounded_7 {
+	background-position: 0 0;
+}
+
+.fb_rounded .fb_rounded_8 {
+	background-position: 0 0;
+}
+
+.fb_rounded .fb_rounded_cimage,
+.fb_rounded .fb_rounded_cmarker,
+.fb_rounded .fb_rounded_ctext {
+	background-color: #F2F2ED;
+}
+
+.fb_rounded_table_head {
+	width:100%;
+}
+.fb_rounded_row_head {
+	height:17px;
+}
+
+.fb_rounded_cell_head {
+/*	xxxwidth: 100%; */
+}
+
+.fb_rounded_text {
+	font-family:Verdana;
+	font-size:8pt;
+	color:#0046D5;
+	white-space: nowrap;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+

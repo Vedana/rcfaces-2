@@ -1,0 +1,43 @@
+/*
+ * $Id: f_shellManager.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_shellManager
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_shellManager_background {
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    position: absolute;
+    z-index: 99; 
+}
+
+.f_shellManager_background_transparent {
+    background-color: black; 
+    opacity: 0.0;
+    filter: alpha(opacity=0);
+}
+
+.f_shellManager_background_light {
+    background-color: black; 
+    opacity: 0.08;
+    filter: alpha(opacity=8);
+}
+
+.f_shellManager_background_greyed {
+    background-color: black; 
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+}
+
+.f_shellManager_background_opaque {
+    background-color: blue; 
+}
+ 

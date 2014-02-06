@@ -1,0 +1,22 @@
+/*
+ * $Id: f_cardBox.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_cardBox
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+ 
+.f_cardBox {
+	display: block;
+	text-align: left;
+	vertical-align: baseline;
+}
+ 
+.f_cardBox_card {
+	display: block;
+}

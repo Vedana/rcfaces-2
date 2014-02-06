@@ -1,0 +1,107 @@
+/*
+ * $Id: fa_dataGridPopup.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class fa_dataGridPopup
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_dataGridPopup_popup {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	-moz-outline-style: none;
+	background-color: #F0F0F0;
+	border: 1px solid #8A867A;
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: 0;
+	padding: 2px;
+	display: block;
+	visibility: hidden;
+	cursor: default;
+	overflow: hidden;
+}
+
+.fa_dataGridPopup_table {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.fa_dataGridPopup_label {
+	height: 20px;
+	margin-left: 16px;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	line-height: 20px;
+}
+
+.fa_dataGridPopup_title {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+	vertical-align: middle;
+}
+
+.fa_dataGridPopup_li_label,
+.fa_dataGridPopup_li_form {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0 2px 0 2px;	
+}
+
+.fa_dataGridPopup_label {
+	float: left;
+}
+
+.fa_dataGridPopup_form {
+	height: 18px;
+	padding: 0;
+	border: 1px solid #888;
+	padding: 0;
+	margin: 0;
+	width: 160px;
+	background: white;
+	float: left;
+}
+
+.fa_dataGridPopup_input {
+	border:0;
+	padding:0;
+	margin:0;
+	height: 16px;
+	width: 120px;
+}
+
+.fa_dataGridPopup_icon {
+	float: right;
+	width: 16px;
+	height: 16px;
+	background: url('grid/search.gif') no-repeat 0 0;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+}
+
+.fa_dataGridPopup_search {
+}
+
+.fa_dataGridPopup_pager {
+	border: 0;
+	background-color: transparent;
+	vertical-align: center;
+	text-align: center;
+}
+
+.fa_dataGridPopup_grid {
+	margin-top: 2px;
+}

@@ -1,0 +1,114 @@
+/*
+ * $Id: f_comboEx.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_comboEx
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+TABLE.f_comboEx {
+	border: 1px solid #7F9DB9;
+	position: relative;
+}
+
+TABLE.f_comboEx IMG,
+TABLE.f_comboEx UL,
+TABLE.f_comboEx LI,
+TABLE.f_comboEx SPAN {
+	-moz-user-select: none;
+	user-select: none;
+}
+
+TABLE.f_comboEx INPUT {
+	border: 0;
+	padding: 0;
+	margin: 0px 0 0 4px;
+	-moz-user-select: inherit;
+}
+
+
+TD.f_comboEx_cimage {
+	border-width: 0 1px 0 1px;
+	padding: 1px 2px 1px 1px;
+}
+
+IMG.f_comboEx_itemImage {
+	margin: 0 1px 0 1px;
+}
+
+IMG.f_comboEx_image {
+	background: url('comboEx/arrow.gif') no-repeat 0px 0px ;
+}
+
+IMG.f_comboEx_image_hover {
+	background: url('comboEx/arrow.gif') no-repeat -16px 0px ;
+}
+
+IMG.f_comboEx_image_selected {
+	background: url('comboEx/arrow.gif') no-repeat -32px 0px ;
+}
+
+IMG.f_comboEx_image_disabled {
+	background: url('comboEx/arrow.gif') no-repeat -48px 0px ;
+}
+
+UL.f_comboEx_popup, UL.f_comboEx_popup_scroll,
+UL.f_comboEx_popup_image, UL.f_comboEx_popup_image_scroll {
+	background-color: white;
+	border: 1px solid #8A867A;	
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:1000;
+	visibility: hidden;
+	display: block;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	cursor: pointer;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+
+UL.f_comboEx_popup_image {
+/*	background-image: url(menu/xp_borderLeft.gif);
+	background-repeat: repeat-y;
+	background-position: left;
+	*/
+}
+
+UL.f_comboEx_popup_scroll, UL.f_comboEx_popup_image_scroll {
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+LI.f_comboEx_item, LI.f_comboEx_item_image,
+LI.f_comboEx_item_disabled, LI.f_comboEx_item_image_disabled,
+LI.f_comboEx_item_hover, LI.f_comboEx_item_image_hover {
+	white-space: nowrap;
+	vertical-align: middle;
+	padding: 1px 0px 1px 2px;
+}
+
+LI.f_comboEx_item_image {
+}
+
+LI.f_comboEx_item_hover, LI.f_comboEx_item_image_hover {
+	background-color: #316AC5;
+	color: white;	
+}
+
+.f_comboEx_item_text {
+	display: inline;
+	padding-left: 6px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.f_comboEx_item_image {
+	padding-left: 2px;
+}

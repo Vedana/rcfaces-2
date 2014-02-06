@@ -1,0 +1,44 @@
+/*
+ * $Id: f_keyLabel.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_keyLabel
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_keyLabel,
+.f_keyLabel_item {
+	box-sizing: border-box;
+
+	padding: 0;
+	margin: 0;
+	border: 0;
+	
+	display: block;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+}
+
+.f_keyLabel_item {
+	background: transparent url("keyLabel/separator.gif") left center no-repeat;
+	padding-left: 10px;
+
+	white-space: nowrap;
+	float: left;
+}
+
+.f_keyLabel_item_first {
+	background: none;
+	padding-left: 0;
+}
+
+/*
+.f_keyLabel_item_last {
+}
+*/
+ 

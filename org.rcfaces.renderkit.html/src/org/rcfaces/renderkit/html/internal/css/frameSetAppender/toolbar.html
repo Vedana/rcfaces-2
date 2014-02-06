@@ -1,0 +1,310 @@
+<html>
+	<head>
+<style type="text/css">
+BODY {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: url('toolBarBackground.gif') repeat-x left center;
+}
+#command {
+	vertical-align: middle;
+	height: 20px;
+}
+#url {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	height: 20px;
+}
+.icons {
+	padding: 0 4px;
+}
+</style>
+<script type="text/javascript">
+function updateLocation(location) {
+	document.getElementById("url").value=location;
+	document._oldLocation=location;
+}
+function toggleDebug() {
+	window._showDebug=!window._showDebug;
+	setCookieValue("consoleDebug", window._showDebug, "/");
+	
+	updateIcons();	
+	callUpdateLevels();
+}
+function toggleInfo() {
+	window._showInfo=!window._showInfo;
+	setCookieValue("consoleInfo", window._showInfo, "/");
+	
+	updateIcons();	
+	callUpdateLevels();
+}
+function toggleWarning() {
+	window._showWarning=!window._showWarning;
+	setCookieValue("consoleWarning", window._showWarning, "/");
+	
+	updateIcons();	
+	callUpdateLevels();
+}
+function toggleError() {
+	window._showError=!window._showError;
+	setCookieValue("consoleError", window._showError, "/");
+	
+	updateIcons();	
+	callUpdateLevels();
+}
+function toggleProfile() {
+	window._showProfile=!window._showProfile;
+	setCookieValue("consoleProfile", window._showProfile, "/");
+	
+	updateIcons();	
+	callUpdateLevels();
+}
+function callUpdateLevels() {
+	window.parent.updateLevels(window._showDebug, window._showInfo, window._showWarning, window._showError, window._showProfile);
+}
+function callClearLogs() {
+	window.parent.clearLogs();
+}
+
+function callReload() {
+	if (!document._oldLocation) {
+		return;
+	}
+	
+	window.parent.changeMainLocation(document._oldLocation);
+}
+
+function initIcons() {
+
+	var att=getCookieValue("consoleError");
+	window._showError=(!att)?true:(att=="true");
+
+	att=getCookieValue("consoleWarning");
+	window._showWarning=(!att)?true:(att=="true");
+
+	att=getCookieValue("consoleInfo");
+	window._showInfo=(!att)?true:(att=="true");
+
+	att=getCookieValue("consoleDebug");
+	window._showDebug=(!att)?true:(att=="true");
+	
+	att=getCookieValue("consoleProfile");
+	window._showProfile=(!att)?true:(att=="true");
+	
+	updateIcons();
+	callUpdateLevels();
+}
+function updateIcons() {
+	document.getElementById("iconError").src="../consoleAppender/"+((window._showError)?"error.gif":"errorDisabled.gif");
+	document.getElementById("iconWarning").src="../consoleAppender/"+((window._showWarning)?"warning.gif":"warningDisabled.gif");
+	document.getElementById("iconInfo").src="../consoleAppender/"+((window._showInfo)?"info.gif":"infoDisabled.gif");
+	document.getElementById("iconDebug").src="../consoleAppender/"+((window._showDebug)?"debug.gif":"debugDisabled.gif");
+	document.getElementById("iconProfiler").src="../consoleAppender/"+((window._showProfile)?"profiler.gif":"profilerDisabled.gif");
+}
+function getCookieValue(cookieName) {
+	var cookies=document.cookie;
+		
+	if (!cookies) {
+		return null;
+	}
+	
+	var start = cookies.indexOf("; "+cookieName+"=");
+	if (start<0) {
+		start = cookies.indexOf(cookieName+"=");
+		// C'est forcement le premier !
+		if (start!=0) {
+			return null;
+		}
+	}
+	
+	// On regarde derriere !
+	// Deuxieme verification, non obligatoire !
+	if (start>0 && cookies.charAt(start-1)>64) {
+		// On a trouvé un sous-ensemble !
+		return null;
+	}
+	
+	start = cookies.indexOf("=", start) + 1;
+	var end = cookies.indexOf(";", start);
+	if (end<0) {
+		end=cookies.length;
+	}
+	
+	var value=cookies.substring(start, end);
+	return unescape(value);
+}
+
+function setCookieValue(cookieName, cookieValue, cookiePath) {
+	if (cookieValue===undefined || cookieValue.length<1) {
+		var exp=cookieName+"=; expires=Thu, 01-Jan-70 00:00:01 GMT";
+		if (cookiePath) {
+			exp+="; path="+cookiePath;
+		}
+		
+		document.cookie=exp;
+		
+		return;
+	}
+
+	var exp=cookieName+"="+escape(cookieValue);
+	if (cookiePath) {
+		exp+="; path="+cookiePath;
+	}
+	
+	document.cookie=exp;
+}
+function clearCookies() {
+	var cookies=document.cookie;
+		
+	if (!cookies) {
+		return null;
+	}
+	
+	var cks=cookies.split(";");
+	
+	var path=document.location.toString();
+	path=path.substring(path.indexOf("//")+2);
+	path=path.substring(path.indexOf("/"));
+	path=path.substring(0, path.indexOf("/", 1));
+	
+	for(var i=0;i<cks.length;i++) {
+		var c=cks[i];
+		
+		var name=c.substring(0, c.indexOf("="));
+		
+		name=name.replace(/^\s*(.*?)\s*$/, "$1");
+		if (name.indexOf("console")==0) {
+			continue;
+		}
+		
+		setCookieValue(name, undefined, path);
+	}
+}
+
+function locationKeys(event) {
+	if (!event) {
+		event=window.event;
+	}
+	
+	var input=document.getElementById("url");		
+	
+	if (event.keyCode==13) {
+		window.parent.changeMainLocation(input.value);
+	}
+}
+
+</script>
+	</head>
+	<body onload="initIcons()">
+		<table id="command" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<input 
+						id="url" 
+						name="location" 
+						onkeypress="locationKeys(event)"
+						size="80" />
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					<input 
+						type="image" 
+						src="../frameSetAppender/reload.gif" 
+						class="icons"
+						title="Reload current page"
+						width="16" height="16"
+						onclick="callReload()">
+				</td>
+				<td>
+					<img src="separator.gif" width="11" height="22" />
+				</td>
+				<td>
+					<input 
+						type="image" 
+						src="../consoleAppender/delete.gif" 
+						class="icons"
+						title="Permanently delete all entries"
+						width="16" height="16"
+						onclick="callClearLogs()">
+				</td>
+				<td>
+					<input 
+						id="iconError" 
+						class="icons"
+						type="image" 
+						src="../consoleAppender/error.gif" 
+						title="Shows/hides all Errors"
+						width="16" height="16"
+						onclick="toggleError()" >
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					<input 
+						id="iconWarning" 
+						class="icons"
+						type="image" 
+						title="Shows/hides all Warnings"
+						src="../consoleAppender/warning.gif" 
+						width="16" height="16"
+						onclick="toggleWarning()" >
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					<input 
+						id="iconInfo" 
+						class="icons"
+						type="image" 
+						title="Shows/hides all Infos"
+						src="../cosoleAppender/info.gif" 
+						width="16" height="16"
+						onclick="toggleInfo()" >
+				</td>
+				<td>
+					&nbsp;
+				</td>
+				<td>
+					<input 
+						id="iconDebug" 
+						class="icons"
+						type="image"
+						title="Shows/hides all Debugs"
+						src="../consoleAppender/debug.gif" 
+						width="16" height="16"
+						onclick="toggleDebug()" >
+				</td>
+				<td>
+					<img src="separator.gif" width="11" height="22" />
+				</td>
+				<td>
+					<input 
+						id="iconProfiler" 
+						class="icons"
+						type="image" 
+						title="Shows/hides all profiler statistics"
+						src="../consoleAppender/profiler.gif" 
+						width="16" height="16"
+						onclick="toggleProfile()" >
+				</td>
+				<td>
+					<img src="separator.gif" width="11" height="22" />
+				</td>
+				<td>
+					<input 
+						id="iconClearCookies" 
+						class="icons"
+						type="image" 
+						title="Permanently clear all cookies"
+						src="cookie.gif" 
+						width="16" height="16"
+						onclick="clearCookies()" >
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,42 @@
+/*
+ * $Id: f_waiting.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_waiting
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_waiting {
+	display: none;
+	overflow: hidden;
+
+	width: 100px;
+	height: 24px;
+	padding-left: 24px;	
+
+	background: transparent url("waiting/waiting2.gif") no-repeat left center;
+
+	vertical-align: middle;
+	text-align: left;
+	
+	font: normal normal normal 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif normal;
+
+	line-height: 24px;
+}
+
+.f_waiting_absolute {
+	position: absolute;
+	z-index: 999;
+}
+
+.f_waiting_inline {
+}
+
+.f_waiting_error {
+	color: #B00;
+}
+

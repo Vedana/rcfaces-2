@@ -1,0 +1,54 @@
+/*
+ * $Id: f_imageCriteriaButton.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imageCriteriaButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+
+.f_imageCriteriaButton {
+	cursor: pointer;
+}
+ 
+.f_imageCriteriaButton_image,
+.f_imageCriteriaButton_text,
+.f_imageCriteriaButton {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	-moz-user-focus: normal;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_imageCriteriaButton_disabled,
+.f_imageCriteriaButton_disabled INPUT,
+.f_imageCriteriaButton_disabled A {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_imageCriteriaButton_disabled .f_imageCriteriaButton_text {
+	color: #A1A192;
+}
+
+/*
+.f_imageCriteriaButton_text {
+	border: 1px solid transparent;
+}
+
+.f_imageCriteriaButton_focus .f_imageCriteriaButton_text,
+.f_imageCriteriaButton_selected_focus .f_imageCriteriaButton_text {
+	border: 1px dotted black;
+}
+*/
+

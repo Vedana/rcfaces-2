@@ -1,0 +1,85 @@
+/*
+ * $Id: f_consoleAppender.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_consoleAppender
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_consoleAppender_table {
+	position: absolute;
+	right: 1px;
+	top: 0px;
+	opacity: 0.9;
+	color: black;
+	border: 1px solid black;
+	background-color: #EEE;
+	display: block;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_consoleAppender_button {
+	cursor: pointer;
+	padding-top: 8px;
+}
+
+.f_consoleAppender_command {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+	width: 16px;
+	height: 100%;
+	vertical-align: middle;
+	background: url('consoleAppender/buttonBg.gif') repeat-y;
+	overflow: hidden;
+}
+
+.f_consoleAppender_body {
+	overflow: auto;
+	overflow-y: auto;
+	right: 0px;
+	left: 16px;
+	top: 0px;
+	height: 100%;
+	position: absolute;
+	display: block;
+}
+
+.f_consoleAppender_buttons {
+	position: absolute;
+	display: block;
+	left: 1px;
+	top: 0px;
+	width: 16px;
+	bottom: 0px;
+}
+
+.f_consoleAppender_list {
+	margin:0;
+	padding:0;
+	border:0;
+	width: 100%;
+	height: 100%;
+	font-size:12px;
+	list-style-type: none;
+}
+
+.f_consoleAppender_item {
+	margin:0;
+	padding: 0 0 0 20px;
+	border:0;
+	background-position: 0 50%;
+}
+
+.f_consoleAppender_image {
+	vertical-align: middle;
+	position: relative;
+	top: 50%;
+}
+

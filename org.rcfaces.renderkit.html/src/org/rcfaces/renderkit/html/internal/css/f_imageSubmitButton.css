@@ -1,0 +1,52 @@
+/*
+ * $Id: f_imageSubmitButton.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imageSubmitButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_imageSubmitButton_image,
+.f_imageSubmitButton_text,
+.f_imageSubmitButton {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	-moz-user-focus: normal;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_imageSubmitButton {
+	cursor: pointer;
+}
+
+.f_imageSubmitButton_disabled,
+.f_imageSubmitButton_disabled INPUT{
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+.f_imageSubmitButton_disabled .f_imageSubmitButton_text {
+	color: #A1A192;
+}
+
+/*
+.f_imageSubmitButton_text {
+	border: 1px solid transparent;
+}
+
+.f_imageSubmitButton_focus .f_imageSubmitButton_text,
+.f_imageSubmitButton_selected_focus .f_imageSubmitButton_text {
+	border: 1px dotted black;
+}
+*/
+

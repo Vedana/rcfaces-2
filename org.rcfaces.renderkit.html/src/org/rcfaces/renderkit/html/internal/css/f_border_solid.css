@@ -1,0 +1,28 @@
+
+.fb_solid_disabled {
+	color: #DDD;
+}
+
+.fb_solid,
+.fb_solid_focus,
+.fb_solid_hover {
+	background-color: transparent;
+	color: black;
+}
+
+.fb_solid_pushed,
+.fb_solid_selected,
+.fb_solid_selected_focus,
+.fb_solid_selected_hover {
+	background-color: #316AC5;
+	color: white;
+}
+
+.fb_solid_pushed SPAN,
+.fb_solid_selected SPAN,
+.fb_solid_selected_focus SPAN,
+.fb_solid_selected_hover SPAN {
+	background-color: #316AC5;
+	color: white;
+}
+

@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<script type="text/javascript">
+window.rcfacesLogCB=function(level, name, message, exception, win) {
+	if (!window._logAppender) {
+		return;
+	}
+	
+	if (window._frameLoaded) {
+		window._frameLoaded=false;
+		window._logAppender.call(this, "loadFrame");
+		
+		window._toolBarFrame.document.getElementsByName("location")[0].value=win.document.location.toString();
+	}
+
+	window._logAppender.call(this, "console", arguments);
+}
+window.rcfacesProfilerCB=function(timeEnd, name, date, win) {
+	if (!window._logAppender) {
+		return;
+	}
+	
+	if (window._frameLoaded) {
+		window._frameLoaded=false;
+		window._logAppender.call(this, "loadFrame");
+
+		if (window._toolBarFrame) {
+			window._toolBarFrame.document.getElementsByName("location")[0].value=win.document.location.toString();
+		}
+	}
+	
+	if (timeEnd===false) {
+		name="ENTER: "+name;
+		
+	} else if (timeEnd===true) {
+		name="EXIT: "+name;
+	}
+
+	window._logAppender.call(this, "profiler", name, date);
+}
+	
+function initializeLogFrame(frameWindow) {
+	window._logFrame=frameWindow;
+	window._logAppender=frameWindow._rcfacesFrameSetAppend;
+	
+	var location=document.location.toString();
+	var idx=location.indexOf("url=");
+	if (idx>0) {
+		var uri=decodeURI(location.substring(idx+4));
+		document.getElementsByName("main")[0].src=uri;
+	}
+}
+	
+function initializeToolBarFrame(frameWindow) {
+	window._toolBarFrame=frameWindow;
+}
+	
+function loadMainFrame(frameWindow) {
+	window._mainFrame=frameWindow;
+
+	if (!window._logAppender) {
+		window._frameLoaded=true;
+		return;
+	}	
+	
+	window._logAppender.call(this, "loadFrame");
+}
+
+function updateLocation(location) {
+	if (!window._toolBarFrame) {
+		return;
+	}
+	
+	window._toolBarFrame.updateLocation(location);
+}
+function updateLevels(showDebug, showInfo, showWarning, showError, showProfile) {
+	window._waiting={
+		showDebug: showDebug,
+		showInfo: showInfo,
+		showWarning: showWarning,
+		showError: showError,
+		showProfile: showProfile
+	};
+
+	if (!window._logFrame) {
+		return;
+	}
+	
+	window._logFrame.updateLevels(showDebug, showInfo, showWarning, showError, showProfile);
+}
+function fireUpdateLevels(win) {
+	var w=window._waiting;
+	if (!w) {
+		return;
+	}
+	
+	win.updateLevels(w.showDebug, w.showInfo, w.showWarning, w.showError, w.showProfile);	
+}
+function clearLogs() {
+	if (!window._logFrame) {
+		return;
+	}
+	
+	window._logFrame.clearLogs();
+}
+
+function changeMainLocation(location) {
+	if (!window._mainFrame) {
+		return;
+	}
+	
+	window._mainFrame.src=location;
+}
+
+</script>		
+	</head>
+
+	<FRAMESET rows="10%,*" border="3">
+		<FRAMESET rows="24,*" border="0">
+		    <FRAME 
+		    	scrolling="no"
+		    	frameBorder="no"
+		    	src="toolbar.html" 
+		    	name="toolbar" 
+		    	noResize="false"
+		    	onload="this.contentWindow.parent.initializeToolBarFrame(this.contentWindow)" />
+		    <FRAME 
+		    	src="log.html" 
+		    	name="log" 
+		    	onload="this.contentWindow.parent.initializeLogFrame(this.contentWindow)" />
+		</FRAMESET>
+	    <FRAME 
+	    	src="about:blank" 
+	    	name="main" 
+	    	onload="this.contentWindow.parent.loadMainFrame(this.contentWindow)"  />
+	</FRAMESET>
+</html>

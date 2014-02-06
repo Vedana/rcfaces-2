@@ -1,0 +1,38 @@
+/*
+ * $Id: f_toolTip.css,v 1.4 2014/01/07 13:48:20 jbmeslin Exp $
+ *
+ * @charset UTF-8
+ */
+
+/**
+ *
+ * @class f_toolTip
+ *
+ * @author jbmeslin@vedana.com (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.4 $ $Date: 2014/01/07 13:48:20 $ 
+ */
+ 
+
+.f_toolTip {
+	position: absolute;
+	display: none;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	user-select: none;
+	
+	border: 1px solid #767676;
+	background: white url("dnd/bg-grey.gif") repeat-x bottom left;
+	padding: 2px 4px;
+
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	
+	/* accessibilite
+	opacity: 0.85;
+    
+	-ms-filter: "alpha(opacity=85)"; /* IE 8 */
+    filter : alpha(opacity=85); /* IE < 8 */
+    */
+}

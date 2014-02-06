@@ -1,0 +1,52 @@
+/*
+ * $Id: f_toolBar.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_toolBar
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_toolBar {
+	display: block;
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+	overflow: hidden;
+}
+
+.f_toolFolder,
+.f_itemsToolFolder {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+	float: left;
+	display: block;
+}
+
+.f_toolFolder_item,
+.f_toolFolder_itemSeparator {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	float: left;
+	margin: 0;
+	padding: 2px;
+}
+
+.f_toolFolder_itemSeparator {
+	position: relative;
+	vertical-align: middle;
+}
+
+.f_toolFolder_autoSeparator {
+	background: transparent url('toolBar/separator.gif') center top repeat-y;
+	width: 4px;
+}

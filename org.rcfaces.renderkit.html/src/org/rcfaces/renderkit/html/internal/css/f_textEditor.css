@@ -1,0 +1,106 @@
+/*
+ * $Id: f_textEditor.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_textEditor
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+
+.f_textEditor {
+	margin: 0;
+	border: 1px solid black;
+	overflow:auto;
+}
+
+.f_textEditorToolFolder .f_toolFolder_item,
+.f_textEditorToolFolder .f_toolFolder_itemSeparator {
+	height: 24px;
+}
+
+.f_textEditorImageButton,
+.f_textEditorImageButton_cimage {
+	font-size: 8pt;
+}
+
+.f_textEditorToolFolder * {
+	vertical-align: middle;
+}
+
+.f_textEditorCombo {
+	font-size: 12px;
+	display: block;
+	height: 18px;
+}
+
+.f_textEditor_arial { 
+  font-family: arial,helvetica,sans-serif;
+}
+
+.f_textEditor_arialB { 
+  font-family: arial black,avant garde;
+}
+
+.f_textEditor_andaleM { 
+  font-family: andale mono,times;
+}
+
+.f_textEditor_bookA { 
+  font-family: book antiqua,palatino;
+}
+
+.f_textEditor_comisSMS { 
+  font-family: comic sans ms,sand;
+}
+
+.f_textEditor_courierN { 
+  font-family: courier new,courier;
+}
+
+.f_textEditor_georgia { 
+  font-family: georgia,palatino;
+}
+
+.f_textEditor_impact { 
+  font-family: impact,chicago;
+}
+
+.f_textEditor_helvetica { 
+  font-family: helvetica;
+}
+
+.f_textEditor_fsymbol { 
+  font-family: symbol;
+}
+
+.f_textEditor_tahoma { 
+  font-family: tahoma,arial,helvetica,sans-serif;
+}
+
+.f_textEditor_fterminal { 
+  font-family: terminal,monaco;
+}
+
+.f_textEditor_timesNR { 
+  font-family: times new roman,times;
+}
+
+.f_textEditor_trebuchetMS { 
+  font-family: trebuchet ms,geneva;
+}
+
+.f_textEditor_verdana { 
+  font-family: verdana,geneva;
+}
+
+.f_textEditor_webdings { 
+  font-family: webdings;
+}
+
+.f_textEditor_wingdings { 
+  font-family: wingdings,zapf dingbats;
+}
+

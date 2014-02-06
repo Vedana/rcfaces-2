@@ -1,0 +1,32 @@
+/*
+ * $Id: f_textArea.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_textArea
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_textArea {
+	margin: 0;
+}
+.f_textArea_disabled {
+	border: 1px solid black;
+	margin: 1px;
+}
+.f_textArea_readonly {
+	border: 1px solid black;
+	margin: 1px;
+}
+
+.f_textArea_empty_message {
+	color: #888;
+	font-style: italic;
+}
+
+.f_textArea_required {
+	color: red;
+}

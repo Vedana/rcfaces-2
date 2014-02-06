@@ -1,0 +1,191 @@
+/*
+ * $Id: f_tree.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_tree
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_tree {
+ 	border: 1px solid #7F9DB9;
+	position: relative;
+	margin: 0;
+	padding: 1px 1px 1px 1px;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	-moz-outline-style: none;
+	-moz-user-select: none;
+	user-select: none;
+	text-align: left;
+	background-color: white;
+	vertical-align: baseline;
+}
+
+.f_tree_body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	list-style-type: none;
+	user-select: none;
+}
+ 
+.f_tree_parent {
+	white-space: nowrap;
+	vertical-align: middle;
+
+	padding: 0 0 1px 0;
+	margin: 0;
+	line-height: 1.0;
+	list-style-type: none;
+	list-style-image: none;	
+	white-space: nowrap;
+}
+
+.f_tree_node {
+	padding: 0;
+	margin: 0;
+	display: inline;
+	border: 0;
+}
+
+.f_tree_node_disabled .f_tree_label {
+	color: #A1A192;
+	cursor: normal;
+}
+
+.f_tree_node_selected .f_tree_label {
+	color: #000;
+	background-color: #ECE9D8;
+}
+
+.f_tree_node_selected_focus .f_tree_label,
+.f_tree_node_selected_focus_hover .f_tree_label,
+.f_tree_node_selected_focus .f_tree_label_cursor,
+.f_tree_node_selected_focus_hover .f_tree_label_cursor {
+	color: HighlightText;
+	background-color: Highlight;
+}
+
+.f_tree_node_hover .f_tree_label,
+.f_tree_node_selected_hover .f_tree_label,
+.f_tree_node_selected_focus_hover .f_tree_label,
+.f_tree_node_hover .f_tree_label_cursor,
+.f_tree_node_selected_hover .f_tree_label_cursor,
+.f_tree_node_selected_focus_hover .f_tree_label_cursor {
+	text-decoration: underline;
+}
+
+.f_tree_node_hover .f_tree_label {
+	color: #008;
+}
+
+.f_tree_depth_dndOver .f_tree_label, 
+.f_tree_depth_opened_dndOver .f_tree_label, 
+.f_tree_depth_leaf_dndOver .f_tree_label {
+	background-color: #c2c282;	
+	color: HighlightText;
+}
+
+.f_tree_command,
+.f_tree_image {
+	margin: 0 2px 0 0;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.f_tree_command_opened,
+.f_tree_command_opened_selected,
+.f_tree_command_closed,
+.f_tree_command_closed_selected {
+	background: transparent url('tree/command.gif') no-repeat scroll 0 0;
+}
+
+.f_tree_command_leaf,
+.f_tree_command_leaf_selected {
+	cursor: default;
+}
+
+.f_tree_command_closed,
+.f_tree_command_closed_selected {
+	background-position: -16px 0;
+}
+
+.f_tree_check {
+	vertical-align: middle;
+	padding: 0;
+	margin: 0 2px 0 0;
+	cursor: pointer;
+}
+
+.f_tree_label {
+	cursor: pointer;
+	padding: 2px 1px 2px 1px;
+	text-decoration: inherit;
+	white-space: nowrap;
+	color: black;
+	text-decoration: none;
+}
+
+.f_tree_label:hover {
+	text-decoration: none;
+	color: black;
+}
+
+.f_tree_checkable .f_tree_label_cursor {
+	padding: 1px 0 1px 0;
+	border: 1px dotted black;
+}
+
+.f_tree_focus {
+	position: absolute;
+	width: 0;
+	height: 0;
+
+	-moz-outline-style: none;
+	outline-style: none;
+
+	-moz-outline-width: 0;
+	outline-width: 0;
+}
+
+.f_tree_waiting {
+	height: 16px;
+}
+
+.f_tree_commandHasImages .f_tree_command {
+	background: none !important;
+	background-image: none !important;
+}
+
+.f_tree_caption {
+	position: absolute;
+	left: -10000px;
+	top: -10000px;
+	display: block;
+}
+
+.f_tree_checkButton {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	width: 16px;
+	height: 16px;
+}
+
+.f_tree_checkImage {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	width: 16px;
+	height: 16px;
+	vertical-align: top;	
+}
+
+

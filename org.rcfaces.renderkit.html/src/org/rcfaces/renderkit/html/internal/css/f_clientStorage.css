@@ -1,0 +1,23 @@
+/*
+ * $Id: f_clientStorage.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_clientStorage
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_userDataClientStorage {
+	position: absolute;
+	display: none;
+	behavior: url(#default#userdata);
+}
+
+.f_flashClientStorage {
+	position: absolute;
+	display: none;
+}
+

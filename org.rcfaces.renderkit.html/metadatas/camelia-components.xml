@@ -1,0 +1,89 @@
+<camelia-components package="html">	
+
+	<component id="init" extends="cameliaBase" renderKit="html">
+	
+		<implements id="org.rcfaces.core.internal.capability.IPageConfigurator" />
+		
+		<attribute id="base" type="java.lang.String" />
+		<attribute id="domain" type="java.lang.String" />
+		<attribute id="title" type="java.lang.String" />
+		<attribute id="favoriteImageURL" type="java.lang.String" />
+		<attribute id="disabledScriptPageURL" type="java.lang.String" />
+		<attribute id="disabledCookiesPageURL" type="java.lang.String" />
+		<attribute id="invalidBrowserPageURL" type="java.lang.String" />
+		<attribute id="literalLocale" type="java.util.Locale" />
+		<attribute id="literalTimeZone" type="java.util.TimeZone" />
+		<attribute id="disabledIEImageBar" type="boolean" />
+		<attribute id="disableCache" type="boolean" />
+		<attribute id="disableContextMenu" type="boolean" />
+		<attribute id="renderBaseTag" type="boolean" default="true" />
+		<attribute id="clientMessageIdFilter" type="java.lang.String" />
+		<attribute id="waiRolesNS" type="java.lang.String" />
+		<attribute id="clientValidation" type="boolean" default="true" />
+
+		<attribute id="userAgentVary" type="boolean" default="false" />
+		
+		<method id="setLiteralLocale(String)" />
+		<method id="setLiteralTimeZone(String)" />
+		
+		<method id="getPageScriptType" returnType="String">
+			<import>org.rcfaces.renderkit.html.internal.IHtmlRenderContext</import>
+			<code>
+			return IHtmlRenderContext.JAVASCRIPT_TYPE;
+			</code>			
+		</method>
+		
+	</component>
+	
+	<component id="javaScript" extends="cameliaBase" renderKit="html" textBodyContent="true">
+		<capability id="ITextCapability" />
+		<capability id="IUserAgentVaryCapability" />
+
+		<attribute id="src" type="java.lang.String" />
+		<attribute id="srcCharSet" type="java.lang.String" />
+		<attribute id="requiredFiles" type="java.lang.String" />
+		<attribute id="requiredClasses" type="java.lang.String" />
+		<attribute id="requiredModules" type="java.lang.String" />
+		<attribute id="requiredSets" type="java.lang.String" />
+	</component>
+
+	<component id="cssStyle" extends="cameliaBase" renderKit="html" textBodyContent="true">
+		<capability id="ITextCapability" />
+		<capability id="IUserAgentVaryCapability" />
+
+		<attribute id="src" type="java.lang.String" />
+		<attribute id="srcCharSet" type="java.lang.String" />
+		<attribute id="requiredModules" type="java.lang.String" />
+		<attribute id="requiredSets" type="java.lang.String" />
+
+		<attribute id="mergeStyles" type="boolean" />
+		<attribute id="processRules" type="boolean" />
+	</component>
+	
+	<component id="loadBundle" extends="cameliaBase" renderKit="html">
+		<attribute id="bundleName" type="java.lang.String" />
+		<attribute id="baseName" type="java.lang.String" />
+		<attribute id="side" type="java.lang.String" />
+		<attribute id="serverScope" type="java.lang.String" />
+		<attribute id="override" type="boolean" />
+	</component>
+	
+	<component id="nameSpace" extends="cameliaBase" renderKit="html">
+		<attribute id="uri" type="java.lang.String" />
+		<attribute id="prefix" type="java.lang.String" />
+	</component>
+	
+	<component id="javaScriptCollector" extends="cameliaBase" renderKit="html">
+		<attribute id="mergeScripts" type="boolean" />
+	</component>
+	
+	<component id="javaScriptItem" extends="fileItem" renderKit="html" render="false">
+		<capability id="IUserAgentVaryCapability" />
+	</component>
+	
+	<component id="cssStyleItem" extends="fileItem" renderKit="html" render="false">
+		<capability id="IUserAgentVaryCapability" />
+	</component>
+	
+
+</camelia-components>

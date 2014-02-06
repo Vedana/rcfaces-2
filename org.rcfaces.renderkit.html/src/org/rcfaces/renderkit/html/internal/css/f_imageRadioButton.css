@@ -1,0 +1,53 @@
+/*
+ * $Id: f_imageRadioButton.css,v 1.2 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_imageRadioButton
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_imageRadioButton_image,
+.f_imageRadioButton_text,
+.f_imageRadioButton {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	-moz-user-select: none;
+	-moz-user-focus: normal;
+	user-select: none;
+	color: black;
+	text-decoration: none;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_imageRadioButton {
+	cursor: pointer;
+}
+
+.f_imageRadioButton_disabled,
+.f_imageRadioButton_disabled INPUT,
+.f_imageRadioButton_disabled A {
+	-moz-user-focus: ignore;
+	cursor: default;
+}
+
+
+.f_imageRadioButton_disabled .f_imageRadioButton_text {
+	color: #A1A192;
+}
+
+/*
+.f_imageRadioButton_text {
+	border: 1px solid transparent;
+}
+
+.f_imageRadioButton_focus .f_imageRadioButton_text,
+.f_imageRadioButton_selected_focus .f_imageRadioButton_text {
+	border: 1px dotted black;
+}
+*/

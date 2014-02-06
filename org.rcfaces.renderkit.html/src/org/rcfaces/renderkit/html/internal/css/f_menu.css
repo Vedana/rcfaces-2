@@ -1,0 +1,190 @@
+/* 
+ * $Id: f_menu.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_menu
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+
+.f_menu_popup {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: visible;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	background-color: white;
+	margin: 0;
+	padding: 1px;
+
+	z-index:1000;
+
+	border: 1px solid #8A867A;
+	list-style-type: none;
+	text-align: left;
+	vertical-align: baseline;
+
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.f_menu_item {
+	display: block;
+	position: relative;
+	overflow: visible;
+
+	padding: 1px 14px 1px 1px;
+	height: 19px;
+
+	-moz-user-select: none;
+
+	text-decoration:none;
+
+	white-space: nowrap;
+	vertical-align: middle;
+
+	cursor: pointer;
+
+	color: black;
+}
+
+.f_menu_item_hover, 
+.f_menu_item_selected, 
+.f_menu_item_disabled_hover  {
+	padding: 0 13px 0 0;
+	border: 1px solid #316AC5;
+	color: white;
+}
+
+.f_menu_item_disabled, 
+.f_menu_item_disabled_hover,
+.f_menu_item_popup_disabled,
+.f_menu_item_selected_disabled {
+	color: #ACA899;
+	cursor: default;
+}
+
+.f_menu_item_hover,
+.f_menu_item_disabled_hover {
+	background-color: #316AC5;
+}
+
+
+.f_menu_item_selected, 
+.f_menu_item_selected_disabled {
+	background: #316AC5 url("menu/expand_selected.gif") no-repeat scroll 100% 2px;
+}
+
+.f_menu_item_popup,
+.f_menu_item_popup_disabled {
+	background: url("menu/expand.gif") no-repeat scroll 100% 2px;
+}
+
+.f_menu_item_popup_disabled,
+.f_menu_item_selected_disabled {
+	background-image: url("menu/expand_disabled.gif");
+}
+
+.f_menu_item_sep {
+	margin: 2px 4px 2px 4px;
+	vertical-align: middle;
+	height: 3px;
+	font-size: 1pt;
+	line-height: 0.1;
+	background: url("menu/separator.gif") repeat-x scroll 50% 0;
+}
+
+
+.f_menu_item_image {
+	padding: 0;
+	border: 0;
+	vertical-align: top;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center center;
+
+/* xxwidth: 18px;*/
+/*	xxheight: 18px; */	
+}
+
+.f_menu_item_image_check,
+.f_menu_item_image_check_hover,
+.f_menu_item_image_check_disabled,
+.f_menu_item_image_radio,
+.f_menu_item_image_radio_hover,
+.f_menu_item_image_radio_disabled {
+	background-image: url("menu/markers.gif");
+	background-position: 0 0;
+}
+
+.f_menu_item_image_check_hover {
+	background-position: -18px 0;
+}
+
+.f_menu_item_image_check_disabled {
+	background-position: -36px 0;
+}
+
+.f_menu_item_image_radio {
+	background-position: -54px 0;
+}
+
+.f_menu_item_image_radio_hover {
+	background-position: -72px 0;
+}
+
+.f_menu_item_image_radio_disabled {
+	background-position: -90px 0;
+}
+
+.f_menu_popup .f_accessKey {
+	text-decoration: underline;
+}
+
+.f_menu_item_text,
+.f_menu_item_text_empty {
+	vertical-align: middle;
+	height: 18px;
+	padding-left: 2px;
+	cursor: pointer;
+}
+
+.f_menu_item_text_empty {
+	font-style: italic;
+}
+
+.f_menu_item_disabled .f_menu_item_text, 
+.f_menu_item_disabled_hover .f_menu_item_text,
+.f_menu_item_popup_disabled .f_menu_item_text,
+.f_menu_item_selected_disabled .f_menu_item_text {
+	cursor: default;
+}
+
+.f_menu_item_accelV,
+.f_menu_item_accel {
+	vertical-align: middle;
+}
+
+.f_menu_item_accelV {
+	visibility: hidden;
+	margin: 0 8px 0 2px;
+}
+
+.f_menu_item_accel {
+	position: absolute;
+	display: block;
+	right: 14px;
+	top: 3px;
+	height: 16px;
+}
+
+.f_menu_item_hover .f_menu_item_accel, 
+.f_menu_item_disabled_hover .f_menu_item_accel {
+	top: 2px;
+	right: 13px;
+}

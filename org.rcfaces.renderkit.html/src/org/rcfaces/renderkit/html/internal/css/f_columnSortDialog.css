@@ -1,0 +1,63 @@
+/*
+ * $Id: f_columnSortDialog.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_columnSortDialog
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_columnSortDialog_body {
+	text-align: center;
+	vertical-align: middle;
+	user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.f_columnSortDialog_form {
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+
+.f_columnSortDialog_hr {
+	background: transparent url('shell/separator.gif') repeat-x 0 center;
+}
+
+
+.f_columnSortDialog LABEL {
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.f_columnSortConfigurator_no_column {
+	font-style: italic;
+}
+
+.f_columnSortDialog_dialog {
+	padding: 0;
+	margin: 0;
+}
+	
+.f_columnSortDialog_corps_tr {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 10px 0 0 0;
+	padding: 0;
+	border: 0;
+}
+
+.f_columnSortDialog_corps_tr TABLE {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.f_columnSortDialog .f_shellDecorator_body_buttons INPUT {
+	margin-left: 8px;
+}
+ 

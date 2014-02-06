@@ -1,0 +1,87 @@
+/*
+ * $Id: f_comboGrid.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_comboGrid
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+.f_comboGrid {
+	border: 1px solid #7F9DB9;
+	position: relative;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	padding: 2px 1px;
+	background-color: white;
+}
+
+.f_comboGrid_disabled,
+.f_comboGrid_disabled_error {
+	border-color: #BBB;
+}
+
+.f_comboGrid TD {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.f_comboGrid_input {
+	border: 0;
+	padding: 0;
+	margin: 0 2px;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_comboGrid_input_verifying {
+	background: url("suggestTextEntry/waiting.gif") no-repeat right center;
+}
+
+.f_comboGrid_input_error {
+	background: #FFFFDD url("comboGrid/warning.gif") no-repeat right center;
+}
+
+.f_comboGrid_input_empty_message {
+	color: #888;
+	font-style: italic;
+}
+
+.f_comboGrid_button {
+	border: 0;
+	padding: 0;
+	-moz-user-select: none;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_comboGrid_button {
+	background: transparent url('comboGrid/arrow.gif') no-repeat 0 0;
+	cursor: pointer;
+}
+
+.f_comboGrid_buttonCell {
+	vertical-align: middle;
+}
+
+.f_comboGrid_button_hover {
+	background-position: -16px 0;
+}
+
+.f_comboGrid_button_selected {
+	background-position: -32px 0;
+}
+
+.f_comboGrid_disabled .f_comboGrid_button,
+.f_comboGrid_disabled_error .f_comboGrid_button {
+	background-position: -48px 0;
+	cursor: default;
+}

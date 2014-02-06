@@ -1,0 +1,138 @@
+/*
+ * $Id: f_progressBar.css,v 1.2 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_progressBar
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+
+.f_progressBar {
+	border: 0;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	-moz-outline-style: none;
+	-moz-user-select: none;
+	user-select: none;	
+	height: 15px;
+	padding: 0;
+	position: relative;
+	font-size: 1pt;
+}
+
+.f_progressBar_bg,
+.f_progressBar_fg {
+	position: absolute;
+	overflow: hidden;
+	background: transparent;
+	text-align: left;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	font-size: 1pt;
+	border: 0;
+	padding: 0;
+	margin: 0;
+
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_progressBar_fg {
+	margin: 1px;
+	visibility: hidden;
+}
+
+.f_progressBar_anim,
+.f_progressBar_bgLeft,
+.f_progressBar_bgCenter,
+.f_progressBar_bgRight,
+.f_progressBar_fgLeft,
+.f_progressBar_fgCenter,
+.f_progressBar_fgRight {
+	background: transparent url("progressBar/progressVista.gif") no-repeat 0 0;
+	height: 15px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.f_progressBar_bgLeft {
+}
+
+.f_progressBar_bgCenter {
+	background-position: 0 -30px;
+	background-repeat: repeat-x;
+}
+
+.f_progressBar_bgRight {
+	background-position: 100% -15px;
+}
+
+
+.f_progressBar_fgLeft {
+	background-position: 0 -60px;
+}
+
+.f_progressBar_fgCenter {
+	background-position: 0 -75px;
+	background-repeat: repeat-x;
+}
+
+.f_progressBar_fgRight {
+	background-position: 100% -45px;
+}
+
+.f_progressBar_anim {
+	background-position: 0 -90px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	visibility: hidden;
+	background: transparent url("progressBar/animVista.gif") no-repeat 0 0;
+}
+
+
+.f_progressBar_left,
+.f_progressBar_mid,
+.f_progressBar_right {
+	background: transparent url("progressBar/border.gif") no-repeat 0 0;
+}
+
+.f_progressBar_mid {
+	background-position: 0 -32px;
+	background-repeat: repeat-x;
+	font-size: 1pt;
+	position: relative;
+	vertical-align: top;
+	padding-top: 1px;
+	border: 0;
+}
+
+.f_progressBar_cursor,
+.f_progressBar_cursor_smooth {
+	font-size: 1pt;
+	background: white url("progressBar/defaultCursor.gif") repeat-x left center;
+	visibility: hidden;
+	width: 0;
+	height: 10px;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.f_progressBar_cursor_smooth {
+	background-image: url("progressBar/smoothCursor2.gif");
+}
+	
+.f_progressBar_right {
+	background-position: 0 -16px;
+}
+

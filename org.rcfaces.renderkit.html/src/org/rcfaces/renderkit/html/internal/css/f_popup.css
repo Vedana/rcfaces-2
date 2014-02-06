@@ -1,0 +1,25 @@
+/*
+ * $Id: f_popup.css,v 1.3 2013/11/13 12:53:31 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_popup
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:31 $ 
+ */
+ 
+.f_popup_iframe {
+	position: absolute;
+	visibility: hidden;
+	z-index: 2000;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.f_popup_iframe_body {
+	padding: 0;
+	border: 0;
+	margin: 0;
+}

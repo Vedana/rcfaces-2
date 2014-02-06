@@ -1,0 +1,78 @@
+/*
+ * $Id: f_menuBar.css,v 1.3 2013/11/13 12:53:30 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class f_menuBar
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.3 $ $Date: 2013/11/13 12:53:30 $ 
+ */
+ 
+
+.f_menuBar {
+	display: block;
+	position: relative;
+
+	padding: 0 2px;
+	border: 1px solid #BBB;		
+	
+	-moz-user-select: none;
+	user-select: none;
+	
+	text-align: left;
+	vertical-align: baseline;
+}
+
+.f_menuBar,
+.f_menuBar_bitem {
+	text-decoration: none;
+	font: 8pt Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.f_menuBar_binput {
+	width: 1px;
+	height: 1px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	line-height: 0.1;
+	font-size: 1px;
+	-moz-user-select: none;
+	vertical-align: top;
+	outline-width: 0px;
+	/* Non support par Mozilla de outline-width */
+	-moz-outline-width: 0px;
+}
+
+.f_menuBar_bitem {
+	-moz-user-select: none;
+	cursor: pointer;
+	color: #000;
+	border: 0;
+	background: transparent;
+	padding: 2px;
+	height: 21px;
+}
+
+/*
+button::-moz-focus-inner {
+	border: 0;
+}
+*/
+
+.f_menuBar_bitem_selected, 
+.f_menuBar_bitem_selected_hover,
+.f_menuBar_bitem_hover,
+.f_menuBar_bitem_disabled_hover {
+	background-color: #316AC5;
+	color: white;
+}
+
+.f_menuBar_bitem_disabled,
+.f_menuBar_bitem_disabled_hover {
+	color: #ACA899;
+	cursor: default;
+}
