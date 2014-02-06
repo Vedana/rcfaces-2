@@ -1,0 +1,5338 @@
+<camelia-components>	
+
+	<facesComponent id="cameliaBase"
+		extends="javax.faces.component.UIComponentBase">
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+
+				
+	</facesComponent>
+	<facesComponent id="cameliaCommand" extends="javax.faces.component.UICommand">
+
+		<tagAttribute id="immediate" type="boolean" generate="true" />
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+
+		<tagAttribute id="value" type="java.lang.Object"
+			generate="true" />
+					
+		<method id="broadcast" >
+			<parameter type="javax.faces.event.FacesEvent" name="event" />
+			<import>javax.faces.event.ValueChangeEvent</import>
+			<import>javax.faces.event.FacesListener</import>
+			<import>javax.faces.event.ActionEvent</import>
+			<code>				
+				if (event instanceof ActionEvent) {
+					// Traitement local, sinon l'actionEvent est traité 2 fois !
+					
+					FacesListener listeners[]=getFacesListeners(FacesListener.class);
+				ComponentTools.broadcastCommand(this, (ActionEvent)event,
+				listeners);
+					return;
+				}
+				
+				super.broadcast(event);
+			</code>
+		</method>
+		
+	</facesComponent>
+	<facesComponent id="cameliaOutput" extends="javax.faces.component.UIOutput"
+			implements="org.rcfaces.core.internal.capability.IConvertValueHolder">
+
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+		<tagAttribute id="value" type="java.lang.Object"
+			generate="true" />
+		<tagAttribute id="converter" type="java.lang.String"
+			generate="true" />
+	</facesComponent>
+	<facesComponent id="cameliaInput" extends="javax.faces.component.UIInput"
+			implements="org.rcfaces.core.internal.capability.IConvertValueHolder, org.rcfaces.core.internal.capability.ISubmittedExternalValue"
+			ignoreRequired="true">
+
+		<field id="NULL_VALUE" type="java.lang.Object"
+			value="org.rcfaces.core.internal.tools.ValuesTools.NULL_VALUE" 
+			modifiers="private static final"/>
+ 
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>	
+				
+
+		<tagAttribute id="value" type="java.lang.Object"
+			generate="true" />
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+		<tagAttribute id="converter" type="java.lang.String"
+			generate="true" />
+		
+		<!-- method id="broadcast" >
+			<parameter type="javax.faces.event.FacesEvent" name="event" />
+			<import>javax.faces.event.ValueChangeEvent</import>
+			<import>javax.faces.event.FacesListener</import>
+			<code>
+				if (!Constants.MYFACES_INPUT_BROADCAST_BUG) {
+					super.broadcast(event);
+					return;
+				}
+				
+				// Bug #1647203
+				if (event instanceof ValueChangeEvent) {				
+					super.broadcast(event);
+					return;
+				}
+				
+				FacesListener listeners[]=getFacesListeners(FacesListener.class);
+				ComponentTools.broadcast(this, event, listeners);
+				
+			</code>
+		</method -->		
+
+		<method id="getLocalValue" returnType="java.lang.Object">
+			<code>
+				Object value=super.getLocalValue();
+				
+				if (NULL_VALUE.equals(value)) {
+					value=null;
+				}
+				
+				return value;
+			</code>
+		</method>
+
+		<method id="getConvertedValue" modifier="protected" final="false"
+			returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<parameter type="java.lang.Object" name="submittedValue" />
+			
+			<code>				
+				if (NULL_VALUE.equals(submittedValue)) {
+					submittedValue=null;
+				}
+				
+				return super.getConvertedValue(context, submittedValue);
+			</code>
+		</method>
+
+		<method id="getSubmittedExternalValue" returnType="java.lang.Object">
+			<code>
+				Object value=super.getSubmittedValue();
+				
+				if (NULL_VALUE.equals(value)) {
+					value=null;
+				}
+				
+				return value;
+			</code>
+		</method>
+
+		<method id="setSubmittedExternalValue">
+			<parameter type="java.lang.Object" name="submittedValue" />
+			<code>
+				if (submittedValue==null) {
+					submittedValue=NULL_VALUE;
+				}
+				
+				super.setSubmittedValue(submittedValue);
+			</code>
+		</method>
+
+		<method id="isSubmittedValueSetted" returnType="boolean">
+			<code>
+				Object value=super.getSubmittedValue();
+				
+				if (NULL_VALUE.equals(value)) {
+					return true;
+				}
+				
+				return value!=null;
+			</code>
+		</method>
+
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				Object value=super.getValue();
+				
+				if (NULL_VALUE.equals(value)) {
+					value=null;
+				}
+				
+				return value;
+			</code>
+		</method>		
+		
+	</facesComponent>
+	<!-- javax.faces.component.UIData -->
+	<facesComponent id="cameliaData"
+		extends="org.rcfaces.core.internal.component.UIData2">
+		<!-- <method id="getValue"/> <method id="getCachedValue"/> <method id="clearCachedValue"/> 
+			<field id="cachedValue" type="java.lang.Object" value="null"/> -->
+				
+		<method id="getDataModelValue" returnType="javax.faces.model.DataModel">
+			<code>
+				return getDataModel();
+				/*
+				Object value=getValue();
+				if (value
+				instanceof DataModel) {
+					return (DataModel)value;
+				}
+				
+				return null; */
+			</code>
+		</method>
+		
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+		<tagAttribute id="saveCompleteState" type="boolean"
+			generate="true" />
+	</facesComponent>
+	<facesComponent id="cameliaGrid"
+		extends="javax.faces.component.UIComponentBase" implements="javax.faces.component.NamingContainer">
+		<field id="dataModel" type="javax.faces.model.DataModel" value="null"
+			modifiers="transient" />
+
+				
+
+		<method id="isRowAvailable" />
+		<method id="isRowAvailable(javax.faces.context.FacesContext)" />
+		<method id="getRowCount" />
+		<method id="getRowData" />
+		<method id="getDataModel(javax.faces.context.FacesContext)" />
+		<method id="getDataModelValue()" />
+
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				return getValue(null);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+				return engine.getValue(Properties.VALUE, context);
+			</code>
+		</method>
+		<method id="setValue">
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				dataModel=null;
+				engine.setValue(Properties.VALUE, value);
+			</code>
+		</method>
+		
+		<binding-case id="value">
+			<code>
+				dataModel=null;
+			</code>			
+		</binding-case>
+		
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+		<tagAttribute id="value" type="java.lang.Object"
+			generate="true" />
+	</facesComponent>
+	<facesComponent id="cameliaMessage" extends="javax.faces.component.UIMessage">
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+				
+	</facesComponent>
+	<facesComponent id="cameliaMessages" extends="javax.faces.component.UIMessages">
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+				
+	</facesComponent>
+
+	<facesComponent id="cameliaItem" extends="javax.faces.component.UISelectItem">
+		<tagAttribute id="itemLabel" type="java.lang.String" />
+		<tagAttribute id="itemValue" type="java.lang.Object" />
+		<tagAttribute id="itemDisabled" type="boolean" />
+		<tagAttribute id="itemDescription" type="java.lang.String" />
+				
+	</facesComponent>
+
+	<facesComponent id="cameliaItems" extends="javax.faces.component.UISelectItems">
+		<tagAttribute id="value" type="java.lang.Object" />
+				
+	</facesComponent>
+
+	<facesComponent id="cameliaColumn" extends="javax.faces.component.UIColumn">
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+				
+	</facesComponent>
+
+	<facesComponent id="cameliaValueColumn" 
+			implements="org.rcfaces.core.internal.capability.IConvertValueHolder"
+			extends="javax.faces.component.UIColumn">
+		<method id="getConverter(javax.faces.context.FacesContext)"/>
+		<tagAttribute id="converter" type="java.lang.String"
+			generate="false" />
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+				
+	</facesComponent>
+
+	<facesComponent id="cameliaSelectMany" extends="javax.faces.component.UISelectMany"
+			implements="org.rcfaces.core.internal.capability.IConvertValueHolder"
+			ignoreRequired="true">
+
+				
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+
+		<tagAttribute id="value" type="java.lang.Object"
+			generate="true" />
+		<tagAttribute id="rendered" type="boolean" generate="false"/>
+		<tagAttribute id="converter" type="java.lang.String"
+			generate="false" />
+	</facesComponent>
+
+	<component id="abstractBasic" abstract="true" extends="cameliaBase">
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IPartialRenderingCapability" />
+
+		<capability id="IClientDataCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IPropertyChangeEventCapability" />
+		<capability id="IUserEventCapability" />
+		<capability id="IErrorEventCapability" />
+		<capability id="IWAIRoleCapability" />
+
+		<capability id="IPositionCapability" />
+		<capability id="ILayoutPositionCapability" />
+		<capability id="ISizeCapability" />
+		<capability id="IMarginCapability" />
+		<capability id="IHelpCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IStyleClassCapability" />
+
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+
+		<!-- On ne gere plus le rendered <attribute id="rendered" type="boolean" 
+			writeComponent="false"/> -->
+		<attribute id="margins" type="java.lang.String"
+			writeComponent="false" noValueBinding="true" />
+
+		<method id="setHiddenMode(String)" />
+
+		<method id="isVisible()"/>
+
+		<method id="setMargins(String)"/>
+		
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+	</component>
+
+	<component id="abstractOutput" abstract="true" extends="cameliaOutput"
+		extendsCapabilities="abstractBasic">
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IValueLockedCapability" />
+	</component>
+
+	<component id="abstractInput" abstract="true" extends="cameliaInput"
+		extendsCapabilities="abstractOutput">
+		<capability id="IDisabledCapability" />
+		<capability id="IFontCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="IKeyEventCapability" />
+		<capability id="ITextAlignmentCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IImmediateCapability" />			
+		<capability id="IValidationEventCapability" />			
+	</component>
+	
+
+	<component id="abstractSelectMany" abstract="true"
+		extends="cameliaSelectMany" extendsCapabilities="abstractInput">
+		<capability id="IUnlockedClientAttributesCapability" />
+	</component>
+
+	<component id="abstractCommand" abstract="true" extends="cameliaCommand"
+		extendsCapabilities="abstractBasic">
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IFocusBlurEventCapability" />
+
+		<capability id="IDisabledCapability" />
+		<capability id="IFontCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="ITextAlignmentCapability" />
+		<capability id="IImmediateCapability" />
+		<capability id="IValidationEventCapability" />			
+	</component>
+
+
+	<component id="abstractConverterCommand" abstract="true"
+		extends="abstractCommand">
+		<implements id="org.rcfaces.core.internal.capability.IConvertValueHolder" />
+		<capability id="IUnlockedClientAttributesCapability" />
+			
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+		<method id="setConverter(javax.faces.convert.Converter)"/>
+		<method id="getConverter()"/>
+		<method id="getConverter(javax.faces.context.FacesContext)"/>
+-
+		<method id="getLocalValue()"/>
+
+		<tagAttribute id="converter" type="java.lang.String"
+			generate="true" />
+	</component>
+
+	<component id="abstractData" abstract="true" extends="cameliaData"
+		extendsCapabilities="abstractBasic">
+		<capability id="IResetEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IKeyEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="ISortManagerCapability" />
+		<capability id="ISortEventCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IImmediateCapability" forceComponent="true"/>
+		<capability id="IWheelSelectionCapability" />
+		<capability id="IAlertLoadingMessageCapability" />
+		
+		<behaviorEvent id="grid.additionalInformation" />
+		<behaviorEvent id="grid.toolTip" />
+
+		<attribute id="rows" type="int" writeComponent="false" />
+		<attribute id="first" type="int" writeComponent="false" />
+		<attribute id="value" type="java.lang.Object"
+			writeComponent="false" />
+		<attribute id="var" type="java.lang.String" writeComponent="false"/>
+
+		<method id="setValue">
+			<parameter type="javax.faces.el.ValueBinding" name="value" />
+			<code>
+				setValueBinding(Properties.VALUE, value);
+			</code>
+		</method>
+		
+		
+		<method id="processEngineUpdates" modifier="protected"  override="true">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>javax.el.ELContext</import>
+			<code>
+			<![CDATA[
+        super.processEngineUpdates(context);
+
+        ELContext elContext = context.getELContext();
+
+        int first = getFirst();
+        ValueExpression vae = getValueExpression("first");
+        if (vae != null) {
+        	// JS de Bull demande de forcer systématiquement le setValue()
+            //Number num = (Number) vae.getValue(elContext);
+            //if (num != null && num.intValue() != first) {
+                vae.setValue(elContext, Integer.valueOf(first));
+            //}
+        }
+        ]]>
+			</code>
+		</method>
+	</component>
+
+	<component id="abstractGrid" abstract="true" extends="cameliaGrid"
+		extendsCapabilities="abstractBasic">
+		<capability id="IResetEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IKeyEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="ISortManagerCapability" />
+		<capability id="ITabIndexCapability" />
+
+		<attribute id="first" type="int" />
+		<attribute id="rows" type="int" />
+		<attribute id="var" type="java.lang.String" clearVariable="var" />
+
+		<field id="rowIndex" type="int" modifiers="transient"/>
+		<field id="var" type="java.lang.String" modifiers="transient"/>
+
+		<method id="setRowIndex" >
+			<parameter type="int" name="rowIndex" />
+			<code>
+				setRowIndex(rowIndex, null);
+			</code>
+		</method>
+		
+		<method id="setRowIndex" >
+			<parameter type="int" name="rowIndex" />
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>java.util.Map</import>
+			<import>javax.faces.model.DataModel</import>
+			<code>
+			this.rowIndex=rowIndex;
+			
+			if (context==null) {
+				context=FacesContext.getCurrentInstance();
+			}
+			
+			DataModel dataModel=getDataModel(context);
+			dataModel.setRowIndex(rowIndex);
+
+			String var = this.var;
+			if (var == null) {
+				var = getVar(context);
+			}
+	        // Clear or expose the current row data as a request scope attribute
+    	    if (var != null) {
+	            Map requestMap = context.getExternalContext().getRequestMap();
+	            
+	            if (rowIndex == -1) {
+    	            requestMap.remove(var);
+    	            
+        	    } else if (dataModel.isRowAvailable()) {
+        	    	Object rowData=dataModel.getRowData();
+					requestMap.put(var, rowData);
+					
+			    } else {
+					requestMap.remove(var);
+	            }
+    	    }
+			
+			</code>
+		</method>
+
+		<method id="getRowIndex" returnType="int" >
+			<code>
+			return rowIndex;
+			</code>
+		</method>
+		
+	</component>
+	
+	<component id="abstractMessage" abstract="true" extends="cameliaMessage"
+		extendsCapabilities="abstractBasic">
+		<implements id="org.rcfaces.core.component.capability.IForCapability"
+			importMethods="false" />
+		<capability id="IUnlockedClientAttributesCapability" />
+
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<attribute id="showDetail" type="boolean" writeComponent="false"/>
+		<attribute id="showSummary" type="boolean" writeComponent="false"/>
+		<attribute id="for" type="java.lang.String" writeComponent="false"/>
+	</component>
+	
+	<component id="abstractMessages" abstract="true" extends="cameliaMessages"
+		extendsCapabilities="abstractBasic">
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+
+		<attribute id="showDetail" type="boolean" writeComponent="false"/>
+		<attribute id="showSummary" type="boolean" writeComponent="false"/>
+		<attribute id="globalOnly" type="boolean" writeComponent="false"/>
+	</component>
+	
+	<component id="abstractItem" abstract="true" extends="cameliaItem">
+		<capability id="IDisabledCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IClientDataCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+		
+		<method id="setDisabled" returnType="void">
+			<parameter type="boolean" name="disabled" />
+			<code>
+			setItemDisabled(disabled);
+			</code>
+		</method>
+		<method id="isDisabled" returnType="boolean">
+			<code>
+			return isItemDisabled();
+			</code>
+		</method>
+		
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method
+			id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+		
+		<method id="setValueExpression" returnType="void">
+			<parameter type="Properties" name="name" /> <!-- FIXME 12|21 -->
+			<parameter type="ValueExpression" name="binding" />
+			<code>
+			if(name.equals(Properties.DISABLED)){
+				name = Properties.ITEM_DISABLED;
+			}
+			super.setValueExpression(name, binding);
+			</code>
+		</method>
+
+		<attribute id="itemValue" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemLabel" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemDescription" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemDisabled" type="boolean" writeComponent="false"/>
+	</component>
+	
+	
+
+	<component id="abstractSeparator" abstract="true" extends="cameliaBase"
+		render="false">
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<implements id="org.rcfaces.core.component.ISeparatorComponent" />
+		<capability id="IUnlockedClientAttributesCapability" />
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+
+		<method id="setHiddenMode(String)" />
+	</component>	
+
+	<component id="abstractMenu" abstract="true"
+		extends="abstractConverterCommand" render="false">
+		<implements id="org.rcfaces.core.component.IMenuComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability"
+			importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.ICheckComponent"
+			importMethods="false" />
+		<capability id="IUnlockedClientAttributesCapability" />
+
+		<capability id="ISelectionEventCapability" />
+	
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+
+		<capability id="IReadOnlyCapability" />
+
+		<attribute id="removeAllWhenShown" type="boolean" />
+		<!-- <attribute id="itemImageWidth" type="int"/> <attribute id="itemImageHeight" 
+			type="int"/> -->
+
+		<method id="getComponentValueType"
+			returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.MenuTools</import>
+			<code>
+				return MenuTools.MENU_VALUE_TYPE;
+			</code>
+		</method>
+
+<!-- Check/uncheck -->
+		<method id="check" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.check(null, this, value);
+			</code>
+		</method>
+		<method id="checkAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.checkAll(null, this);
+			</code>
+		</method>
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				CheckTools.uncheck(null, this, value);
+			</code>
+		</method>
+		<method id="uncheckAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.uncheckAll(null, this);
+			</code>
+		</method>
+
+		<method id="listMenuItems"/>
+	</component>
+		
+	<component id="accelerator" extends="cameliaCommand">
+		<capability id="IKeyPressEventCapability" />
+		<capability id="IImmediateCapability" forceComponent="true"/>
+		<capability id="IValidationEventCapability" />			
+		<capability id="IForCapability" /> 
+		<!-- Pas de required pour le for , car cela peut etre une action ! -->
+		
+		<attribute id="forItemValue" type="java.lang.String" />
+	
+		<attribute id="keyBinding" type="java.lang.String" />
+	
+		<attribute id="ignoreEditableComponent" type="boolean" />
+	
+		<action id="action" type="keyPress" default="true" />
+	</component>
+	
+	<component id="additionalInformation" extends="cameliaColumn" >
+		<implements
+			id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+		<behaviorEvent id="asyncRender.request" />
+		<implements
+			id="org.rcfaces.core.component.capability.IAdditionalInformationContainer" />
+
+		<capability id="IHeadingZoneCapability" default="false" />
+		<capability id="IHeadingLevelCapability" />
+
+		<capability id="IPropertyChangeEventCapability" />
+		<capability id="IUserEventCapability" />
+		<capability id="IErrorEventCapability" />
+		<capability id="IWAIRoleCapability" />
+
+		<capability id="IMarginCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="IBackgroundImageCapability" />
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IHeightCapability" />
+
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="ILoadEventCapability" />
+
+		<capability id="IMenuCapability" />
+		<capability id="IVariableScopeCapability" />		
+
+		<attribute id="margins" type="java.lang.String"
+			writeComponent="false" noValueBinding="true" />
+
+		<method id="isVisible()"/>
+
+		<method id="setMargins(String)"/>
+		<!-- <method id="processDecodes"> <parameter type="javax.faces.context.FacesContext" 
+			name="context" /> <import>javax.faces.component.UIComponent</import> <import>org.rcfaces.core.internal.component.UIData2</import> 
+			<code><![CDATA[ if (isRendered()==false) { return; } UIComponent parent=getParent(); 
+			if (parent instanceof UIData2) { if (((UIData2)parent).decodeAdditionalInformation(this)==false) 
+			{ return; } } super.processDecodes(context); ]]> </code> </method> -->
+
+	</component>
+	
+	<component id="box" extends="abstractBasic">
+		<implements
+			id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+		<behaviorEvent id="asyncRender.request" />
+
+		<capability id="IHeadingZoneCapability" default="false" />
+		<capability id="IHeadingLevelCapability" />
+
+		<capability id="IBackgroundImageCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IClickEventCapability" />
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="ILoadEventCapability" />
+
+		<capability id="ILayoutManagerCapability" />
+
+		<capability id="IMenuCapability" />
+		<capability id="IAsyncRenderModeCapability" />
+		<capability id="IAsyncDecodeModeCapability" />
+		<capability id="IVariableScopeCapability" />	
+		<capability id="ITypedComponentCapability" />	
+
+		<capability id="IOverStyleClassCapability" />	
+
+		<method id="setAsyncRenderMode(String)" />		
+		<method id="setAsyncDecodeMode(String)" />	
+
+		<method id="setLayoutType(String)" />	
+		
+		<attribute id="horizontalScroll" type="boolean" />
+		<attribute id="verticalScroll" type="boolean" />
+		
+	</component>
+	
+	
+	<component id="externalBox" extends="abstractOutput">
+		<capability id="ILoadEventCapability" />
+		<capability id="IOverStyleClassCapability" />
+		
+		<attribute id="scrolling" type="java.lang.String" />
+		<attribute id="contentURL" type="java.lang.String" />
+		
+		<propertyValue>contentURL</propertyValue>
+		
+	</component>
+
+	<component id="button" extends="abstractCommand">
+		<implements id="org.rcfaces.core.internal.capability.IToolTipComponent" />
+		
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="IToolTipIdCapability" />
+
+		<action id="action" type="selection" default="true" />
+
+		<!-- <method id="getValue" returnType="java.lang.Object"> <code> return 
+			getValue(null); </code> </method> <method id="getValue" returnType="java.lang.Object"> 
+			<parameter type="javax.faces.context.FacesContext" name="context" /> <code> 
+			return engine.getValue(Properties.VALUE, context); </code> </method> -->
+		
+<!--		<propertyValue>text</propertyValue> -->
+	</component>
+
+	<component id="checkButton" extends="abstractInput">
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IHorizontalTextPositionCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+
+		<capability id="ISelectedCapability" />
+
+		<method id="getTextPositionConverter" modifier="protected"
+			returnType="javax.faces.convert.Converter" final="false">
+			<import>org.rcfaces.core.internal.converter.HorizontalTextPositionConverter
+			</import>
+			<code>
+				return HorizontalTextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+
+		<propertyValue>selected</propertyValue>
+	</component>
+
+	<!--<component id="checkButton3States" extends="abstractInput">
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IHorizontalTextPositionCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="IFocusStyleClassCapability" />
+
+		<capability id="ISelected3StatesCapability" />
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter" final="false">
+			<import>org.rcfaces.core.internal.converter.HorizontalTextPositionConverter</import>
+			<code>
+				return HorizontalTextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="isSelected" returnType="boolean">
+			<code>
+			return SELECTED_STATE.equals(getSelectedState());
+			</code>
+		</method>		
+		<method id="isUndeterminated" returnType="boolean">
+			<code>
+			return UNDETERMINATED_STATE.equals(getSelectedState());
+			</code>
+		</method>		
+
+		<method id="setTextPosition(String)" />
+
+		<propertyValue>selectedState</propertyValue>
+	</component>
+
+	--><component id="combo" extends="abstractInput">
+	
+		<behaviorEvent id="items.request" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IRequiredCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+
+		<capability id="IFilterCapability"/>
+
+		<propertyValue>value</propertyValue>
+
+
+<!-- *************************************************************
+		<method id="getFirstSelectedItem" />
+		<method id="indexOfFirstSelectedItem()" />
+		<method id="getItemAt(int)" />
+		<method id="getItemIndex(javax.faces.component.UISelectItem)" />
+		<method id="getItemCount"/>
+		<method id="listItems"/>
+		
+
+		<method id="select" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+			UISelectItem item=getItemAt(index);
+			if (item==null) {
+				return;
+			}
+			
+			select(item);
+			</code>
+		</method>		
+		<method id="select" returnType="void">
+			<parameter type="javax.faces.component.UISelectItem" name="item" />
+			<code>
+			ListTools.select(this, item);
+			</code>
+		</method>
+		<method id="deselectAll" returnType="void">
+			<code>
+			setValue(null);
+			</code>
+		</method>
+		<method id="removeAllItems" returnType="void">
+			<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+			<code>
+			ComponentIterators.removeAll(this, UISelectItem.class);
+			deselectAll();
+			</code>
+		</method>
+ ****************************************************************  -->
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+	</component>
+
+<!--
+	<component id="comboEx" extends="combo">
+		<capability id="IEditableCapability" />
+		<capability id="IImageCapability" />
+		<capability id="ITextCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IMaxTextLengthCapability" />
+
+		<attribute id="columnNumber" type="int" />
+		<attribute id="autoCompletion" type="boolean" />
+		<attribute id="popupRowNumber" type="int" />
+	</component>
+	-->
+		
+	<component id="customButton" extends="abstractCommand">
+		<capability id="IBorderTypeCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IReadOnlyCapability" />
+
+		<action id="action" type="selection" default="true" />
+
+	</component>
+
+	<component id="componentsColumn" extends="cameliaColumn"
+		render="false">
+		<implements
+			id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellStyleClassSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellToolTipTextSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+			
+		<behaviorEvent id="asyncRender.request" />
+
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IToolTipTextCapability" />
+		<capability id="IAlignmentCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="ISortEventCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IOrderCapability" />
+		<capability id="ISortComparatorCapability" />
+		<capability id="IResizableCapability" />
+		<capability id="IStatesImageCapability" />
+		<capability id="IImageSizeCapability" />
+		<capability id="IMenuPopupIdCapability" />
+		<capability id="IWidthRangeCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+
+		<capability id="ICellStyleClassCapability" />
+		<capability id="ICellToolTipTextCapability" />
+		
+		<capability id="ISelectionEventCapability" />		
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IUserEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+
+		<method id="setHiddenMode(String)" />
+
+		<method id="setAscending(String)" />
+			
+	</component>
+
+	<component id="dataColumn" extends="cameliaValueColumn"
+		render="false" converter="true">
+		<implements id="javax.faces.component.ValueHolder" />
+		<implements id="org.rcfaces.core.internal.capability.ICellImageSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellStyleClassSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellToolTipTextSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellClickableSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<implements id="org.rcfaces.core.internal.capability.ICriteriaContainer"
+			importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.IToolTipComponent" />
+		
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IToolTipTextCapability" />
+		<capability id="IAlignmentCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="ISortEventCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IOrderCapability" />
+		<capability id="ISortComparatorCapability" />
+		<capability id="IResizableCapability" />
+		<capability id="IStatesImageCapability" />
+		<capability id="IImageSizeCapability" />
+		<capability id="IMenuPopupIdCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IWidthRangeCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IAutoFilterCapability" />
+		<capability id="ICellImageCapability" />
+		<capability id="ICellStyleClassCapability" />
+		<capability id="ICellToolTipTextCapability" />
+		<capability id="ICellClickableCapability" />
+		<capability id="IToolTipIdCapability" />
+		<capability id="ITitleToolTipIdCapability" />
+		
+		<capability id="ISelectionEventCapability" />		
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IUserEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<attribute id="value" type="java.lang.Object"
+			writeComponent="false" />
+		
+		<!-- <attribute id="imagesProviderId" type="java.lang.String" setted="true"/> -->
+
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+
+		<method id="setConverter(javax.faces.convert.Converter)"/>
+		<method id="getConverter()"/>
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+
+		<method id="getLocalValue" returnType="java.lang.Object">
+			<code>
+				return engine.getLocalValue(Properties.VALUE);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				return getValue(null);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+				return engine.getValue(Properties.VALUE, context);
+			</code>
+		</method>
+		<method id="setValue">
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				engine.setValue(Properties.VALUE, value);
+			</code>
+		</method>
+		<method id="setHiddenMode(String)" />
+
+		<method id="setAscending(String)" />
+			
+
+		<method id="getCriteriaManager"
+			returnType="org.rcfaces.core.component.capability.ICriteriaManagerCapability">
+			<code>
+				return CriteriaTools.getCriteriaManager(this);
+			</code>
+		</method>
+		
+		<method id="getCriteriaConfiguration"
+			returnType="org.rcfaces.core.internal.capability.ICriteriaConfiguration">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+				return CriteriaTools.getFirstCriteriaConfiguration(this);
+			</code>
+		</method>
+		
+		
+	</component>
+
+	<component id="comboColumn" extends="cameliaValueColumn"
+		render="false" converter="true">
+		<implements id="javax.faces.component.ValueHolder" />
+		<implements id="org.rcfaces.core.internal.capability.ICellImageSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellStyleClassSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICellToolTipTextSettings" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IToolTipTextCapability" />
+		<capability id="IAlignmentCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="ISortEventCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IOrderCapability" />
+		<capability id="ISortComparatorCapability" />
+		<capability id="IResizableCapability" />
+		<capability id="IStatesImageCapability" />
+		<capability id="IImageSizeCapability" />
+		<capability id="IWidthRangeCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IAutoFilterCapability" />
+		<capability id="ICellImageCapability" />
+		<capability id="ICellStyleClassCapability" />
+		<capability id="ICellToolTipTextCapability" />
+		
+		<capability id="ISelectionEventCapability" />		
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IUserEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<attribute id="value" type="java.lang.Object"
+			writeComponent="false" />
+		
+		<!-- <attribute id="imagesProviderId" type="java.lang.String" setted="true"/> -->
+
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+
+		<method id="setConverter(javax.faces.convert.Converter)"/>
+		<method id="getConverter()"/>
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+
+		<method id="getLocalValue" returnType="java.lang.Object">
+			<code>
+				return engine.getLocalValue(Properties.VALUE);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				return getValue(null);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+				return engine.getValue(Properties.VALUE, context);
+			</code>
+		</method>
+		<method id="setValue">
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				engine.setValue(Properties.VALUE, value);
+			</code>
+		</method>
+		<method id="setHiddenMode(String)" />
+
+		<method id="setAscending(String)" />
+			
+	</component>
+
+	<component id="pager" extends="abstractBasic">
+		<capability id="IForCapability" required="true"/>
+		<capability id="IPagerMessageCapability" />
+
+		<attribute id="noPagedMessage" type="java.lang.String"/>
+		
+	</component>
+	
+	<component id="criteriaList" extends="abstractBasic">
+		<capability id="IForCapability" required="true"/>
+
+		<attribute id="criteriaFormat" type="java.lang.String"/>
+
+		<attribute id="noCriteriaMessage" type="java.lang.String"/>		
+	</component>
+	
+	<component id="dataGrid" extends="abstractData">
+		<implements id="org.rcfaces.core.internal.capability.IGridComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IDraggableGridComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IDroppableGridComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ISelectionRangeComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ICheckRangeComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IAdditionalInformationRangeComponent"
+			importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.IToolTipComponent"/>
+
+		<implements
+			id="org.rcfaces.core.component.capability.ISortedChildrenCapability"
+			properties="sortedChildren" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ISortedComponentsCapability"
+			importMethods="false" />
+
+		<implements
+			id="org.rcfaces.core.component.capability.IOrderedChildrenCapability"
+			properties="orderedChildren" />
+
+		<implements
+			id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability"
+			importMethods="false" />
+
+		<implements
+			id="org.rcfaces.core.component.capability.ICriteriaManagerCapability"
+			importMethods="false" properties="selectedCriteriaColumns" />
+
+		<capability id="IDragEventCapability" />
+		<capability id="IDraggableCapability" />
+		<capability id="IDropEventCapability" />
+		<capability id="IDropCompleteEventCapability" />
+		<capability id="IDroppableCapability" />
+		<method id="setDragEffects(String)" />	
+		<method id="setDragTypes(String)" />
+		<method id="setDropEffects(String)" />
+		<method id="setDropTypes(String)" />
+		
+		<attribute id="rowDragTypes" type="java.lang.String[]" />
+		<method id="setRowDragTypes(String)" />
+
+		<attribute id="rowDragEffects" type="int" />
+		<method id="setRowDragEffects(String)" />
+		
+		<attribute id="rowDropTypes" type="java.lang.String[]" />
+		<method id="setRowDropTypes(String)" />
+		
+		<attribute id="rowDropEffects" type="int" />
+		<method id="setRowDropEffects(String)" />
+	
+		<attribute id="selectedCriteriaColumns" type="java.lang.Object" />
+
+		<capability id="ISelectionEventCapability" />
+		<capability id="ISelectableCapability" />
+		<capability id="ISelectionCardinalityCapability" />
+		<capability id="ISelectedValuesCapability"
+			onlyValueBinding="true" />
+	
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckableCapability" />
+		<capability id="ICheckCardinalityCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+
+		<capability id="IAdditionalInformationEventCapability" />
+		<capability id="IAdditionalInformationValuesCapability"
+			onlyValueBinding="true" />
+		<capability id="IClientAdditionalInformationFullStateCapability"/>
+		<capability id="IAdditionalInformationCardinalityCapability" />
+
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="ILoadEventCapability" />
+
+		<capability id="IRequiredCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IRowStyleClassCapability" />
+		<capability id="IEmptyDataMessageCapability" />
+
+		<capability id="IReadOnlyCapability" />
+		<capability id="IDisabledCapability" />
+
+		<capability id="IMenuCapability" />
+
+		<capability id="IScrollableCapability" />
+		<capability id="IFilterCapability"/>
+		<capability id="IShowValueCapability"/>
+		<capability id="IKeySearchColumnIdCapability" />
+
+		<capability id="IPreferencesSettings" />
+		<capability id="IPagedCapability" />
+		<capability id="ICriteriaCountCapability" />
+
+		<capability id="IClientSelectionFullStateCapability"/>
+		<capability id="IClientCheckFullStateCapability"/>
+
+		<capability id="IHeaderVisibilityCapability" default="true"/>
+
+		<capability id="IRowToolTipIdCapability" />
+
+		<capability id="org.rcfaces.core.lang.provider.ICursorProvider"/>
+
+		<capability id="IScopeColumnIdCapability" />
+		
+		<capability id="IGridCaptionCapability"/>
+		
+		<behaviorEvent id="dataGrid.update" />
+		<behaviorEvent id="criteria.request" />
+		
+		<attribute id="rowValueColumnId" type="java.lang.String" />
+		<attribute id="rowLabelColumnId" type="java.lang.String"/>
+
+		<attribute id="rowCountVar" type="java.lang.String"
+			noValueBinding="true" />
+		<attribute id="rowIndexVar" type="java.lang.String"
+			noValueBinding="true" />
+
+		<attribute id="cellTextWrap" type="boolean" default="false"/>
+		
+		<attribute id="bodyDroppable" type="boolean" default="false"/>
+				
+		<action id="action" type="selection" default="true"/>
+		
+		<method id="getComponentValueType"
+			returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.DATA_GRID_VALUE_TYPE;
+			</code>
+		</method>
+	
+		<method id="listColumns"
+			returnType="org.rcfaces.core.component.iterator.IColumnIterator">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.listColumns(this,
+				org.rcfaces.core.component.DataColumnComponent.class);
+			</code>
+		</method>
+	
+		<method id="listDataColumns"
+			returnType="org.rcfaces.core.component.iterator.IDataColumnIterator">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.listDataColumns(this);
+			</code>
+		</method>
+	
+		<method id="listAdditionalInformations"
+			returnType="org.rcfaces.core.component.iterator.IAdditionalInformationIterator">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools
+			</import>
+			<code>
+			return AdditionalInformationTools.listAdditionalInformations(this);
+			</code>
+		</method>
+
+		
+<!-- API de Selection -->
+
+		<method id="setSelectionCardinality(String)" />
+		<method id="setClientSelectionFullState(String)" /> 		
+
+		<method id="getSelectedValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getCount(getSelectedValues());
+			</code>
+		</method>
+		<method id="getFirstSelectedValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getFirst(getSelectedValues(), getValue());
+			</code>
+		</method>
+		<method id="listSelectedValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.listValues(getSelectedValues(), getValue());
+			</code>
+		</method>
+		<method id="getSelectedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code><![CDATA[			
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)) {
+					return engine.getValue(Properties.SELECTED_VALUES, facesContext);
+				}
+
+				return SelectionTools.getAdaptedValues(getValue(), false);
+			]]></code>
+		</method>
+		<method id="setSelectedValues">
+			<parameter type="java.lang.Object" name="selectedValues" />		
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)==false) {
+					if (SelectionTools.setAdaptedValues(getValue(), selectedValues)) {
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.SELECTED_VALUES, selectedValues);
+			]]></code>
+		</method>
+
+<!-- API de CHECK -->
+		<method id="setCheckCardinality(String)" />
+		<method id="setClientCheckFullState(String)" /> 
+			
+		<method id="getCheckedValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				return CheckTools.getCount(getCheckedValues());
+			</code>
+		</method>
+		<method id="getFirstCheckedValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				return CheckTools.getFirst(getCheckedValues(), getValue());
+			</code>
+		</method>
+		<method id="listCheckedValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				return CheckTools.listValues(getCheckedValues(), getValue());
+			</code>
+		</method>
+
+		<method id="getCheckedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.CHECKED_VALUES)) {
+					return engine.getValue(Properties.CHECKED_VALUES, facesContext);
+				}
+
+				return CheckTools.getAdaptedValues(getValue(), false);
+			]]></code>
+		</method>
+		<method id="setCheckedValues">
+			<parameter type="java.lang.Object" name="checkedValues" />		
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.CHECKED_VALUES)==false) {
+					if (CheckTools.setAdaptedValues(getValue(), checkedValues)) {
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.CHECKED_VALUES, checkedValues);
+			]]></code>
+		</method>
+		
+
+<!-- API Additional -->
+		<method id="setAdditionalInformationCardinality(String)" />
+		<method id="setClientAdditionalInformationFullState(String)" /> 
+
+		<method id="getAdditionalInformationValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools
+			</import>
+			<code>
+				return
+				AdditionalInformationTools.getCount(getAdditionalInformationValues());
+			</code>
+		</method>
+		<method id="getFirstAdditionalInformationValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools
+			</import>
+			<code>
+				return
+				AdditionalInformationTools.getFirst(getAdditionalInformationValues(),
+				null);
+			</code>
+		</method>
+		<method id="getAdditionalInformationValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				return
+				engine.getValue(Properties.ADDITIONAL_INFORMATION_VALUES,
+				facesContext);
+			</code>
+		</method>
+		<method id="listAdditionalInformationValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools
+			</import>
+			<code>
+				return
+				AdditionalInformationTools.listValues(getAdditionalInformationValues(),
+				getValue());
+			</code>
+		</method>
+
+
+<!-- Criteria/Filtred -->
+
+		<method id="listCriteriaContainers"
+			returnType="org.rcfaces.core.internal.capability.ICriteriaContainer[]">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+			return CriteriaTools.listCriteriaContainers(null, this);
+			</code>
+		</method>
+
+		<method id="listSelectedCriteriaContainers"
+			returnType="org.rcfaces.core.internal.capability.ICriteriaContainer[]">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+				return CriteriaTools.getSelectedCriteriaColumns(null, this,
+				engine, Properties.SELECTED_CRITERIA_COLUMNS.toString());
+			</code>
+		</method>
+		
+		<method id="setSelectedCriteriaContainers" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<parameter name="components"
+				type="org.rcfaces.core.internal.capability.ICriteriaContainer[]" />
+			<code>
+				CriteriaTools.setSelectedCriteriaColumns(null, this, engine,
+				components, Properties.SELECTED_CRITERIA_COLUMNS.toString());
+			</code>
+		</method>
+
+		<method id="processSelectedCriteria" returnType="org.rcfaces.core.model.ICriteriaSelectedResult">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+				return CriteriaTools.processCriteriaConfig(this, null);
+			</code>
+		</method>
+		<method id="processSelectedCriteria" returnType="org.rcfaces.core.model.ICriteriaSelectedResult">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<parameter type="org.rcfaces.core.model.ISelectedCriteria[]"
+				name="configs" />
+			<code>
+				return CriteriaTools.processCriteriaConfig(this, configs);
+			</code>
+		</method>
+
+<!-- Order -->
+
+		<method id="getOrderedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<code>
+				return OrderTools.getOrderedChildren(null, this, engine,
+				DataColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setOrderedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				OrderTools.setOrderedChildren(null, this, engine,
+				DataColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Components -->
+
+		<method id="getSortedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<code>
+				return SortTools.getSortedChildren(null, this, engine,
+				DataColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setSortedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				SortTools.setSortedChildren(null, this, engine,
+				DataColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Column -->
+		<method id="getSortedColumns" returnType="org.rcfaces.core.component.DataColumnComponent[]">
+			<import>org.rcfaces.core.component.DataColumnComponent</import>
+			<code>
+				return (DataColumnComponent[])getSortedChildren();
+			</code>
+		</method>
+
+		<method id="getFirstSortedColumn" returnType="org.rcfaces.core.component.DataColumnComponent">
+			<import>org.rcfaces.core.component.DataColumnComponent</import>
+			<code>
+				return (DataColumnComponent)SortTools.getFirstSortedChild(null,
+				this, engine, DataColumnComponent.class );
+			</code>
+		</method>
+		
+		<method id="setSortedColumn" returnType="void">
+			<parameter type="org.rcfaces.core.component.DataColumnComponent"
+				name="dataColumn" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				SortTools.setSortedChildren(null, this, engine,
+				DataColumnComponent.class, new DataColumnComponent[] { dataColumn
+				});
+			</code>
+		</method>
+		
+		<method id="setSortedColumns" returnType="void">
+			<parameter type="org.rcfaces.core.component.DataColumnComponent[]"
+				name="dataColumns" />
+			<code>
+				setSortedChildren(dataColumns);
+			</code>
+		</method>
+		
+<!-- Sort ISortedComponents -->
+		<method id="listSortedComponents" returnType="org.rcfaces.core.model.ISortedComponent[]">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.listSortedComponents(context, this);
+			</code>
+		</method>
+		
+<!-- Selection/deselection -->
+		<method id="select" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				SelectionTools.select(null, this, rowValue);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int" name="index" />
+			<code>
+				SelectionTools.select(null, this, index);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int[]" name="indices" />
+			<code>
+				SelectionTools.select(null, this, indices);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				SelectionTools.select(null, this, start, end);
+			</code>
+		</method>
+		<method id="selectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				SelectionTools.selectAll(null, this);
+			</code>
+		</method>
+
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				SelectionTools.deselect(null, this, rowValue);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int" name="index" />
+			<code>
+				SelectionTools.deselect(null, this, index);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int[]" name="indices" />
+			<code>
+				SelectionTools.deselect(null, this, indices);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				SelectionTools.deselect(null, this, start, end);
+			</code>
+		</method>
+		<method id="deselectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				SelectionTools.deselectAll(null, this);
+			</code>
+		</method>
+
+<!-- Check/uncheck -->
+		<method id="check" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				CheckTools.check(null, this, rowValue);
+			</code>
+		</method>
+		<method id="check" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="int" name="index" />
+			<code>
+				CheckTools.check(null, this, index);
+			</code>
+		</method>
+		<method id="check" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="int[]" name="indices" />
+			<code>
+				CheckTools.check(null, this, indices);
+			</code>
+		</method>
+		<method id="check" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				CheckTools.check(null, this, start, end);
+			</code>
+		</method>
+		<method id="checkAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.checkAll(null, this);
+			</code>
+		</method>
+
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				CheckTools.uncheck(null, this, rowValue);
+			</code>
+		</method>
+		<method id="uncheck" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				CheckTools.uncheck(null, this, index);
+			</code>
+		</method>
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="int[]" name="indices" />
+			<code>
+				CheckTools.uncheck(null, this, indices);
+			</code>
+		</method>
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				CheckTools.uncheck(null, this, start, end);
+			</code>
+		</method>
+		<method id="uncheckAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.uncheckAll(null, this);
+			</code>
+		</method>
+
+<!-- Show/Hide additional informations -->
+		<method id="showAdditionalInformation" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.show(null, this, rowValue);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.show(null, this, index);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.show(null, this, indexes);
+			</code>
+		</method>
+		<method id="showAllAdditionalInformations" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				AdditionalInformationTools.showAll(null, this);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.hide(null, this, rowValue);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.hide(null, this, index);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.hide(null, this, indexes);
+			</code>
+		</method>
+		<method id="hideAllAdditionalInformations" returnType="void">
+			<code>
+				AdditionalInformationTools.hideAll(null, this);
+			</code>
+		</method>
+		
+<!-- Cursor value -->
+
+		<method id="getCursorValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+			<code>
+				Object cursorValue=engine.getValue(Properties.CURSOR_VALUE,
+				facesContext);
+				if (cursorValue!=null) {
+					return cursorValue;
+				}
+				
+				return ComponentTools.getCursorValue(getValue(), this, facesContext);
+			</code>
+		</method>
+
+		<!-- Pas bon pour les additionalInformations <method id="restoreDescendantState" 
+			modifier="protected"> <code/> </method> <method id="saveDescendantState" 
+			modifier="protected"> <code/> </method> -->
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+		
+	</component>
+	
+	<component id="componentsGrid" extends="abstractData">
+		<implements id="org.rcfaces.core.internal.capability.IGridComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.component.capability.ISortedChildrenCapability"
+			properties="sortedChildren" />
+		<implements
+			id="org.rcfaces.core.component.capability.IOrderedChildrenCapability"
+			properties="orderedChildren" />
+		<implements
+			id="org.rcfaces.core.internal.capability.ISelectionRangeComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IAdditionalInformationRangeComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability"
+			importMethods="false" />
+
+		<implements
+			id="org.rcfaces.core.internal.capability.ISortedComponentsCapability"
+			importMethods="false" />
+
+
+		<capability id="ISelectionEventCapability" />
+		<capability id="ISelectableCapability" />
+		<capability id="ISelectionCardinalityCapability" />
+		<capability id="ISelectedValuesCapability"
+			onlyValueBinding="true" />
+		<capability id="IClientSelectionFullStateCapability"/>
+
+		<capability id="IAdditionalInformationEventCapability" />
+		<capability id="IAdditionalInformationValuesCapability"
+			onlyValueBinding="true" />
+		<capability id="IClientAdditionalInformationFullStateCapability"/>
+		<capability id="IAdditionalInformationCardinalityCapability" />
+
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="ILoadEventCapability" />
+
+		<capability id="IRequiredCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IRowStyleClassCapability" />
+		<capability id="IShowValueCapability"/>
+		<capability id="IEmptyDataMessageCapability" />
+
+		<capability id="IMenuCapability" />
+
+		<capability id="IScrollableCapability" />
+		<!-- Pas de filter ... ce n'est pas possible avec le decodage des UIData 
+			! <capability id="IFilterCapability" clearCachedValue="true"/> -->
+
+		<capability id="IPreferencesSettings" />
+		<capability id="IPagedCapability" />
+
+		<capability id="IRowToolTipIdCapability" />
+
+		<capability id="IHeaderVisibilityCapability" default="true"/>
+
+		<capability id="IScopeColumnIdCapability" />		
+
+		<capability id="IGridCaptionCapability"/>
+
+		<attribute id="rowCountVar" type="java.lang.String"
+			noValueBinding="true" />
+		<attribute id="rowIndexVar" type="java.lang.String"
+			noValueBinding="true" />
+		<attribute id="rowValue" type="java.lang.String"
+			onlyValueBinding="true" />
+		<attribute id="rowValueConverter" type="javax.faces.convert.Converter"/>
+		<attribute id="cellTextWrap" type="boolean" default="false"/>
+		
+		
+		<behaviorEvent id="componentsGrid.update" />
+		
+		<method id="getComponentValueType"
+			returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.COMPONENTS_GRID_VALUE_TYPE;
+			</code>
+		</method>
+	
+		<method id="listColumns"
+			returnType="org.rcfaces.core.component.iterator.IColumnIterator">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+			return GridTools.listColumns(this, ComponentsColumnComponent.class);
+			</code>
+		</method>
+	
+		<method id="listAdditionalInformations"
+			returnType="org.rcfaces.core.component.iterator.IAdditionalInformationIterator">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools
+			</import>
+			<code>
+			return AdditionalInformationTools.listAdditionalInformations(this);
+			</code>
+		</method>
+
+		<method id="setRowValueConverter(String)"/>
+		<method
+			id="setRowValueConverter(String,javax.faces.context.FacesContext)" />
+
+<!-- API de selection -->
+
+		<method id="setSelectionCardinality(String)" />
+		<method id="setClientSelectionFullState(String)" /> 
+
+		<method id="getSelectedValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getCount(getSelectedValues());
+			</code>
+		</method>
+		<method id="getFirstSelectedValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getFirst(getSelectedValues(), getValue());
+			</code>
+		</method>
+		<method id="listSelectedValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.listValues(getSelectedValues(), getValue());
+			</code>
+		</method>
+		<method id="getSelectedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code><![CDATA[			
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)) {
+					return engine.getValue(Properties.SELECTED_VALUES, facesContext);
+				}
+
+				return SelectionTools.getAdaptedValues(getValue(), false);
+			]]></code>
+		</method>
+		<method id="setSelectedValues">
+			<parameter type="java.lang.Object" name="selectedValues" />		
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)==false) {
+					if (SelectionTools.setAdaptedValues(getValue(), selectedValues)) {
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.SELECTED_VALUES, selectedValues);
+			]]></code>
+		</method>
+
+
+<!-- API Additional -->
+		<method id="setAdditionalInformationCardinality(String)" />
+		<method id="setClientAdditionalInformationFullState(String)" /> 
+
+		<method id="getAdditionalInformationValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.getCount(getAdditionalInformationValues());
+			</code>
+		</method>
+		<method id="getFirstAdditionalInformationValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.getFirst(getAdditionalInformationValues(), null);
+			</code>
+		</method>
+		<method id="getAdditionalInformationValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				return engine.getValue(Properties.ADDITIONAL_INFORMATION_VALUES, facesContext);
+			</code>
+		</method>
+		<method id="listAdditionalInformationValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.listValues(getAdditionalInformationValues(), getValue());
+			</code>
+		</method>
+
+<!-- Order -->
+
+		<method id="getOrderedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<code>
+				return OrderTools.getOrderedChildren(null, this, engine,
+				ComponentsColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setOrderedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				OrderTools.setOrderedChildren(null, this, engine,
+				ComponentsColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Components -->
+
+		<method id="getSortedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<code>
+				return SortTools.getSortedChildren(null, this, engine,
+				ComponentsColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setSortedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				SortTools.setSortedChildren(null, this, engine, ComponentsColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Column -->
+		<method id="getSortedColumns"
+			returnType="org.rcfaces.core.component.ComponentsColumnComponent[]">
+			<import>org.rcfaces.core.component.ComponentsColumnComponent</import>
+			<code>
+				return (ComponentsColumnComponent[])getSortedChildren();
+			</code>
+		</method>
+
+		<method id="getFirstSortedColumn"
+			returnType="org.rcfaces.core.component.ComponentsColumnComponent">
+			<import>org.rcfaces.core.component.ComponentsColumnComponent</import>
+			<code>
+				return
+				(ComponentsColumnComponent)SortTools.getFirstSortedChild(null, this,
+				engine, ComponentsColumnComponent.class );
+			</code>
+		</method>
+		
+		<method id="setSortedColumn" returnType="void">
+			<parameter type="org.rcfaces.core.component.ComponentsColumnComponent"
+				name="componentsColumn" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				SortTools.setSortedChildren(null, this, engine,
+				ComponentsColumnComponent.class, new ComponentsColumnComponent[] {
+				componentsColumn });
+			</code>
+		</method>
+		
+		<method id="setSortedColumns" returnType="void">
+			<parameter type="org.rcfaces.core.component.ComponentsColumnComponent[]"
+				name="componentsColumns" />
+			<code>
+				setSortedChildren(componentsColumns);
+			</code>
+		</method>
+		
+<!-- Sort ISortedComponents -->
+		<method id="listSortedComponents" returnType="org.rcfaces.core.model.ISortedComponent[]">
+			<code>
+				return listSortedComponents(null);
+			</code>
+		</method>
+		
+		<method id="listSortedComponents" returnType="org.rcfaces.core.model.ISortedComponent[]">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.listSortedComponents(context, this);
+			</code>
+		</method>
+		
+<!-- Selection/deselection -->
+		<method id="select" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				SelectionTools.select(null, this, rowValue);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				SelectionTools.select(null, this, index);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<parameter type="int[]" name="indices" />
+			<code>
+				SelectionTools.select(null, this, indices);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				SelectionTools.select(null, this, start, end);
+			</code>
+		</method>
+		<method id="selectAll" returnType="void">
+			<code>
+				SelectionTools.selectAll(null, this);
+			</code>
+		</method>
+
+		<method id="deselect" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				SelectionTools.deselect(null, this, rowValue);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				SelectionTools.deselect(null, this, index);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<parameter type="int[]" name="indices" />
+			<code>
+				SelectionTools.deselect(null, this, indices);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<parameter type="int" name="start" />
+			<parameter type="int" name="end" />
+			<code>
+				SelectionTools.deselect(null, this, start, end);
+			</code>
+		</method>
+		<method id="deselectAll" returnType="void">
+			<code>
+				SelectionTools.deselectAll(null, this);
+			</code>
+		</method>
+
+
+<!-- Show/Hide additional informations -->
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.show(null, this, rowValue);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.show(null, this, index);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.show(null, this, indexes);
+			</code>
+		</method>
+		<method id="showAllAdditionalInformations" returnType="void">
+			<code>
+				AdditionalInformationTools.showAll(null, this);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.hide(null, this, rowValue);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.hide(null, this, index);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.hide(null, this, indexes);
+			</code>
+		</method>
+		<method id="hideAllAdditionalInformations" returnType="void">
+			<code>
+				AdditionalInformationTools.hideAll(null, this);
+			</code>
+		</method>
+		
+	</component>
+	
+
+	<component id="comboGrid" extends="keyEntry">
+		<implements
+			id="org.rcfaces.core.component.capability.ISortedChildrenCapability"
+			properties="sortedChildren" />
+		<implements
+			id="org.rcfaces.core.component.capability.IOrderedChildrenCapability"
+			properties="orderedChildren" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IAdditionalInformationRangeComponent"
+			importMethods="false" />
+		<implements
+			id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability"
+			importMethods="false" />
+		
+		<method id="getComponentValueType"
+			returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				return GridTools.COMBO_GRID_VALUE_TYPE;
+			</code>
+		</method>
+
+		<capability id="IAdditionalInformationEventCapability" />
+		<capability id="IAdditionalInformationValuesCapability" onlyValueBinding="true" />
+		<capability id="IClientAdditionalInformationFullStateCapability"/>
+		<capability id="IAdditionalInformationCardinalityCapability" />
+
+		<capability id="IRowStyleClassCapability" />
+		<capability id="IPagerMessageCapability" />
+
+		<capability id="IFilterCapability"/>
+
+		<capability id="IPagedCapability" />
+
+		<capability id="IHeaderVisibilityCapability" default="true"/>
+
+
+		<attribute id="popupWidth" type="int"/>
+		<attribute id="popupHeight" type="int"/>
+
+
+		<attribute id="pagerStyleClass" type="java.lang.String"/>
+		<attribute id="pagerLookId" type="java.lang.String"/>
+
+		<attribute id="popupStyleClass" type="java.lang.String"/>
+
+		<attribute id="gridStyleClass" type="java.lang.String"/>
+		<attribute id="gridLookId" type="java.lang.String"/>
+
+		<attribute id="searchFieldVisible" type="boolean" default="true"/>
+		
+		<behaviorEvent id="popupGrid.update" />
+		<behaviorEvent id="comboGrid.key" />
+		
+		<method id="listColumns"
+			returnType="org.rcfaces.core.component.iterator.IColumnIterator">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+			return GridTools.listColumns(this, ComboColumnComponent.class);
+			</code>
+		</method>
+	
+		<method id="listAdditionalInformations" returnType="org.rcfaces.core.component.iterator.IAdditionalInformationIterator">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+			return AdditionalInformationTools.listAdditionalInformations(this);
+			</code>
+		</method>
+
+<!-- API Additional -->
+		<method id="setClientAdditionalInformationFullState(String)" /> 
+
+		<method id="getAdditionalInformationValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.getCount(getAdditionalInformationValues());
+			</code>
+		</method>
+		<method id="getFirstAdditionalInformationValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.getFirst(getAdditionalInformationValues(), null);
+			</code>
+		</method>
+		<method id="getAdditionalInformationValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				return engine.getValue(Properties.ADDITIONAL_INFORMATION_VALUES, facesContext);
+			</code>
+		</method>
+		<method id="listAdditionalInformationValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.AdditionalInformationTools</import>
+			<code>
+				return AdditionalInformationTools.listValues(getAdditionalInformationValues(), getValue());
+			</code>
+		</method>
+
+<!-- Order -->
+
+		<method id="getOrderedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<code>
+				return OrderTools.getOrderedChildren(null, this, engine,
+				ComboColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setOrderedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.OrderTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				OrderTools.setOrderedChildren(null, this, engine,
+				ComboColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Components -->
+
+		<method id="getSortedChildren" returnType="javax.faces.component.UIComponent[]">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<code>
+				return SortTools.getSortedChildren(null, this, engine,
+				ComboColumnComponent.class);
+			</code>
+		</method>
+		
+		<method id="setSortedChildren" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SortTools</import>
+			<parameter name="components" type="javax.faces.component.UIComponent[]" />
+			<code>
+				SortTools.setSortedChildren(null, this, engine,
+				ComboColumnComponent.class, components);
+			</code>
+		</method>
+
+<!-- Sort Column -->
+		<method id="getSortedColumns" returnType="org.rcfaces.core.component.ComboColumnComponent[]">
+			<import>org.rcfaces.core.component.ComboColumnComponent</import>
+			<code>
+				return (ComboColumnComponent[])getSortedChildren();
+			</code>
+		</method>
+
+		<method id="getFirstSortedColumn" returnType="org.rcfaces.core.component.ComboColumnComponent">
+			<import>org.rcfaces.core.component.ComboColumnComponent</import>
+			<code>
+				return (ComboColumnComponent)SortTools.getFirstSortedChild(null, this, engine, ComboColumnComponent.class );
+			</code>
+		</method>
+		
+		<method id="setSortedColumn" returnType="void">
+			<parameter type="org.rcfaces.core.component.ComboColumnComponent" name="comboColumn" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				SortTools.setSortedChildren(null, this, engine, ComboColumnComponent.class, new ComboColumnComponent[] { comboColumn });
+			</code>
+		</method>
+		
+		<method id="setSortedColumns" returnType="void">
+			<parameter type="org.rcfaces.core.component.ComboColumnComponent[]" name="componentsColumns" />
+			<code>
+				setSortedChildren(componentsColumns);
+			</code>
+		</method>
+		
+<!-- Sort ISortedComponents -->
+		<method id="listSortedComponents" returnType="org.rcfaces.core.model.ISortedComponent[]">
+			<code>
+				return listSortedComponents(null);
+			</code>
+		</method>
+		
+		<method id="listSortedComponents" returnType="org.rcfaces.core.model.ISortedComponent[]">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+				return GridTools.listSortedComponents(context, this);
+			</code>
+		</method>
+
+<!-- Show/Hide additional informations -->
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.show(null, this, rowValue);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.show(null, this, index);
+			</code>
+		</method>
+		<method id="showAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.show(null, this, indexes);
+			</code>
+		</method>
+		<method id="showAllAdditionalInformations" returnType="void">
+			<code>
+				AdditionalInformationTools.showAll(null, this);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				AdditionalInformationTools.hide(null, this, rowValue);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+				AdditionalInformationTools.hide(null, this, index);
+			</code>
+		</method>
+		<method id="hideAdditionalInformation" returnType="void">
+			<parameter type="int[]" name="indexes" />
+			<code>
+				AdditionalInformationTools.hide(null, this, indexes);
+			</code>
+		</method>
+		<method id="hideAllAdditionalInformations" returnType="void">
+			<code>
+				AdditionalInformationTools.hideAll(null, this);
+			</code>
+		</method>
+		
+	</component>
+	
+	<component id="keyLabel" extends="abstractOutput">
+		<behaviorEvent id="keyLabel.request" />
+		
+		<capability id="IFilterCapability"/>
+
+		<attribute id="selectedStyleClass" type="java.lang.String"/>
+		<attribute id="parentsStyleClass" type="java.lang.String"/>
+		<attribute id="showParents" type="boolean"/>		
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+	</component>
+	
+	<component id="keyEntry" extends="abstractGrid">
+		<implements id="org.rcfaces.core.internal.capability.IGridComponent"
+			importMethods="false" />
+		
+		<behaviorEvent id="popupGrid.update" />
+		<behaviorEvent id="comboGrid.key" />
+		
+		<capability id="IEmptyMessageCapability" />
+		<capability id="IEmptyDataMessageCapability" />
+	
+		<capability id="ISelectionEventCapability" />
+
+		<capability id="IDisabledCapability" />
+		<capability id="IRequiredCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IMaxTextLengthCapability" />
+		<capability id="IEditableCapability" default="true" />
+
+		<capability id="IFilterCapability"/>
+
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+
+		<attribute id="suggestionDelayMs" type="int" />		
+		<attribute id="suggestionMinChars" type="int" />		
+
+		<attribute id="rowCountVar" type="java.lang.String"
+			noValueBinding="true" />
+		<attribute id="rowIndexVar" type="java.lang.String"
+			noValueBinding="true" />
+
+		<attribute id="valueColumnId" type="java.lang.String"
+			required="true" />
+		<attribute id="labelColumnId" type="java.lang.String"/>
+
+		<attribute id="selectedValue" type="java.lang.Object"/>
+	
+		<attribute id="valueFormat" type="java.lang.String"/>
+	
+		<attribute id="valueFormatTooltip" type="java.lang.String"/>
+		<attribute id="valueFormatDescription" type="java.lang.String" />
+
+		<attribute id="forceValidation" type="boolean" default="false"/>
+		
+		<attribute id="forLabel" type="java.lang.String"/>
+		<attribute id="valueFormatLabel" type="java.lang.String"/>
+		<attribute id="noValueFormatLabel" type="java.lang.String"/>
+	
+		<method id="listColumns"
+			returnType="org.rcfaces.core.component.iterator.IColumnIterator">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<code>
+			return GridTools.listColumns(this, javax.faces.component.UIColumn.class);
+			</code>
+		</method>
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+
+		<method
+			id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method
+			id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method
+			id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+		
+	</component>
+	
+	<component id="componentsList" extends="abstractData">
+		<behaviorEvent id="componentsList.update" />
+		
+		<capability id="IMenuCapability" />
+
+		<capability id="IBorderCapability" />
+		<capability id="IBorderTypeCapability" />
+		<capability id="IScrollableCapability" />
+		<capability id="IShowValueCapability"/>
+
+		<capability id="IHeadingZoneCapability" default="false" />
+		<capability id="IHeadingLevelCapability" />
+
+		<!-- Pas de filter ... ce n'est pas possible avec le decodage des UIData 
+			! <capability id="IFilterCapability" clearCachedValue="true"/> -->
+
+		<attribute id="rowCountVar" type="java.lang.String"
+			noValueBinding="true" />
+		<attribute id="rowIndexVar" type="java.lang.String"
+			noValueBinding="true" />
+
+		<attribute id="columnNumber" type="int" />
+
+		<attribute id="rowStyleClass" type="java.lang.String"
+			setted="true" />
+		<attribute id="columnStyleClass" type="java.lang.String"
+			setted="true" />
+
+		
+	</component>
+
+	<component id="abstractCalendar" abstract="true" extends="abstractInput">
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="ILiteralLocaleCapability" />
+		<capability id="ILiteralTimeZoneCapability" />
+		<capability id="IComponentLocaleCapability" />
+		<capability id="IComponentTimeZoneCapability" />
+
+		<method id="getDate" returnType="java.util.Date">
+			<import>java.util.Date</import>
+			<import>javax.faces.FacesException</import>
+			<import>org.rcfaces.core.lang.IAdaptable</import>
+			<import>org.rcfaces.core.internal.converter.LiteralDateConverter
+			</import>
+			<code><![CDATA[			
+				Object submittedValue=getSubmittedExternalValue();
+				if (submittedValue!=null) {
+					return (Date)submittedValue;
+				}
+			
+				Object value=getValue();
+
+				if (value==null) {
+					return null;
+				}			
+
+				if (value instanceof Date) {
+					return (Date)value;
+				}
+								
+				if (value instanceof String) {
+					return (Date)LiteralDateConverter.SINGLETON.getAsObject(null, this, (String)value);
+				}				
+
+				if (value instanceof IAdaptable) {
+					Date adapted=(Date)((IAdaptable)value).getAdapter(Date.class, this);
+					if (adapted!=null) {
+						return adapted;
+					}
+				}
+
+
+				throw new FacesException("Value of AbstractCalendar is not a date ! ("+value+")");
+			]]></code>
+		</method>
+		<method id="setDate">
+			<parameter type="java.util.Date" name="date" />
+			<code>
+				setValue(date);
+			</code>			
+		</method>
+	
+		<attribute id="twoDigitYearStart" type="java.util.Date" />
+		<method id="setTwoDigitYearStart(String)" />
+		<method id="getTwoDigitYearStart(javax.faces.context.FacesContext)" />
+
+		<capability id="IClientDatesStrategyCapability" />
+		<method id="setClientDatesStrategy(String)" />
+
+		<attribute id="minDate" type="java.util.Date" />
+		<method id="setMinDate(String)" />
+		<method id="getMinDate(javax.faces.context.FacesContext)" />
+
+		<attribute id="maxDate" type="java.util.Date" />
+		<method id="setMaxDate(String)" />
+		<method id="getMaxDate(javax.faces.context.FacesContext)" />
+
+		<method id="setLiteralLocale(String)" />
+		<method id="setComponentLocale(String)" />
+		<method id="setLiteralTimeZone(String)" />
+		<method id="setComponentTimeZone(String)" />
+
+		<attribute id="cursorDate" type="java.util.Date" />
+		<method id="setCursorDate(String)" />
+		<method id="getCursorDate(javax.faces.context.FacesContext)" />
+
+<!--
+	bit0: dimanche
+	bit1: lundi
+	...
+	bit6: samedi
+-->
+		<attribute id="disabledWeekDays" type="int" />
+		<method id="setDisabledWeekDays(String)" />
+		
+<!-- 
+Dans le cas d'un mode period !
+		<attribute id="slaveCalendar" type="java.lang.String" />
+-->
+
+	</component>
+
+	<component id="dateItem" extends="selectItem" render="false">
+		<capability id="ITextCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IMenuPopupIdCapability" />
+		<capability id="ILiteralLocaleCapability" />
+		<capability id="ILiteralTimeZoneCapability" />
+
+		<tagAttribute id="date" type="java.lang.String" generate="true"/>
+
+		<binding-alias id="date" target="itemValue" />
+		<method id="getDate" returnType="java.util.Date">
+			<import>java.util.Date</import>
+			<import>javax.faces.FacesException</import>
+			<import>org.rcfaces.core.lang.IAdaptable</import>
+			<import>org.rcfaces.core.internal.converter.LiteralDateConverter
+			</import>
+			<code><![CDATA[			
+				Object value=getItemValue();
+
+				if (value==null) {
+					return null;
+				}			
+
+				if (value instanceof Date) {
+					return (Date)value;
+				}
+								
+				if (value instanceof String) {
+					return (Date)LiteralDateConverter.SINGLETON.getAsObject(null, this, (String)value);
+				}				
+
+				if (value instanceof IAdaptable) {
+					Date adapted=(Date)((IAdaptable)value).getAdapter(Date.class, this);
+					if (adapted!=null) {
+						return adapted;
+					}
+				}
+
+				throw new FacesException("ItemValue of DateItem is not a date ! ("+value+")");
+			]]></code>
+		</method>
+		<method id="setDate">
+			<parameter type="java.util.Date" name="date" />
+			<code>
+				setItemValue(date);
+			</code>			
+		</method>
+		<method id="setDate">
+			<parameter type="java.lang.String" name="date" />
+			<code>
+				setItemValue(date);
+			</code>			
+		</method>
+
+		<binding-alias id="text" target="itemLabel" />
+		<method id="setText" returnType="void">
+			<parameter type="java.lang.String" name="text" />
+			<code>
+			setItemLabel(text);
+			</code>
+		</method>
+		<method id="getText" returnType="String">
+			<code>
+			return getItemLabel();
+			</code>
+		</method>
+
+		<method id="setLiteralLocale(String)" />
+		<method id="setLiteralTimeZone(String)" />
+		
+	</component>	
+
+	<component id="calendar" extends="abstractCalendar">
+		<capability id="IBorderCapability" />
+		<capability id="ICalendarLayoutCapability" default="ICalendarLayoutCapability.DEFAULT_LAYOUT"/>
+		<capability id="IMultipleSelectCapability" />
+		<capability id="ICalendarModeCapability" /> 
+	
+		<attribute id="autoSelection" type="boolean" />
+		
+		<method id="setMode" returnType="void">
+			<parameter type="java.lang.String" name="calendarMode" />
+			<import>org.rcfaces.core.internal.converter.CalendarModeConverter
+			</import>
+			<code><![CDATA[			
+			setMode(((Integer)CalendarModeConverter.SINGLETON.getAsObject(null, this, calendarMode)).intValue());
+			]]></code>
+		</method>	
+		<method id="setCalendarLayout(String)" /> 
+	</component>
+	
+	<component id="dateEntry" extends="abstractCalendar">
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+
+		<capability id="IRequiredCapability" />
+		<capability id="IAutoTabCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+		<capability id="IDateFormatCapability" />	
+		
+		<attribute id="showCalendarOnFocus" type="boolean" />
+		<attribute id="autoCompletion" type="boolean" />
+		
+		<action id="action" type="selection" default="true" />
+	
+		<attribute id="defaultDate" type="java.util.Date" />
+		<method id="setDefaultDate(String)" />
+		<method id="getDefaultDate(javax.faces.context.FacesContext)" />
+
+		<method
+			id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method
+			id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method
+			id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method
+			id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method
+			id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+	</component>
+	
+	<component id="dateChooser" extends="abstractCalendar">
+		<capability id="IImageButtonFamilly" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IForCapability"/>
+		<capability id="ICalendarLayoutCapability" default="ICalendarLayoutCapability.DEFAULT_LAYOUT"/>
+
+		<attribute id="forValueFormat" type="java.lang.String" />
+
+		<attribute id="homeDate" type="java.util.Date" />
+		<method id="setHomeDate(String)" />
+		<method id="getHomeDate(javax.faces.context.FacesContext)" />
+
+		<attribute id="defaultSelectedDate" type="java.util.Date" />
+		<method id="setDefaultSelectedDate(String)" />
+		<method id="getDefaultSelectedDate(javax.faces.context.FacesContext)" />
+		
+
+		<attribute id="homeDateLabel" type="java.lang.String" />
+		
+		<attribute id="popupStyleClass" type="java.lang.String"/>
+
+		
+		<method id="getTextPositionConverter" modifier="protected"
+			returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter
+			</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+		<method id="setCalendarLayout(String)" /> 
+	</component>
+
+
+	<component id="expandBar" extends="abstractOutput">
+		<implements id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+		<behaviorEvent id="asyncRender.request" />
+		
+		<capability id="IExpandEventCapability" />
+
+		<capability id="IHeadingZoneCapability" default="true" />
+		<capability id="IHeadingLevelCapability" />
+
+		<capability id="IAsyncRenderModeCapability" />
+		<capability id="IFontCapability" />
+		<capability id="IDisabledCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="ITextAlignmentCapability" />
+		<capability id="ICollapsableCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IRadioGroupCapability" />
+
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="ILoadEventCapability" />
+		<capability id="IVariableScopeCapability" />	
+
+		<capability id="IOverStyleClassCapability" />	
+
+		<attribute id="collapseEffect" type="java.lang.String" />
+		<attribute id="collapsedText" type="java.lang.String" />
+
+		<attribute id="userExpandable" type="boolean" default="true" />
+		
+		<method id="setAsyncRenderMode(String)" />	
+		
+		<propertyValue>text</propertyValue>
+	</component>	
+		
+	<component id="selectImageItem" extends="cameliaItem" render="false">
+		<capability id="IImageCapability" />
+		<implements
+			id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<attribute id="itemValue" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemDescription" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemLabel" type="java.lang.String"
+			writeComponent="false" />
+		<attribute id="itemDisabled" type="boolean" writeComponent="false"/>
+	</component>
+
+	<component id="selectItem" extends="abstractItem" render="false">
+		<capability id="IToolTipTextCapability" />
+
+		<binding-alias id="toolTipText" target="itemDescription" />
+		<method id="setToolTipText" returnType="void">
+			<parameter type="java.lang.String" name="text" />
+			<code>
+			setItemDescription(text);
+			</code>
+		</method>
+		<method id="getToolTipText" returnType="String">
+			<code>
+			return getItemDescription();
+			</code>
+		</method>
+		<method id="isToolTipTextSetted" returnType="boolean">
+			<code>
+			return getItemDescription()!=null;			
+			</code>
+		</method>
+		
+	</component>
+
+	<component id="UIImageItem" extends="selectItem" render="false" tagName="uiImageItem">
+		<capability id="IVisibilityCapability" />
+		<capability id="IStatesImageCapability" />		
+		<capability id="IAlternateTextCapability" />
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<attribute id="rendered" type="boolean" writeComponent="false"/>
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+		
+	</component>
+	
+	<component id="expandableItem" extends="UIImageItem" abstract="true">
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="ITextCapability" />
+		<capability id="IExpandImageCapability" />
+	
+		<binding-alias id="text" target="itemLabel" />
+		<method id="setText" returnType="void">
+			<parameter type="java.lang.String" name="text" />
+			<code>
+			setItemLabel(text);
+			</code>
+		</method>
+		<method id="getText" returnType="String">
+			<code>
+			return getItemLabel();
+			</code>
+		</method>
+	</component>	
+
+	<component id="fieldSet" extends="abstractOutput">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="IHeadingZoneCapability" default="true" />
+		<capability id="IHeadingLevelCapability" />
+
+		<capability id="IFontCapability" />
+<!--		<capability id="IDisabledCapability" /> -->
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="ITextAlignmentCapability" />
+		<capability id="IAudioDescriptionCapability" />
+		
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IBorderTypeCapability" />
+		<capability id="IImageCapability" />	
+		<capability id="IImageSizeCapability" />
+		<capability id="IVariableScopeCapability" />	
+
+		<capability id="IOverStyleClassCapability" />			
+		
+		<propertyValue>text</propertyValue>
+	</component>	
+
+	<component id="fileItem" abstract="true" extends="cameliaItem">
+		<tagAttribute id="src" type="java.lang.String" generate="true"/>
+
+		<attribute id="charSet" type="java.lang.String" />
+
+		<binding-alias id="src" target="itemValue" />
+		<method id="setSrc" returnType="void">
+			<parameter type="java.lang.String" name="src" />
+			<code>
+			setItemValue(src);
+			</code>
+		</method>
+		<method id="getSrc" returnType="String">
+			<code>
+			return (String)getItemValue();
+			</code>
+		</method>
+
+	</component>
+
+	<component id="helpButton" extends="imageButton">
+		<capability id="IForCapability" />
+	</component>	
+
+	<component id="imageSubmitButton" extends="imageButton">
+	</component>	
+	
+	<!--<component id="helpMessageZone" extends="abstractOutput">
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IFontCapability" />
+		<capability id="ITextAlignmentCapability" />
+	</component>	
+
+	--><component id="hyperLink" extends="button">
+		<implements id="org.rcfaces.core.internal.capability.IConvertValueHolder" />
+			
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+		<method id="setConverter(javax.faces.convert.Converter)"/>
+		<method id="getConverter()"/>
+		<method id="getConverter(javax.faces.context.FacesContext)"/>
+-
+		<method id="getLocalValue()"/>
+
+		<tagAttribute id="converter" type="java.lang.String" generate="true"/>
+	</component>	
+
+	<component id="image" extends="abstractOutput">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<implements id="org.rcfaces.core.internal.capability.IToolTipComponent" />
+
+		<capability id="IImageCapability" />
+		<capability id="IImageSizeCapability" />
+		<capability id="IAlternateTextCapability" />
+	
+		<capability id="IFilterCapability"/>
+						
+		<capability id="IToolTipIdCapability" />
+						
+		<method id="getImageAccessors" returnType="org.rcfaces.core.component.familly.IContentAccessors">
+			<import>org.rcfaces.core.internal.tools.ImageAccessorTools</import>
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				Object value=getLocalValue();
+				if (value==null) {
+					value=getValueBinding(Properties.VALUE);
+				}
+			
+				return ImageAccessorTools.createImageAccessor(facesContext, value);
+			</code>
+		</method>
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+		
+		<propertyValue>imageURL</propertyValue>
+	</component>	
+	
+	<component id="imageButton" extends="button">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<capability id="IImageButtonFamilly" />
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+	</component>	
+
+	<component id="hiddenValue" extends="cameliaInput">
+		<capability id="IClientDataCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IPropertyChangeEventCapability" />
+		<capability id="IImmediateCapability" />
+		<capability id="IValueLockedCapability" />
+		<capability id="IValidationEventCapability" />			
+		<capability id="IUserEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method
+			id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+	</component>
+	
+	<component id="imageCheckButton" extends="checkButton">
+		<capability id="IImageButtonFamilly" />
+		
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+		
+		<propertyValue>selected</propertyValue>
+	</component>	
+
+	<component id="imageCombo" extends="abstractMenu">
+		<capability id="IImageButtonFamilly" />
+		<capability id="IShowDropDownMarkCapability" />
+		<capability id="IAudioDescriptionCapability" />
+		
+		<attribute id="popupRowNumber" type="int">
+		</attribute>
+		
+		<method id="getTextPositionConverter" modifier="protected"
+			returnType="javax.faces.convert.Converter" final="false">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter
+			</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+	</component>	
+
+	<component id="imagePagerButton" extends="imageButton">
+
+		<capability id="IForCapability" required="true"/>
+
+		<attribute id="type" type="java.lang.String" required="true"/>		
+		<attribute id="hideIfDisabled" type="boolean" required="false"/>		
+	</component>	
+
+	<component id="imageCriteriaButton" extends="imageButton">
+
+		<capability id="IForCapability" required="true"/>
+
+		<attribute id="type" type="java.lang.String" required="true"/>		
+		<attribute id="hideIfDisabled" type="boolean" required="false"/>		
+	</component>	
+
+	<component id="textEditorImageButton" extends="imageButton">
+		<capability id="IForCapability" required="true"/>
+		<capability id="IRadioGroupCapability" required="true"/>
+
+		<attribute id="type" type="java.lang.String" required="true"/>		
+	</component>	
+
+	<component id="imageRadioButton" extends="radioButton">
+		<capability id="IImageButtonFamilly" />
+		
+		<method id="getTextPositionConverter" modifier="protected"
+			returnType="javax.faces.convert.Converter" final="false">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter
+			</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+	</component>	
+
+	<component id="imageResetButton" extends="imageButton">
+	</component>
+
+	<component id="lineBreak" extends="cameliaBase">
+		<capability id="IStyleClassCapability" />
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+
+		<attribute id="rendered" type="boolean" writeComponent="false"/>
+
+		<method id="setHiddenMode(String)" />
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+
+	</component>	
+
+	<component id="list" extends="combo">
+		<capability id="IMultipleSelectCapability" />
+		<capability id="IDoubleClickEventCapability" />
+
+		<attribute id="rowNumber" type="int" />		
+
+<!-- *************************************************************
+		<method id="listAllSelectedItems" />
+		<method id="listIndexOfAllSelectedItems" />
+
+		<method id="selectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.ListTools</import>
+			<code>
+			ListTools.selectAll(this);
+			</code>
+		</method>
+		
+		<method id="deselect" returnType="void">
+			<parameter type="int" name="index" />
+			<code>
+			UISelectItem item=getItemAt(index);
+			if (item==null) {
+				return;
+			}
+			
+			deselect(item);
+			</code>
+		</method>
+		<method id="deselect" returnType="void">
+			<parameter type="javax.faces.component.UISelectItem" name="item" />
+			<code>
+			ListTools.deselect(this, item);
+			</code>
+		</method>
+		*************************************************************
+-->
+		
+	</component>
+
+
+	<component id="messageDialog" extends="cameliaInput">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="IImageCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IVisibilityCapability" />
+		<capability id="IDialogPriorityCapability" />
+		<capability id="IImmediateCapability" />
+		<capability id="IValidationEventCapability" />			
+		<capability id="ISizeCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IWAIRoleCapability" />
+		<capability id="ISelectionEventCapability" />		
+		<capability id="IUserEventCapability" />
+
+		<attribute id="title" type="java.lang.String" />
+		<attribute id="defaultValue" type="java.lang.String" />
+
+		<method id="setHiddenMode(String)" />
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+	</component>
+
+
+	<component id="viewDialog" extends="cameliaOutput">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<implements id="javax.faces.component.NamingContainer" />
+
+		<capability id="IImageCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IVisibilityCapability" />
+		<capability id="IDialogPriorityCapability" />
+		<capability id="ISizeCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IWAIRoleCapability" />
+		<capability id="ICloseEventCapability" />
+		<capability id="IClosableCapability" default="true" />
+		<capability id="IImmediateCapability" forceComponent="true"/>
+
+		<capability id="IClientDataCapability" />
+		<capability id="IServerDataCapability" />
+
+
+		<attribute id="viewURL" type="java.lang.String" />
+		<attribute id="shellDecoratorName" type="java.lang.String" />
+		<attribute id="returnFocusClientId" type="java.lang.String" />
+
+		<method id="setHiddenMode(String)" />
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+		
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+	</component>
+	
+	<component id="submitWait" extends="cameliaBase">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="IImageCapability" />
+		<capability id="ITextCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="ISizeCapability" />		
+		<capability id="IWAIRoleCapability" />
+		<capability id="ILookAndFeelCapability" />
+	
+		<attribute id="backgroundMode" type="java.lang.String" />
+		
+	</component>
+
+	<component id="message" extends="abstractMessage">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="IImageSizeCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ISeverityStyleClassCapability" />
+		<capability id="ISeverityImagesCapability" />
+	<!--	<capability id="IBundleVarCapability" /> -->
+		<capability id="ICaptionCapability" />		
+		
+		<!--  <attribute id="setFocusIfMessage" type="boolean" />  -->
+		<attribute id="showIfMessage" type="boolean" />
+		<attribute id="showActiveComponentMessage" type="boolean" />
+
+	</component>
+
+	<component id="messageFieldSet" extends="fieldSet">
+		<capability id="IForCapability" required="true"/>
+		<capability id="ISeverityStyleClassCapability" />
+		<capability id="ISeverityImagesCapability" />
+		<!-- <capability id="IBundleVarCapability" /> -->
+
+		<method id="getInfoImageAccessor(javax.faces.context.FacesContext)"/>
+
+		<method id="getWarnImageAccessor(javax.faces.context.FacesContext)"/>
+
+		<method id="getErrorImageAccessor(javax.faces.context.FacesContext)"/>
+
+		<method id="getFatalImageAccessor(javax.faces.context.FacesContext)"/>
+
+		<attribute id="setFocusIfMessage" type="boolean" />
+		<attribute id="showActiveComponentMessage" type="boolean" />
+	</component>	
+
+	<component id="messages" extends="abstractMessages">
+		<capability id="ISeverityStyleClassCapability" />	
+		<!-- <capability id="IBundleVarCapability" /> -->
+		<capability id="ICaptionCapability" />		
+
+		<attribute id="showIfMessage" type="boolean" />
+		<attribute id="showActiveComponentMessage" type="boolean" />
+		
+		<attribute id="maxCount" type="int" />
+	</component>
+
+	<component id="menu" extends="cameliaSelectMany" render="false">
+		<implements id="org.rcfaces.core.component.IMenuComponent" importMethods="false" />
+		<implements id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability" importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.ICheckComponent" importMethods="false" />
+
+		<capability id="IPreloadedLevelDepthCapability" />
+		<capability id="IMenuEventCapability" />
+		<capability id="ISelectionEventCapability" />		
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+
+		<attribute id="menuId" type="java.lang.String" />
+		<attribute id="removeAllWhenShown" type="boolean" />
+		<!-- <attribute id="itemImageWidth" type="int"/> <attribute id="itemImageHeight" 
+			type="int"/> -->
+
+		<method id="listMenuItems"/>
+
+		<method id="getComponentValueType"
+			returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.MenuTools</import>
+			<code>
+				return MenuTools.MENU_VALUE_TYPE;
+			</code>
+		</method>
+
+<!-- Check/uncheck -->
+		<method id="check" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.check(null, this, value);
+			</code>
+		</method>
+		<method id="checkAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.checkAll(null, this);
+			</code>
+		</method>
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				CheckTools.uncheck(null, this, value);
+			</code>
+		</method>
+		<method id="uncheckAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.uncheckAll(null, this);
+			</code>
+		</method>
+
+		<tagAttribute id="converter" type="java.lang.String" generate="true"/>
+	</component>
+	
+	<component id="menuBar" extends="abstractMenu" >
+		<action id="action" type="selection" default="true" />		
+	</component>
+
+	<component id="menuCheckItem" extends="menuItem" render="false">
+	</component>	
+
+	<component id="menuItem" extends="expandableItem" render="false">
+		<capability id="IAccessKeyCapability" />
+		<capability id="IAcceleratorKeyCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IImmediateCapability" forceComponent="true"/>
+
+		<capability id="IMenuEventCapability" />
+
+		<attribute id="removeAllWhenShown" type="boolean" />
+
+		<method id="getMenu" />
+		<method id="listMenuItems"/>
+	</component>	
+
+	<component id="menuSeparator" extends="abstractSeparator" render="false">
+	</component>	
+
+	<component id="menuRadioItem" extends="menuCheckItem" render="false">
+		<capability id="IRadioValueCapability" />
+	</component>
+
+	<component id="numberEntry" extends="abstractInput">
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+
+		<capability id="IRequiredCapability" />
+		<capability id="IAutoTabCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="INumberFormatTypeCapability" />
+		<capability id="ILiteralLocaleCapability" />
+		<capability id="IComponentLocaleCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+		<capability id="IAlternateTextCapability" />
+
+		<attribute id="autoCompletion" type="boolean" default="true" />
+
+		<attribute id="integerDigits" type="int" />
+		<attribute id="fractionDigits" type="int" />
+	
+		<attribute id="numberFormat" type="java.lang.String" />
+	
+		<attribute id="integerStep" type="java.lang.String" />
+		<attribute id="fractionStep" type="java.lang.String" />
+
+		<method id="setValue" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<import>javax.faces.context.FacesContext</import>
+			<import>org.rcfaces.core.internal.converter.LiteralNumberConverter
+			</import>
+			<code><![CDATA[			
+				if (value instanceof String) {
+					value=LiteralNumberConverter.SINGLETON.getAsObject(null, this, (String)value);
+				}
+				
+				super.setValue(value);
+			]]></code>
+		</method>
+
+		<method id="setNumberFormatType" returnType="void">
+			<parameter type="String" name="formatType" />
+			<import>org.rcfaces.core.internal.converter.NumberFormatTypeConverter
+			</import>
+			<code>
+				setNumberFormatType(((Integer)NumberFormatTypeConverter.SINGLETON.getAsObject(null,
+				this, formatType)).intValue());
+			</code>
+		</method>	
+
+		<attribute id="number" type="java.lang.Number"
+			writeComponent="false" />
+		<method id="getNumber" returnType="java.lang.Number">
+			<code><![CDATA[			
+				Object submittedValue=getSubmittedExternalValue();
+				if (submittedValue!=null) {
+					return (Number)submittedValue;
+				}
+			
+				return (Number)getValue();
+			]]></code>
+		</method>
+
+		<method id="setNumber">
+			<parameter type="double" name="number" />
+			<code>
+				setValue(new Double(number));
+			</code>			
+		</method>
+
+		<method id="setNumber">
+			<parameter type="long" name="number" />
+			<code>
+				setValue(new Long(number));
+			</code>			
+		</method>
+
+		<method id="setNumber">
+			<parameter type="java.lang.Number" name="number" />
+			<code>
+				setValue(number);
+			</code>			
+		</method>
+
+		<method id="setNumber">
+			<parameter type="String" name="number" />
+			<code>
+				setValue(number);
+			</code>
+		</method>
+
+		<attribute id="minimum" type="java.lang.Number" />
+		<method id="setMinimum(String)" />
+
+		<attribute id="defaultNumber" type="java.lang.Number" />
+		<method id="setDefaultNumber(String)" />
+
+		<attribute id="maximum" type="java.lang.Number" />
+		<method id="setMaximum(String)" />
+
+		<propertyValue>number</propertyValue>
+
+		<method id="setLiteralLocale(String)" />
+		<method id="setComponentLocale(String)" />
+
+		<method
+			id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method
+			id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method
+			id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method
+			id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method
+			id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+	</component>
+	
+	<component id="passwordEntry" extends="textEntry">
+	</component>
+
+	<component id="progressBar" extends="abstractInput">
+		<attribute id="minimum" type="double" />		
+		<attribute id="maximum" type="double" />		
+		<attribute id="indeterminate" type="boolean" />		
+	</component>
+
+	<!--<component id="progressIndicator" extends="abstractBasic">
+		<implements id="javax.faces.component.NamingContainer" />
+		<template>
+			<import>org.rcfaces.core.component.ProgressBarComponent</import>
+			<import>org.rcfaces.core.component.TextComponent</import>
+			<code>
+				ProgressBarComponent progressBar=new ProgressBarComponent("progressBar");
+				getChildren().add(progressBar);
+
+				TextComponent textComponent=new TextComponent("label");
+				getChildren().add(textComponent);
+			</code>
+		</template>
+		<attribute id="indeterminate" type="boolean" />		
+	</component>
+
+	--><component id="suggestTextEntry" extends="textEntry">
+		
+		<behaviorEvent id="items.request" />
+	
+		<capability id="IFilterCapability"/>
+		<capability id="IMaxResultNumberCapability"/>
+		<capability id="ISuggestionEventCapability" />
+		<capability id="IMenuEventCapability" />
+
+		<attribute id="suggestionDelayMs" type="int" />		
+		<attribute id="suggestionMinChars" type="int" />		
+		<attribute id="caseSensitive" type="boolean" />
+		<attribute id="forceProposal" type="boolean" />
+		<attribute id="suggestionValue" type="java.lang.Object" />
+		<attribute id="suggestionConverter" type="javax.faces.convert.Converter" />
+		<attribute id="moreResultsMessage" type="java.lang.String" />
+		<attribute id="orderedItems" type="boolean" default="false" />
+		<attribute id="showPopupForOneResult" type="boolean" />
+		<attribute id="disableProposals" type="boolean" />
+
+		<attribute id="inputFormat" type="java.lang.String" />
+		<attribute id="labelFormat" type="java.lang.String" />
+		<attribute id="descriptionFormat" type="java.lang.String" />
+
+		<attribute id="popupWidth" type="int"/>
+		<attribute id="popupHeight" type="int"/>
+	
+		<method id="setSuggestionConverter(String)" />
+		<method id="setSuggestionConverter(String,javax.faces.context.FacesContext)" />
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+		
+	</component>
+
+	<component id="radioButton" extends="abstractInput">
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IHorizontalTextPositionCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+		<capability id="IFocusStyleClassCapability" />
+
+		<capability id="ISelectedCapability" />
+		<capability id="IRadioValueCapability" />
+		<capability id="IRequiredCapability" />
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter" final="false">
+			<import>org.rcfaces.core.internal.converter.HorizontalTextPositionConverter</import>
+			<code>
+				return HorizontalTextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+
+		<method id="getSelectedFromSameGroup" returnType="org.rcfaces.core.component.RadioButtonComponent">
+			<import>org.rcfaces.core.internal.tools.RadioButtonTools</import>
+			<code>
+			return RadioButtonTools.getSelectedRadioButtonFromSameGroup(this);
+			</code>
+		</method>
+	
+		<method id="listSameGroup" returnType="org.rcfaces.core.component.iterator.IRadioButtonIterator">
+			<import>org.rcfaces.core.internal.tools.RadioButtonTools</import>
+			<code>
+			return RadioButtonTools.listRadioButtonSameGroup(this);
+			</code>
+		</method>
+
+		<method id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+		
+	</component>	
+
+	<component id="resetButton" extends="button">
+	</component>	
+
+	<component id="ruler" extends="cameliaBase">
+		<capability id="IPositionCapability" />
+		<capability id="ILayoutPositionCapability" />
+		<capability id="IMarginCapability" />
+		<capability id="ISizeCapability" />
+		<capability id="IVisibilityCapability" />
+		<capability id="IHiddenModeCapability" />
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IOrientationCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="IAlignmentCapability" />
+
+		<attribute id="rendered" type="boolean" writeComponent="false"/>
+		<attribute id="margins" type="java.lang.String" writeComponent="false" noValueBinding="true"/>
+
+		<method id="setMargins(String)"/>
+		<method id="setHiddenMode(String)" />
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+	</component>	
+
+	<component id="scope" extends="cameliaBase">
+		<capability id="IVariableScopeCapability" />	
+	</component>
+	
+	<component id="submitButton" extends="button">
+	</component>	
+
+	<component id="spinner" extends="textEntry">		
+		<attribute id="minimum" type="double" />
+		<attribute id="maximum" type="double" />
+		<attribute id="cycleValue" type="boolean" />
+		<attribute id="step" type="java.lang.String" />
+<!--		<attribute id="defaultValue" type="double" /> -->
+	</component>
+	
+	<component id="styledMessage" extends="abstractBasic">
+		<capability id="IBackgroundImageCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IInitEventCapability" />
+		<capability id="IForCapability" required="true"/>
+		<capability id="ISeverityStyleClassCapability" />
+
+		<attribute id="showIfMessage" type="boolean" />
+		<attribute id="setFocusIfMessage" type="boolean" />
+	</component>
+	
+	<component id="heading" extends="text">
+		<capability id="IHeadingLevelCapability" />
+	</component>	
+	
+	<component id="styledText" extends="text">
+	</component>	
+
+	<component id="cardBox" extends="abstractInput">
+		<capability id="ISelectionEventCapability" />
+		<capability id="IAsyncRenderModeCapability" />
+		<capability id="IPreferencesSettings" />
+		<capability id="IVariableScopeCapability" />	
+		<capability id="IAsyncDecodeModeCapability" />
+
+		<capability id="IHeadingZoneCapability" default="true" />
+		<capability id="IHeadingLevelCapability" />
+
+		<propertyValue>value</propertyValue>
+
+		<method id="listCards" />
+		<method id="getSelectedCard" />
+		<method id="getSelectedCard(javax.faces.context.FacesContext)" />
+		<method id="select" returnType="void">
+			<parameter type="org.rcfaces.core.component.CardComponent" name="card" />
+			<import>org.rcfaces.core.internal.tools.CardBoxTools</import>
+			<code>
+			CardBoxTools.selectCard(this, card);
+			</code>
+		</method>
+		<method id="setAsyncRenderMode(String)" />	
+		<method id="setAsyncDecodeMode(String)" />	
+		
+		<method id="verifyAsyncDecode"  modifier="protected" returnType="boolean">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<parameter type="javax.faces.event.PhaseId" name="phaseId" />
+			<code>
+				return true;
+			</code>
+		</method>
+	</component>
+	
+	<component id="card" extends="abstractOutput">
+		<implements id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+		<behaviorEvent id="asyncRender.request" />
+
+		<capability id="ITextAlignmentCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IVariableScopeCapability" />	
+		<capability id="IAsyncDecodeModeCapability" />
+
+		<capability id="ILoadEventCapability" />
+
+		<method id="getCardBox" returnType="org.rcfaces.core.component.CardBoxComponent">
+			<import>org.rcfaces.core.internal.tools.CardBoxTools</import>
+			<code>
+				return CardBoxTools.getCardBox(this);
+			</code>
+		</method>
+		
+		<method id="getAsyncDecodeMode" returnType="int">
+			<import>org.rcfaces.core.component.capability.IAsyncDecodeModeCapability
+			</import>
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code><![CDATA[			
+				if (engine.isPropertySetted(Properties.ASYNC_DECODE_MODE)) {			
+					return engine.getIntProperty(Properties.ASYNC_DECODE_MODE,0, facesContext);
+				}
+				
+				CardBoxComponent cardBox=getCardBox();
+				if (cardBox==null) {
+					return IAsyncDecodeModeCapability.DEFAULT_ASYNC_DECODE_MODE;
+				}
+				
+				return cardBox.getAsyncDecodeMode(facesContext);
+			]]></code>
+		</method>
+		
+		<method id="setAsyncDecodeMode(String)" />	
+	</component>
+
+	<component id="tabbedPane" extends="cardBox">
+		<capability id="ICloseEventCapability" />
+		<capability id="IClosableCapability" />
+		<capability id="IPreSelectionEventCapability" />
+		
+		<!-- Affiche le titre de l'onglet -->
+		<capability id="IShowValueCapability"/>
+
+		<method id="listTabs" returnType="org.rcfaces.core.component.iterator.ITabIterator">
+			<import>org.rcfaces.core.internal.tools.TabbedPaneTools</import>
+			<code>
+				return TabbedPaneTools.listTabs(this);				
+			</code>
+		</method>
+		<method id="getSelectedTab" returnType="org.rcfaces.core.component.TabComponent">
+			<code>
+				return (TabComponent)getSelectedCard();
+			</code>
+		</method>
+		<method id="getSelectedTab" returnType="org.rcfaces.core.component.TabComponent">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				return (TabComponent)getSelectedCard(facesContext);
+			</code>
+		</method>
+		<method id="select" returnType="void">
+			<parameter type="org.rcfaces.core.component.TabComponent"
+				name="tab" />
+			<code>
+				super.select(tab);
+			</code>
+		</method>
+	</component>
+	<component id="tab" extends="card">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IFontCapability" />
+		<capability id="IDisabledCapability" />
+		<capability id="IStatesImageCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="IMenuCapability" />
+
+		<method id="getTabbedPane" returnType="org.rcfaces.core.component.TabbedPaneComponent">
+			<code>
+				return (TabbedPaneComponent)getCardBox();
+			</code>
+		</method>		
+	</component>
+
+	<component id="tabNamingContainer" extends="tab">
+		<implements id="javax.faces.component.NamingContainer" />
+<!-- 	<capability id="IPrependIdCapability" default="true" /> -->
+		
+<!--	<method id="getContainerClientId(javax.faces.context.FacesContext)" />
+-->		
+	</component>
+
+	<component id="text" extends="abstractOutput" textBodyContent="true">
+		<capability id="ITextCapability" />
+		<capability id="IAudioDescriptionCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IFontCapability" />
+		<capability id="ITextAlignmentCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="IForCapability" />
+<!--		<capability id="IValueAdapterCapability" /> -->
+		
+		<capability id="ITypedComponentCapability" />	
+
+		<propertyValue>text</propertyValue>
+	</component>
+	
+	<component id="textArea" extends="abstractInput">
+		<capability id="IRequiredCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IEmptyMessageCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />			
+		<capability id="ISelectionEventCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="IMaxTextLengthCapability" />
+		
+		<action id="action" type="selection" default="true" />
+		
+		<attribute id="columnNumber" type="int" />
+		<attribute id="rowNumber" type="int" />
+
+		<attribute id="ignoreWhenFull" type="boolean" />
+
+		<propertyValue>text</propertyValue>
+
+	</component>
+
+	<component id="textEditor" extends="abstractInput">
+		<capability id="IRequiredCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IEmptyMessageCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />			
+		<capability id="ISelectionEventCapability" />
+		<capability id="IAlternateTextCapability" />
+		
+		<action id="action" type="selection" default="true" />
+
+		<attribute id="valueMimeType" type="java.lang.String" />
+
+		<propertyValue>text</propertyValue>
+		
+	</component>
+
+	<component id="textEntry" extends="abstractInput">
+		<capability id="IRequiredCapability" />
+		<capability id="IAutoTabCapability" />
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IEmptyMessageCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+		<capability id="IAlternateTextCapability" />
+		<capability id="IMaxTextLengthCapability" />
+		
+		<!--
+		<capability id="IValueAdapterCapability" />
+		-->
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+		<capability id="IClientValidationCapability" />
+		<capability id="ISelectionEventCapability" />
+		
+		<action id="action" type="selection" default="true" />
+		
+		<attribute id="columnNumber" type="int" />
+		<attribute id="autoCompletion" type="boolean" default="true" />
+
+		<propertyValue>text</propertyValue>
+
+		<method id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method
+			id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+
+		<method id="setClientValidator" returnType="void">
+			<import>org.rcfaces.core.internal.tools.ClientValidatorTools</import>
+			<parameter type="String" name="clientValidator" />
+			<code><![CDATA[			
+				engine.setProperty(Properties.CLIENT_VALIDATOR, clientValidator);
+				
+				ClientValidatorTools.setClientValidator(null, this);
+			]]></code>
+		</method>
+
+	</component>
+
+	<component id="timeEntry" extends="abstractInput">
+		<import>org.rcfaces.core.lang.Time</import>
+
+		<implements id="org.rcfaces.core.internal.manager.IValidationParameters" />
+
+		<capability id="IRequiredCapability" />
+		<capability id="IAutoTabCapability" />
+		<capability id="IValueChangeEventCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="ILiteralLocaleCapability" />
+		<capability id="ILiteralTimeZoneCapability" />
+		<capability id="IComponentLocaleCapability" />
+		<capability id="IComponentTimeZoneCapability" />
+		<capability id="ISeverityStyleClassCapability" />	
+		<capability id="IAlternateTextCapability" />
+
+		<attribute id="autoCompletion" type="boolean" default="true" />
+
+		<attribute id="time" type="Time" writeComponent="false"/>
+		<method id="getTime" returnType="Time">
+			<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+			<import>javax.faces.context.FacesContext</import>
+			<import>javax.faces.FacesException</import>
+			<import>org.rcfaces.core.lang.IAdaptable</import>
+			<code><![CDATA[			
+				Object submittedValue=getSubmittedExternalValue();
+				if (submittedValue!=null) {
+					return (Time)submittedValue;
+				}
+
+				Object value=getValue();
+				
+				if (value==null) {
+					return null;
+				}
+				
+				if (value instanceof Time) {
+					return (Time)value;
+				}
+				
+				if (value instanceof String) {
+				return (Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this,
+				(String)value);
+				}
+
+				if (value instanceof IAdaptable) {
+					Time adapted=(Time)((IAdaptable)value).getAdapter(Time.class, this);
+					if (adapted!=null) {
+						return adapted;
+					}
+				}
+
+				throw new FacesException("Value of timeEntry is not a time ! ("+value+")");
+			]]></code>
+		</method>
+
+		<method id="setTime">
+			<parameter type="Time" name="time" />
+			<code>
+				setValue(time);
+			</code>			
+		</method>
+
+		<method id="setTime(String)" />
+
+		<attribute id="minTime" type="Time" />
+		<method id="setMinTime(String)" />
+
+		<attribute id="defaultTime" type="Time" />
+		<method id="setDefaultTime(String)" />
+
+		<attribute id="maxTime" type="Time" />
+		<method id="setMaxTime(String)" />
+	
+		<attribute id="timeFormat" type="java.lang.String" />
+	
+		<attribute id="hourStep" type="java.lang.String" />
+		<attribute id="minuteStep" type="java.lang.String" />
+		<attribute id="secondStep" type="java.lang.String" />
+		<attribute id="millisStep" type="java.lang.String" />
+
+		<propertyValue>time</propertyValue>
+
+		<method id="setLiteralLocale(String)" />
+		<method id="setComponentLocale(String)" />
+		<method id="setLiteralTimeZone(String)" />
+		<method id="setComponentTimeZone(String)" />
+
+		<method id="getValidationParameter(String,javax.faces.context.FacesContext)" />
+		<method id="getValidationParametersCount(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameter(String,javax.faces.el.ValueBinding, boolean)" />
+		<method id="getValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="getClientValidationParametersMap(javax.faces.context.FacesContext)" />
+		<method id="setValidationParameterData(String, Object, boolean)" />
+		<method id="isClientSideValidationParameter(String,javax.faces.context.FacesContext)" />
+	</component>
+
+	<component id="toolBar" extends="abstractBasic">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+
+		<capability id="IInitEventCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IBorderTypeCapability" />
+
+		<attribute id="separatorImageURL" type="java.lang.String" />
+		<attribute id="separatorImageWidth" type="int" />
+		<attribute id="separatorImageHeight" type="int" />
+		<attribute id="separatorAlternateText" type="java.lang.String" />
+
+		<attribute id="controlImageURL" type="java.lang.String" />
+		<attribute id="controlImageWidth" type="int" />
+		<attribute id="controlImageHeight" type="int" />
+		<attribute id="controlAlternateText" type="java.lang.String" />
+
+		<attribute id="itemPadding" type="int" />
+		
+		<attribute id="locked" type="boolean" />
+		
+		<method id="listToolFolders"/>
+	</component>
+
+	<component id="toolFolder" extends="abstractBasic">
+		<capability id="IInitEventCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IBorderTypeCapability" />
+		
+		<method id="getToolBar"/>
+	</component>
+
+	<component id="textEditorToolFolder" extends="toolFolder">
+		<implements id="javax.faces.component.NamingContainer" />
+
+		<attribute id="itemTypes" type="java.lang.String" />
+		<attribute id="fontSizes" type="java.lang.String" />
+		<attribute id="fontNames" type="java.lang.String" />
+
+		<attribute id="for" type="java.lang.String" />
+	</component>
+
+	<component id="textEditorCombo" extends="combo">
+		<capability id="IForCapability" required="true"/>
+
+		<attribute id="type" type="java.lang.String" required="true"/>		
+	</component>	
+
+	<component id="itemsToolFolder" extends="abstractInput">
+		<implements id="javax.faces.component.NamingContainer" />
+
+		<capability id="IInitEventCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="ITextPositionCapability" />		
+		<capability id="IBorderTypeCapability" />
+
+		<capability id="ISelectionEventCapability" />
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+		<capability id="IDisabledCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		<capability id="IShowDropDownMarkCapability" />
+
+		<attribute id="defaultItemLookId" type="java.lang.String" />
+		<attribute id="defaultItemStyleClass" type="java.lang.String" />
+
+		<attribute id="itemHiddenMode" type="int" />
+
+		<method id="setItemHiddenMode(String)" />
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+
+		<method id="getToolBar"/>
+	</component>
+
+	<component id="toolItem" extends="UIImageItem" render="false">
+		<capability id="IRadioGroupCapability" />
+		<capability id="IInputTypeCapability" />
+		<capability id="IImageSizeCapability" />		
+		<capability id="ILookAndFeelCapability" />		
+		<capability id="IBorderTypeCapability" />		
+		<capability id="ITextPositionCapability" />		
+		<capability id="IAccessKeyCapability" />		
+		<capability id="IWidthCapability" />		
+		<capability id="IStyleClassCapability" />
+		<capability id="IImmediateCapability" forceComponent="true"/>
+
+		<method id="setInputType(String)" />
+
+		<method id="getToolFolder"/>
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setTextPosition(String)" />
+	</component>
+
+	<component id="toolItemSeparator" extends="abstractSeparator" render="false">
+		<capability id="IAlternateTextCapability" />
+
+		<method id="getToolFolder"/>
+	</component>	
+	
+	<component id="tree" extends="abstractInput">
+		<implements id="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueTypeCapability" importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.ISelectionComponent" importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.ICheckComponent" importMethods="false" />
+
+		<capability id="ICaptionCapability"/>
+		<capability id="IHeadingLevelCapability"/>
+	
+		<capability id="IOutlinedLabelCapability" />
+
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="IRequiredCapability" />
+		<capability id="IScrollableCapability" />
+		<capability id="IBorderCapability" />
+		<capability id="IReadOnlyCapability" />
+		<capability id="IMenuCapability" />
+		<capability id="IShowValueCapability"/>
+		<capability id="IOverStyleClassCapability"/>
+		<capability id="IFilterCapability"/>
+
+		<capability id="ILoadEventCapability" />
+		<capability id="IExpandEventCapability" />
+		<capability id="IPreSelectionEventCapability" />
+
+		<capability id="IDragEventCapability" />
+		<capability id="IDraggableCapability" />
+		<!--  capability id="IDraggableItemsCapability" /-->
+		<capability id="IDropEventCapability" />
+		<capability id="IDropCompleteEventCapability" />
+		<capability id="IDroppableCapability" />
+		<!-- capability id="IDroppableItemsCapability" /-->
+		<method id="setDragEffects(String)" />	
+		<method id="setDragTypes(String)" />
+		<method id="setDropEffects(String)" />
+		<method id="setDropTypes(String)" />
+
+
+		<capability id="ICheckableCapability" />
+		<capability id="ICheckCardinalityCapability" />
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+		<capability id="IClientCheckFullStateCapability" />
+
+		<capability id="ISelectableCapability" />
+		<capability id="ISelectionCardinalityCapability" />
+		<capability id="ISelectionEventCapability" />
+		<capability id="ISelectedValuesCapability" onlyValueBinding="true" />
+		<capability id="IClientSelectionFullStateCapability" />
+		
+		<capability id="IPreloadedLevelDepthCapability" />
+
+		<capability id="IExpandableCapability" />
+		<capability id="IExpandedValuesCapability" onlyValueBinding="true" />
+
+		<behaviorEvent id="tree.request" />
+
+		<attribute id="defaultImageURL" type="java.lang.String" />
+		<attribute id="defaultSelectedImageURL" type="java.lang.String" />
+		<attribute id="defaultExpandedImageURL" type="java.lang.String" />
+		<attribute id="defaultCollapsedImageURL" type="java.lang.String" />
+		<attribute id="defaultDisabledImageURL" type="java.lang.String" />
+		
+		<attribute id="defaultLeafImageURL" type="java.lang.String" />
+		<attribute id="defaultSelectedLeafImageURL" type="java.lang.String" />
+		<attribute id="defaultExpandedLeafImageURL" type="java.lang.String" />
+		<attribute id="defaultDisabledLeafImageURL" type="java.lang.String" />
+		
+		<attribute id="hideRootExpandSign" type="boolean" default="false"/>
+		
+		<attribute id="bodyDroppable" type="boolean" default="false"/>
+
+		<attribute id="cursorValue" type="java.lang.Object" />
+
+		<attribute id="expansionUseValue" type="boolean" />
+		<attribute id="schrodingerCheckable" type="boolean" />
+
+		<method id="setClientSelectionFullState(String)" /> 		
+		<method id="setClientCheckFullState(String)" /> 
+
+		<propertyValue>value</propertyValue>
+
+		<method id="setFilterProperties(String)" returnType="void" />
+	
+		<method id="getComponentValueType" returnType="org.rcfaces.core.internal.tools.CollectionTools.IComponentValueType">
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				return TreeTools.TREE_VALUE_TYPE;
+			</code>
+		</method>
+	
+		<method id="setSelectionCardinality(String)" />
+		<method id="setCheckCardinality(String)" />
+
+		<method id="removeAllTreeNodes" returnType="void">
+			<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+			<import>javax.faces.component.UISelectItem</import>
+			<code>
+			ComponentIterators.removeAll(this, UISelectItem.class);
+			</code>
+		</method>
+		
+
+<!-- Selection/deselection -->
+		<method id="select" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				SelectionTools.select(null, this, rowValue);
+			</code>
+		</method>
+		<method id="selectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				SelectionTools.selectAll(null, this);
+			</code>
+		</method>
+
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				SelectionTools.deselect(null, this, rowValue);
+			</code>
+		</method>
+		<method id="deselectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				SelectionTools.deselectAll(null, this);
+			</code>
+		</method>
+
+<!-- Check/uncheck -->
+		<method id="check" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.check(null, this, rowValue);
+			</code>
+		</method>
+		<method id="checkAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.checkAll(null, this);
+			</code>
+		</method>
+
+		<method id="uncheck" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				CheckTools.uncheck(null, this, rowValue);
+			</code>
+		</method>
+		<method id="uncheckAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.CheckTools</import>
+			<code>
+				CheckTools.uncheckAll(null, this);
+			</code>
+		</method>
+		
+<!--  Expand/Collapse -->		
+		<method id="collapseAll" returnType="void">
+			<code>
+				collapseAll(null);
+			</code>
+		</method>
+		<method id="collapseAll" returnType="void">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+			<code>
+				ExpansionTools.collapseAll(context, this);
+			</code>
+		</method>
+		<method id="expandAll" returnType="void">
+			<code>
+				expandAll(null);
+			</code>
+		</method>
+		<method id="expandAll" returnType="void">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+			<code>
+				ExpansionTools.expandAll(context, this);
+			</code>
+		</method>
+		<method id="setExpanded" returnType="void">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<parameter type="java.lang.Object" name="value" />
+			<parameter type="boolean" name="expanded" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				TreeTools.setExpanded(context, this, value, expanded);
+			</code>
+		</method>
+		<method id="expand" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+			<code>
+				ExpansionTools.expand(null, this, value);
+			</code>
+		</method>
+		<method id="collapse" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+			<code>
+				ExpansionTools.collapse(null, this, value);
+			</code>
+		</method>
+		<method id="setExpanded" returnType="void">
+			<parameter type="java.lang.Object" name="value" />
+			<parameter type="boolean" name="expanded" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				setExpanded(null, value, expanded);
+			</code>
+		</method>
+		<method id="isExpanded" returnType="boolean">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<parameter type="java.lang.Object" name="value" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				return TreeTools.isExpanded(context, this, value);
+			</code>
+		</method>
+		
+<!--  Cursor  -->		
+		<method id="getCursorValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+			<code><![CDATA[			
+				if (engine.isPropertySetted(Properties.CURSOR_VALUE)) {
+					return engine.getValue(Properties.CURSOR_VALUE, facesContext);
+				}
+				
+				Object cursorValue=ComponentTools.getCursorValue(getValue(), this, facesContext);
+								
+				return cursorValue;				
+			]]></code>
+		</method>
+		<method id="getSelectedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code><![CDATA[			
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)) {
+					return engine.getValue(Properties.SELECTED_VALUES, facesContext);
+				}
+
+				boolean mainValue=isSelectable(facesContext) && isCheckable(facesContext)==false;
+
+				return SelectionTools.getAdaptedValues(getValue(), mainValue);
+			]]></code>
+		</method>
+		<method id="setSelectedValues">
+			<parameter type="java.lang.Object" name="selectedValues" />		
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.SELECTED_VALUES)==false) {
+					if (SelectionTools.setAdaptedValues(getValue(), selectedValues)) {
+						return;
+					}
+
+					boolean mainValue=isSelectable() && isCheckable()==false;	
+					if (mainValue) {						
+						setValue(selectedValues);
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.SELECTED_VALUES, selectedValues);
+			]]></code>
+		</method>
+		<method id="getCheckedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.CHECKED_VALUES)) {
+					return engine.getValue(Properties.CHECKED_VALUES, facesContext);
+				}
+
+				boolean mainValue=isCheckable(facesContext);
+
+				return CheckTools.getAdaptedValues(getValue(), mainValue);
+			]]></code>
+		</method>
+		<method id="setCheckedValues">
+			<parameter type="java.lang.Object" name="checkedValues" />		
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.CHECKED_VALUES)==false) {
+					if (CheckTools.setAdaptedValues(getValue(), checkedValues)) {
+						return;
+					}
+
+					boolean mainValue=isCheckable();						
+					if (mainValue) {
+						setValue(checkedValues);
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.CHECKED_VALUES, checkedValues);
+			]]></code>
+		</method>
+		<method id="getExpandedValues" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.EXPANDED_VALUES)) {
+					return engine.getValue(Properties.EXPANDED_VALUES, facesContext);
+				}
+
+				boolean mainValue=this.isExpandable(facesContext) && this.isSelectable(facesContext)==false && this.isCheckable(facesContext)==false;
+
+				return ExpansionTools.getAdaptedValues(getValue(), mainValue);
+			]]></code>
+		</method>
+		<method id="setExpandedValues">
+			<parameter type="java.lang.Object" name="expandedValues" />
+			<code><![CDATA[
+				if (engine.isPropertySetted(Properties.EXPANDED_VALUES)==false) {
+					if (ExpansionTools.setAdaptedValues(getValue(), expandedValues)) {
+						return;
+					}
+
+					boolean mainValue=this.isExpandable() && this.isSelectable()==false && this.isCheckable()==false;					
+					if (mainValue) {	
+						setValue(expandedValues);
+						return;
+					}
+				}
+								
+				engine.setValue(Properties.EXPANDED_VALUES, expandedValues);
+			]]></code>
+		</method>
+		<method id="getOutlinedLabelMethodSet" returnType="java.util.EnumSet&lt;Method&gt;">
+			<import>org.rcfaces.core.internal.tools.OutlinedLabelTools</import>
+			<import>org.rcfaces.core.component.capability.IOutlinedLabelCapability.Method</import>
+			<code><![CDATA[
+				String method=getOutlinedLabelMethod();
+				
+				return OutlinedLabelTools.normalize(method);
+			
+			]]></code>
+		</method>
+	</component>
+
+	<component id="itemsList" extends="abstractInput">
+		<implements id="javax.faces.component.NamingContainer" />
+
+		<capability id="IHeadingZoneCapability" default="false" />
+		<capability id="IHeadingLevelCapability" />
+
+		<capability id="IInitEventCapability" />
+		<capability id="IMouseEventCapability" />
+		<capability id="IDoubleClickEventCapability" />
+		<capability id="ITextPositionCapability" />		
+		<capability id="IBorderTypeCapability" />
+
+		<capability id="ISelectionEventCapability" />
+		<capability id="ICheckEventCapability" />
+		<capability id="ICheckedValuesCapability" onlyValueBinding="true" />
+		<capability id="IDisabledCapability" />
+		<capability id="IReadOnlyCapability" />
+
+		<attribute id="defaultImageURL" type="java.lang.String" />
+		<attribute id="defaultSelectedImageURL" type="java.lang.String" />
+		<attribute id="defaultHoverImageURL" type="java.lang.String" />
+		<attribute id="defaultDisabledImageURL" type="java.lang.String" />
+
+		<attribute id="defaultItemInputType" type="int" />
+		<attribute id="defaultItemLookId" type="java.lang.String" />
+		<attribute id="defaultItemStyleClass" type="java.lang.String" />
+		<attribute id="defaultItemGroupName" type="java.lang.String" />
+
+		<attribute id="itemPadding" type="int" />
+		<attribute id="itemHiddenMode" type="int" />
+
+		<method id="setItemHiddenMode(String)" />
+
+		<method id="getTextPositionConverter" modifier="protected" returnType="javax.faces.convert.Converter">
+			<import>org.rcfaces.core.internal.converter.TextPositionConverter</import>
+			<code>
+				return TextPositionConverter.SINGLETON;
+			</code>
+		</method>
+
+		<method id="setDefaultItemInputType(String)" />
+
+		<method id="setTextPosition(String)" />
+
+		<method id="getToolBar"/>
+	</component>
+
+	<component id="treeNode" extends="expandableItem" render="false">
+		<capability id="IRadioGroupCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IMenuPopupIdCapability" />
+		
+		<capability id="IInputTypeCapability" />
+		<method id="setInputType(String)" />
+
+		<capability id="IDraggableCapability" />
+		<capability id="IDroppableCapability" />
+		<method id="setDragEffects(String)" />	
+		<method id="setDragTypes(String)" />
+		<method id="setDropEffects(String)" />
+		<method id="setDropTypes(String)" />
+
+		<method id="setExpanded" returnType="void">
+			<parameter type="boolean" name="expanded" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				setExpanded(null, expanded);
+			</code>
+		</method>
+		<method id="setExpanded" returnType="void">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<parameter type="boolean" name="expanded" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				getTree().setExpanded(context, getItemValue(), expanded);
+			</code>
+		</method>
+		<method id="isExpanded" returnType="boolean">
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				return isExpanded(null);
+			</code>
+		</method>
+		<method id="isExpanded" returnType="boolean">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+				return getTree().isExpanded(context, getItemValue());
+			</code>
+		</method>
+
+		<method id="getTree" returnType="org.rcfaces.core.component.TreeComponent">
+			<import>org.rcfaces.core.internal.tools.TreeTools</import>
+			<code>
+			return TreeTools.getTree(this);
+			</code>
+		</method>
+	</component>
+
+		
+	<component id="focusManager" extends="cameliaBase">
+		<attribute id="focusId" type="java.lang.String" />
+		<attribute id="setFocusIfMessage" type="boolean"  default="true" />
+		<attribute id="autoFocus" type="boolean" />
+		<attribute id="autoFocusFrom" type="java.lang.String" />
+	</component>
+		
+	<component id="scheduler" extends="cameliaBase">
+		<import>org.rcfaces.core.lang.Time</import>
+		
+		<capability id="IWidthCapability" />
+		<capability id="IHeightCapability" />
+		<capability id="IScrollableCapability" />
+		<capability id="ILiteralLocaleCapability" />
+		<capability id="ILiteralTimeZoneCapability" />
+		<capability id="IStyleClassCapability"/>
+		<capability id="ITabIndexCapability"/>
+		
+		<capability id="IImmediateCapability" forceComponent="true"/>
+		
+		<capability id="ISelectionEventCapability" />
+		
+		<attribute id="dateBegin" type="java.util.Date"/>
+		<method id="setDateBegin(String)" />
+		<method id="getDateBegin(javax.faces.context.FacesContext)" />
+		
+		
+		<attribute id="hourBegin" type="org.rcfaces.core.lang.Time"/>
+		
+		<method id="setHourBegin" returnType="void">
+		<parameter type="String" name="time" />
+			<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+			<import>org.rcfaces.core.lang.Time</import>
+			<code>
+				Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+				setHourBegin(timeValue);
+			</code>
+		</method>
+		<attribute id="hourEnd" type="org.rcfaces.core.lang.Time" />
+		
+		<method id="setHourEnd" returnType="void">
+		<parameter type="String" name="time" />
+			<import>org.rcfaces.core.internal.converter.LiteralTimeConverter
+			</import>
+			<import>org.rcfaces.core.lang.Time</import>
+			<code><![CDATA[			
+				Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+				setHourEnd(timeValue);
+			]]></code>
+		</method>
+		
+		<attribute id="primaryTick" type="int" />
+		<attribute id="secondaryTick" type="int" />
+		<attribute id="showPrimaryTickLabel" type="boolean" default="true" />
+		<attribute id="showSecondaryTickLabel" type="boolean" default="false" />
+		
+		<attribute id="periods" type="java.lang.Object"/>
+		<attribute id="periodBegin" type="java.util.Date"/>
+		<method id="setPeriodBegin(String)" />
+		<method id="getPeriodBegin(javax.faces.context.FacesContext)" />
+		<attribute id="periodEnd" type="java.util.Date"/>
+		<method id="setPeriodEnd(String)" />
+		<method id="getPeriodEnd(javax.faces.context.FacesContext)" />
+		<attribute id="periodLabel" type="java.lang.String"/>
+		<attribute id="periodStyle" type="java.lang.String"/>
+		<attribute id="periodSelectable" type="boolean" generate="false"/>
+		<attribute id="periodToolTip" type="java.lang.String"/>
+		<attribute id="periodValue" type="java.lang.String"/>
+		<attribute id="periodType" type="java.lang.String"/>
+		
+		<attribute id="var" type="java.lang.String" />
+		
+		
+		<method id="setLiteralLocale(String)" />
+		<method id="setLiteralTimeZone(String)" />
+		
+		<method id="getSchedulerColumn" returnType="java.util.List">
+			<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+			<code><![CDATA[			
+				return ComponentIterators.list(this, SchedulerColumnComponent.class);
+			]]></code>
+		</method>
+		
+		<method id="getPeriodClientData" returnType="java.util.List">
+			<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+			<code><![CDATA[			
+				return ComponentIterators.list(this, PeriodClientDataComponent.class);
+			]]></code>
+		</method>
+		
+	
+	</component>
+	
+	<component id="schedulerColumn" extends="cameliaValueColumn" render="false" converter="true">
+		
+		<capability id="ITextCapability" />
+		<capability id="ITextDirectionCapability" />
+		<capability id="IToolTipTextCapability" />
+		<capability id="IAlignmentCapability" />
+		<capability id="IForegroundBackgroundColorCapability" />
+		<capability id="IStyleClassCapability" />
+		<capability id="IWidthCapability" />
+		<capability id="IHeightCapability" />
+		<capability id="IVerticalAlignmentCapability" />
+		
+		<capability id="ISelectionEventCapability" />	
+		<capability id="IDoubleClickEventCapability" />
+		
+		<capability id="IUserEventCapability" />
+		<capability id="IInitEventCapability" />
+
+		<attribute id="value" type="java.lang.Object" writeComponent="false"/>
+
+		<method id="setConverter(String)"/>
+		<method id="setConverter(javax.faces.context.FacesContext, String)"/>
+
+		<method id="setConverter(javax.faces.convert.Converter)"/>
+		<method id="getConverter()"/>
+
+
+		<method id="getLocalValue" returnType="java.lang.Object">
+			<code>
+				return engine.getLocalValue(Properties.VALUE);
+			</code>
+		</method>
+
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				return getValue(null);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+				return engine.getValue(Properties.VALUE, context);
+			</code>
+		</method>
+		<method id="setValue">
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				engine.setValue(Properties.VALUE, value);
+			</code>
+		</method>
+	</component>
+		
+	
+	<component id="periodClientData" extends="cameliaBase" render="false">
+		<attribute id="name" type="java.lang.String"/>
+		<attribute id="value" type="java.lang.String"/>
+	</component>			
+		
+	<component id="selectItemsIterator" extends="cameliaItems" render="false">
+	
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+	
+		<attribute id="items" type="java.lang.Object" onlyValueBinding="true" />
+		<attribute id="var" type="java.lang.String" noValueBinding="true" />
+
+		<attribute id="itemIndexVar" type="java.lang.String" noValueBinding="true"/>
+
+		<attribute id="itemLabel" type="java.lang.String" />
+		<attribute id="itemValue" type="java.lang.Object" />
+		<attribute id="itemDisabled" type="boolean" />
+		<attribute id="itemDescription" type="java.lang.String" />
+
+		<attribute id="itemAccessKey" type="java.lang.String" />
+		<attribute id="itemAcceleratorKey" type="java.lang.String" />
+		<attribute id="itemGroupName" type="java.lang.String" />
+		<attribute id="itemInputType" type="java.lang.String" />
+		<attribute id="itemStyleClass" type="java.lang.String" />
+		<attribute id="itemImageURL" type="java.lang.String" />
+		<attribute id="itemDisabledImageURL" type="java.lang.String" />
+		<attribute id="itemHoverImageURL" type="java.lang.String" />
+		<attribute id="itemSelectedImageURL" type="java.lang.String" />
+		<attribute id="itemExpandedImageURL" type="java.lang.String" />
+		<attribute id="itemVisibility" type="boolean" />
+	
+		<method id="setValue">
+			<import>javax.faces.FacesException</import>
+			<parameter type="java.lang.Object" name="value" />
+			<code><![CDATA[			
+			throw new FacesException("Can not set value of 'SelectItemsIterator', use 'items' attribute to set the collection.");
+			]]></code>
+		</method>
+		
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+			return getValue(null);
+			</code>			
+		</method>
+		
+		<method id="getValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.SelectItemsIteratorTools</import>
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+			return SelectItemsIteratorTools.getValue(this, context);
+			</code>			
+		</method>
+		
+		
+		<method id="getClientMapAccessor" returnType="IDataMapAccessor">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+			return engine.getDataMapAccessor(context, "clientData", false);
+			</code>			
+		</method>
+		
+		<method id="getServerMapAccessor" returnType="IDataMapAccessor">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+			return engine.getDataMapAccessor(context, "serverData", false);
+			</code>			
+		</method>
+		
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+	</component>
+
+	<component id="viewErrorListener" extends="cameliaBase">
+		<capability id="IClientDataCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IPropertyChangeEventCapability" />
+		<capability id="IErrorEventCapability" />
+
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+	</component>
+
+	<component id="service" extends="cameliaBase">
+		<capability id="IClientDataCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IPropertyChangeEventCapability" />
+		<capability id="IServiceEventCapability" />
+		<capability id="IFilterCapability" />
+		<capability id="IErrorEventCapability" />
+
+		<capability id="IVisibilityCapability" />
+
+		<!-- Dans la sérialisation on en a besoin !!!! -->
+		<capability id="IComponentLocaleCapability" />
+		<capability id="IComponentTimeZoneCapability" />
+		
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+		
+		<attribute id="serviceId" type="java.lang.String" />
+		<attribute id="enableViewState" type="boolean" default="true" />
+		
+		<behaviorEvent id="service"/>
+		<behaviorEvent id="client.newService" />
+
+		<method id="setComponentLocale(String)" />
+		<method id="setComponentTimeZone(String)" />
+
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method id="getServerDataValueExpression(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+
+		<method id="getVisibleState(javax.faces.context.FacesContext)" />
+	</component>
+
+
+	<component id="criteria" extends="cameliaBase" render="false">
+	
+		<implements id="org.rcfaces.core.internal.capability.ISelectionComponent" importMethods="false" />
+		<implements id="org.rcfaces.core.internal.capability.ICriteriaConfiguration" importMethods="false" />
+
+		<capability id="ISelectionCardinalityCapability" />
+		<capability id="ISelectedValuesCapability" onlyValueBinding="true" />
+		
+		<attribute id="criteriaValue" type="java.lang.Object"/>
+
+		<attribute id="criteriaTitle" type="java.lang.String" />
+
+		<attribute id="criteriaConverter" type="javax.faces.convert.Converter" />
+		<method id="setCriteriaConverter">
+			<parameter type="String" name="converterId" />
+			<code>			
+				setCriteriaConverter(converterId, null);
+			</code>
+		</method>
+				
+		<method id="setCriteriaConverter">
+			<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+			<import>javax.faces.convert.Converter</import>
+			<parameter type="String" name="converterId" />
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code><![CDATA[			
+				Converter converter=ComponentTools.createConverter(facesContext, converterId);
+	
+				setCriteriaConverter(converter);
+			]]></code>
+		</method>
+
+		<attribute id="labelConverter" type="javax.faces.convert.Converter" />
+		<method id="setLabelConverter">
+			<parameter type="String" name="converterId" />
+			<code>			
+				setLabelConverter(converterId, null);
+			</code>
+		</method>
+				
+		<method id="setLabelConverter">
+			<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+			<import>javax.faces.convert.Converter</import>
+			<parameter type="String" name="converterId" />
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code><![CDATA[			
+				Converter converter=ComponentTools.createConverter(facesContext, converterId);
+	
+				setLabelConverter(converter);
+			]]></code>
+		</method>
+
+			
+	<!-- Selection/deselection -->
+		<method id="select" returnType="void">
+			<parameter type="java.lang.Object" name="rowValue" />
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				SelectionTools.select(null, this, rowValue);
+			</code>
+		</method>		
+		<method id="selectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<import>org.rcfaces.core.internal.tools.CollectionTools</import>
+			<code>
+				SelectionTools.selectAll(null, this);
+			</code>
+		</method>
+
+		<method id="deselect" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<parameter type="java.lang.Object" name="rowValue" />
+			<code>
+				SelectionTools.deselect(null, this, rowValue);
+			</code>
+		</method>
+		<method id="deselectAll" returnType="void">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				SelectionTools.deselectAll(null, this);
+			</code>
+		</method>
+	
+		<method id="getSelectedValuesCount" returnType="int">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getCount(getSelectedValues());
+			</code>
+		</method>
+		<method id="getFirstSelectedValue" returnType="java.lang.Object">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.getFirst(getSelectedValues(), null);
+			</code>
+		</method>
+		<method id="listSelectedValues" returnType="java.lang.Object[]">
+			<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+			<code>
+				return SelectionTools.listValues(getSelectedValues(), null);
+			</code>
+		</method>
+
+		<method id="setSelectionCardinality(String)" />
+
+		<method id="listAvailableCriteriaItems" returnType="org.rcfaces.core.item.CriteriaItem[]">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+				return CriteriaTools.listAvailableCriteriaItems(this, null);
+			</code>
+		</method>
+		<method id="listAvailableCriteriaItems" returnType="org.rcfaces.core.item.CriteriaItem[]">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<parameter type="org.rcfaces.core.model.ISelectedCriteria[]"
+				name="configs" />
+			<code>
+				return CriteriaTools.listAvailableCriteriaItems(this, configs);
+			</code>
+		</method>
+
+		<method id="getCriteriaContainer" returnType="org.rcfaces.core.internal.capability.ICriteriaContainer">
+			<import>org.rcfaces.core.internal.tools.CriteriaTools</import>
+			<code>
+				return CriteriaTools.getCriteriaContainer(this);
+			</code>
+		</method>
+		<method id="getCriteriaCardinality" returnType="int">
+			<code>
+				return getSelectionCardinality();
+			</code>
+		</method>
+	
+	</component>
+
+	<component id="criteriaItem" extends="selectItem" render="false">
+		<attribute id="logicalFilter" type="java.lang.String"/>
+		<attribute id="startingValue" type="java.lang.Object"/>
+	</component>
+
+	<component id="criteriaItemFiller" extends="cameliaItems" render="false">
+		<attribute id="logicalFilter" type="java.lang.String"/>
+		<attribute id="itemValue" type="java.lang.Object"/>
+	</component>
+	
+	<component id="toolTip" extends="abstractBasic">
+		<implements id="org.rcfaces.core.internal.capability.IAsyncRenderComponent" />
+		<behaviorEvent id="asyncRender.request" />
+		<implements id="javax.faces.component.NamingContainer" />
+
+		<capability id="IBackgroundImageCapability" />
+		<capability id="IBorderCapability" />
+		
+		<capability id="IInitEventCapability" />
+		<capability id="ILoadEventCapability" />
+		
+		<capability id="IAsyncRenderModeCapability" />
+		<capability id="IVariableScopeCapability" />		
+		
+		<capability id="ILookAndFeelCapability" />
+		<capability id="IStyleClassCapability" />
+
+	
+		<method id="setAsyncRenderMode(String)" />		
+		
+		<attribute id="toolTipId" type="java.lang.String" />
+
+		<attribute id="position" type="java.lang.String" />
+	</component>
+	
+	<component id="toolTipManager" extends="cameliaBase">
+		<attribute id="showDelayMs" type="int" default="-1"/>
+		<attribute id="neighbourThresholdMs" type="int" default="-1" />
+	</component>
+
+	
+	<component id="eventsCollector" extends="cameliaBase" render="false">
+	
+		<field type="String" value="org.rcfaces.EVENTS_LIST" id="EVENTS_LIST_PROPERTY_NAME"
+			modifiers="private static final" />
+	
+		<method id="queueEvent" override="true">
+			<parameter name="event" type="javax.faces.event.FacesEvent" />
+			<code>
+		<![CDATA[
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Queue event '" + event + "'");
+        }
+
+        List<FacesEvent> events = getEventsList(null);
+
+        events.add(event);
+
+        super.queueEvent(event);
+  
+    ]]></code>
+   		</method>
+		<method id="getEventsList" returnType="java.util.List&lt;FacesEvent&gt;"
+			modifier="public static">
+			<parameter name="facesContext" type="javax.faces.context.FacesContext" />
+			<import>java.util.List</import>
+			<import>java.util.LinkedList</import>
+			<import>java.util.Map</import>
+			<code>
+		<![CDATA[
+
+        if (facesContext == null) {
+            facesContext = FacesContext.getCurrentInstance();
+        }
+
+        Map<String, Object> requestMap = facesContext.getExternalContext()
+                .getRequestMap();
+
+        List<FacesEvent> list = (List<FacesEvent>) requestMap
+                .get(EVENTS_LIST_PROPERTY_NAME);
+        if (list == null) {
+            list = new LinkedList<FacesEvent>();
+            requestMap.put(EVENTS_LIST_PROPERTY_NAME, list);
+        }
+
+        return list;
+
+    ]]></code>
+		</method>
+	</component>
+	
+	<component id="headingZone" extends="cameliaBase">
+
+		<capability id="IHeadingZoneCapability" default="true" />
+		<capability id="IHeadingLevelCapability" />
+	
+		<capability id="ICaptionCapability" />		
+	</component>
+	<!-- <component id="imagesBar" extends=""> </component> -->
+	<!-- <component id="clientValidation" extends="cameliaBase"> <capability 
+		id="IValidationEventCapability" /> </component> -->
+	
+	 <behavior id ="org.rcfaces.behaviors.RCFacesAjaxBehavior"  
+	 	class="org.rcfaces.core.internal.behaviors.RCFacesAjaxBehavior" />
+	
+	<tag>
+		<name>clientData</name>
+		<tag-class>org.rcfaces.core.internal.taglib.ClientDataTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+		</attribute>
+	</tag>
+	<tag>
+		<name>serverData</name>
+		<tag-class>org.rcfaces.core.internal.taglib.ServerDataTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+            <deferred-value />
+		</attribute>
+	</tag>
+	<tag>
+		<name>validationParameter</name>
+		<tag-class>org.rcfaces.core.internal.taglib.ValidationParameterTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+		</attribute>
+		<attribute>
+			<name>clientSide</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>selectionListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.SelectionListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register a SelectionListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of a SelectionListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>doubleClickListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.DoubleClickListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register a DoubleClickListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of a DoubleClickListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>userEventListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.UserEventListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register an UserEventListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of an UserEventListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>propertyChangeListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.PropertyChangeListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register a PropertyChangeListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of a PropertyChangeListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>checkListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.CheckListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register a CheckListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of a CheckListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+	<tag>
+		<name>errorListener</name>
+		<tag-class>org.rcfaces.core.internal.taglib.ErrorListenerTag</tag-class>
+		<body-content>empty</body-content>
+	    <description>
+	      Register an ErrorListener instance on the UIComponent associated
+	      with the closest parent UIComponent custom action.
+	    </description>
+	
+	    <attribute>
+	      <name>type</name>
+	      <required>true</required>
+	      <rtexprvalue>false</rtexprvalue>
+            <deferred-value>
+                <type>
+                    java.lang.String
+                </type>
+            </deferred-value>
+	      <description>
+	        Fully qualified Java class name of an ErrorListener to be
+	        created and registered.
+	      </description>
+	    </attribute>
+	</tag>
+
+</camelia-components>

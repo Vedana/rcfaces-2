@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Specification-Vendor: Rcfaces team
+Implementation-Title: org.rcfaces.core
+Implementation-Vendor: Vedana
+Bundle-ManifestVersion: 2
+Bundle-Name: Core of Rcfaces
+Bundle-SymbolicName: org.rcfaces.core
+Bundle-Version: 1.0.0
+Bundle-Vendor: Vedana
+Bundle-Localization: plugin
+Bundle-ClassPath: lib/commons-digester.jar,
+ lib/commons-logging.jar,
+ lib/jsf-api.jar,
+ lib/jsp-api.jar,
+ lib/jstl.jar,
+ lib/servlet-api.jar,
+ .

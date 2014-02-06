@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcfaces-config>
+	<providers>
+  		<provider>
+  			<provider-id>org.rcfaces.core.CONTENT_ACCESSOR_REGISTRY</provider-id>
+  			<provider-class>org.rcfaces.core.internal.contentAccessor.ContentAccessorsRegistryImpl</provider-class>
+  		</provider>
+   	</providers>
+</rcfaces-config>

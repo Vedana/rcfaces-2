@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Packager Camelia" basedir=".">
+	<property name="java.target" value="1.6" />
+	
+	<target name="buildVersion">
+		<property name="build.version.path" value="target/generated-sources" />
+
+		<mkdir dir="build" />
+		<delete failonerror="false" dir="${build.version.path}" />
+		<mkdir dir="${build.version.path}" />
+		<mkdir dir="${build.version.path}/src-core" />
+
+		<copy todir="${build.version.path}/src-core">
+			<fileset dir="src">
+				<include name="**/*.java" />
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+			</fileset>
+			<fileset dir="src-valueExpression">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="src-jsf${jsfVersion}">
+				<include name="**/*.java" />
+			</fileset>
+
+		</copy>
+
+		<mkdir dir="${build.version.path}/bin-bootstrap" />
+
+		<path id="generated.classpath">
+			<path location="${build.version.path}/bin-bootstrap" />
+			<path path="${compile_classpath}" />
+		</path>
+
+		<java taskname="Prepare bootStrap" classname="com.vedana.camelia.generator.components_${jsfVersion}.CameliaGenerator${jsfVersion}" failonerror="true">
+			<classpath refid="generated.classpath" />
+
+			<arg value="+template" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+repository" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+classPath" />
+			<arg pathref="generated.classpath" />
+
+			<arg value="+bootStrap" />
+
+			<arg value="+renderKit:core" />
+			<arg path="${build.version.path}/src-core-bootstrap" />
+
+		</java>
+
+		<javac taskname="Build bootstrap" includeantruntime="false" debug="true" destdir="${build.version.path}/bin-bootstrap" optimize="no" nowarn="true" failonerror="true" target="1.6" encoding="utf-8">
+
+			<classpath>
+				<path path="${compile_classpath}" />
+			</classpath>
+			<src path="${build.version.path}/src-core" />
+			<src path="${build.version.path}/src-core-bootstrap" />
+
+			<include name="org/rcfaces/**/component/**" />
+			<include name="org/rcfaces/**/capability/**" />
+			<include name="org/rcfaces/**/manager/**" />
+			<include name="org/rcfaces/**/event/**" />
+			<include name="org/rcfaces/**/model/**" />
+		</javac>
+
+		<path id="generated.classpath">
+			<path location="${build.version.path}/bin-bootstrap" />
+			<path path="${compile_classpath}" />
+		</path>
+
+
+		<java taskname="Build template" classname="com.vedana.camelia.generator.components_${jsfVersion}.CameliaGenerator${jsfVersion}" failonerror="true">
+
+			<classpath refid="generated.classpath" />
+
+			<arg value="+template" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+repository" />
+			<arg path="../org.rcfaces.core/metadatas" />
+
+			<arg value="+classPath" />
+			<arg pathref="generated.classpath" />
+
+			<arg value="+renderKit:core" />
+			<arg path="../org.rcfaces.core/src-jsf${jsfVersion}-generated" />
+		</java>
+
+	</target>
+
+</project>

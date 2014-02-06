@@ -1,0 +1,1739 @@
+	
+<camelia-components>
+
+	<method id="clearCachedValue" modifier="protected">
+		<code>
+			cachedValue = null;
+		</code>
+	</method>
+	<method id="getValue" returnType="java.lang.Object">
+		<code>
+			cachedValue = super.getValue();
+	
+			return cachedValue;
+		</code>
+	</method>
+	<method id="getMenu" returnType="org.rcfaces.core.component.IMenuComponent">
+		<import>org.rcfaces.core.internal.tools.MenuTools</import>
+		<code>
+		return MenuTools.getMenu(this);
+		</code>
+	</method>
+	<method id="getMenu" returnType="org.rcfaces.core.component.IMenuComponent">
+		<import>org.rcfaces.core.internal.tools.MenuTools</import>
+		<parameter type="String" name="menuId" />
+		<code>
+		return MenuTools.getMenu(this, menuId);
+		</code>
+	</method>
+	<method id="listMenus" returnType="org.rcfaces.core.component.iterator.IMenuIterator">
+		<import>org.rcfaces.core.internal.tools.MenuTools</import>
+		<code>
+		return MenuTools.listMenus(this);
+		</code>
+	</method>
+	<method id="getCachedValue" returnType="java.lang.Object">
+		<javadoc><![CDATA[
+	/*
+	 * On essaye d'enregistrer la value, afin d'eviter d'avoir à la redemander
+	 * ...
+	 */
+	 	]]></javadoc>
+	 		<code>
+		// Provoque la lecture de la value !
+		// Histore d'initialiser le dataModel en meme temps
+		// que la recuperation de la value.
+		getRowCount();
+
+		if (cachedValue != null) {
+			return cachedValue;
+		}
+
+		// Le modele a été constitué avant l'enregistrement dans le cache !
+		return getValue();
+		</code>
+	</method>
+
+	<method id="getFirstSelectedItem" returnType="javax.faces.component.UISelectItem">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<code>
+			return ListTools.getFirstSelectedItem(this);			
+		</code>
+	</method>
+	
+	
+	<method id="indexOfFirstSelectedItem" returnType="int">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<code>
+		return ListTools.findIndexOfFirstListItemSelected(this);
+		</code>
+	</method>
+	
+	
+	<method id="getItemAt" returnType="javax.faces.component.UISelectItem">
+		<parameter type="int" name="selectItemPosition" />
+		<javadoc><![CDATA[
+	/**
+	 * Retourne le nieme ListItem de la liste des ListItems.<br>
+	 * ATTENTION: Ne pas confondre cet indice avec la nieme position dans la liste des enfants de l'element parent.
+	 */
+	 	]]></javadoc>
+		<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+	 	<code>
+			return (UISelectItem)ComponentIterators.componentAt(this, UISelectItem.class, selectItemPosition);
+		</code>
+	</method>
+	
+	
+	<method id="deselectAll" returnType="void">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<code>
+			ListTools.deselectAll(this);
+		</code>
+	</method>
+	
+	
+	<method id="getItemIndex" returnType="int">
+		<parameter type="javax.faces.component.UISelectItem" name="selectItem" />
+		<javadoc><![CDATA[
+	/**
+	 * Recherche l'indice d'un ListItem donné.<br>
+	 * ATTENTION: Ne pas confondre cet indice avec la position de l'element, dans la liste des enfants de l'element parent.
+	 */
+		]]></javadoc>
+		<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+		<code>
+		return ComponentIterators.indexOf(this, selectItem, UISelectItem.class);
+		</code>
+	</method>
+	
+	
+	<method id="getItemCount" returnType="int">
+		<import>org.rcfaces.core.internal.util.ComponentIterators</import>
+		<import>javax.faces.component.UISelectItem</import>
+		<code>
+		return ComponentIterators.count(this, UISelectItem.class);
+		</code>
+	</method>
+	
+	
+	<method id="listItems" returnType="org.rcfaces.core.component.iterator.ISelectItemIterator">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<import>javax.faces.component.UISelectItem</import>
+		<code>
+		return ListTools.listItems(this);
+		</code>
+	</method>
+			
+	<method id="listMenuItems" returnType="org.rcfaces.core.component.iterator.IMenuItemIterator">
+		<import>org.rcfaces.core.internal.tools.MenuTools</import>
+		<code>
+		return MenuTools.listMenuItems(this);
+		</code>
+	</method>
+	
+		
+	<method id="getAdaptedData" returnType="Object">
+		<parameter type="Class" name="classToAdapt" />
+		<import>org.rcfaces.core.internal.tools.ValidationTools</import>
+		<code>
+		AdaptableData adaptableData=ValidationTools.convertToAdaptableData(this, getText(), classToAdapt);
+		if (adaptableData==null) {
+			return null;
+		}
+		
+		return adaptableData.getAdaptedObject(classToAdapt);		
+		</code>
+	</method>
+	
+	
+	<method id="getAdaptableData" returnType="org.rcfaces.core.data.AdaptableData">
+		<throws>org.rcfaces.core.data.AdaptableParserException</throws>
+		<import>org.rcfaces.core.internal.tools.ValidationTools</import>
+		<code>
+		return ValidationTools.convertToAdaptableData(this, getText(), null);
+		</code>
+	</method>
+	
+	<method id="getAdaptedText" returnType="Object">
+		<throws>org.rcfaces.core.data.AdaptableParserException</throws>
+		<import>org.rcfaces.core.data.AdaptableData</import>
+		<code>
+		AdaptableData adaptableData=getAdaptableData();
+		if (adaptableData==null) {
+			return null;
+		}
+		
+		return adaptableData.getAdaptedObject(null);
+		</code>
+	</method>
+	
+	
+	
+	<method id="listAllSelectedItems" returnType="org.rcfaces.core.component.iterator.ISelectItemIterator">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<code>
+		return ListTools.listAllSelectedItems(this);
+		</code>
+	</method>
+	
+	
+	<method id="listIndexOfAllSelectedItems" returnType="int[]">
+		<import>org.rcfaces.core.internal.tools.ListTools</import>
+		<code>
+		return ListTools.listIndexOfAllSelectedItems(this);
+		</code>
+	</method>
+	
+	
+
+	
+	<method id="setValue" returnType="boolean">
+		<import>org.rcfaces.core.internal.tools.ValueAdapterTools</import>
+		<parameter type="long" name="number" />
+		<javadoc>
+	/**
+	 * Spécifie un long qui sera traité par un éventuel adapteur de chaine de caractères, qui
+	 * affectera le champ text.
+	 * 
+	 * @return <code>true</code> Si la donnée a été acceptée.
+	 */
+		</javadoc>		
+		<code>
+		return ValueAdapterTools.setValue(getFacesContext(), this, number);
+		</code>
+	</method>
+		
+	<method id="setValue" returnType="boolean">
+		<import>org.rcfaces.core.internal.tools.ValueAdapterTools</import>
+		<parameter type="double" name="number" />
+		<javadoc>
+	/**
+	 * Spécifie un double qui sera traité par un éventuel adapteur de chaine de caractères, qui
+	 * affectera le champ text.
+	 * 
+	 * @return <code>true</code> Si la donnée a été acceptée.
+	 */
+		</javadoc>		
+		<code>
+		return ValueAdapterTools.setValue(getFacesContext(), this, number);
+		</code>
+	</method>
+	
+	<method id="getIntValue" returnType="int">
+		<import>org.rcfaces.core.internal.tools.ValueAdapterTools</import>
+		<code>
+		return ValueAdapterTools.getIntValue(this);
+		</code>
+	</method>
+	
+	<method id="getDoubleValue" returnType="double">
+		<import>org.rcfaces.core.internal.tools.ValueAdapterTools</import>
+		<code>
+		return ValueAdapterTools.getDoubleValue(this);
+		</code>
+	</method>
+	
+	<method id="getLongValue" returnType="long">
+		<import>org.rcfaces.core.internal.tools.ValueAdapterTools</import>
+		<code>
+		return ValueAdapterTools.getLongValue(this);
+		</code>
+	</method>
+
+	<method id="setValue">
+		<parameter type="javax.faces.el.ValueBinding" name="value" />
+		<code>
+			engine.setValue(Properties.VALUE, value);
+		</code>
+	</method>
+
+	<method id="setRequired">
+		<parameter type="javax.faces.el.ValueBinding" name="required" />
+		<code>
+			setValueBinding("required", required);
+		</code>
+	</method>
+
+	<method id="setImmediate">
+		<parameter type="javax.faces.el.ValueBinding" name="immediate" />
+		<code>
+			setValueBinding("immediate", immediate);
+		</code>
+	</method>
+	
+	<method id="getClientData" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		 return getClientData(name, null);
+		</code>
+	</method>
+	
+	<method id="getClientData" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		 IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", false);
+		 if (dataMapAccessor==null) {
+		 	return null;
+		 }
+            
+		return (String)dataMapAccessor.getData(name, facesContext);
+		</code>		
+	</method>
+
+	
+	<method id="getClientDataCount" returnType="int">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<code>
+		 IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", false);
+		 if (dataMapAccessor==null) {
+		 	return 0;
+		 }
+		 
+		 return dataMapAccessor.getDataCount();
+		</code>
+	</method>
+	
+	<method id="listClientDataKeys" returnType="String[]">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", false);
+		if (dataMapAccessor==null) {
+			return ComponentTools.STRING_EMPTY_ARRAY;
+		}
+		
+		return dataMapAccessor.listDataKeys(facesContext);
+		</code>		
+	</method>
+	
+	<method id="listClientDataKeys" returnType="String[]">
+		<code>
+			return listClientDataKeys(null);
+		</code>		
+	</method>
+
+	<method id="getClientDataMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<code>
+		return getClientDataMap(null);
+		</code>		
+	</method>
+
+	<method id="getClientDataMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>java.util.Collections</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "clientData", false);
+		if (dataMapAccessor==null) {
+			return Collections.EMPTY_MAP;
+		}
+            
+		return dataMapAccessor.getDataMap(facesContext);
+		</code>		
+	</method>
+
+
+	<method id="setClientData" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="String" name="value" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", true);
+            
+		return (String)dataMapAccessor.setData(name, value, null);
+		</code>
+	</method>
+
+	<method id="setClientData">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.el.ValueBinding" name="value" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", true);
+            
+		dataMapAccessor.setData(name, value, null);
+		</code>
+	</method>
+
+	<method id="removeClientData" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "clientData", false);
+		if (dataMapAccessor==null) {
+			return null;
+		}
+            
+		return (String)dataMapAccessor.removeData(name, null);
+		</code>
+	</method>
+
+	
+	<method id="getServerData" returnType="Object">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		 IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		 if (dataMapAccessor==null) {
+		 	return null;
+		 }
+            
+		return dataMapAccessor.getData(name, null);
+		</code>
+	</method>
+
+	
+	<method id="getServerDataCount" returnType="int">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<code>
+		 IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		 if (dataMapAccessor==null) {
+		 	return 0;
+		 }
+            
+		return dataMapAccessor.getDataCount();
+		</code>
+	</method>
+
+	<method id="setServerData" returnType="Object">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="Object" name="value" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", true);
+            
+		return dataMapAccessor.setData(name, value, null);
+		</code>
+	</method>
+
+	<method id="removeServerData" returnType="Object">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		if (dataMapAccessor==null) {
+		 	return null;
+		}
+            
+		return dataMapAccessor.removeData(name, null);
+		</code>
+	</method>
+
+	<method id="setServerData">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.el.ValueBinding" name="value" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", true);
+            
+		dataMapAccessor.setData(name, value, null);
+		</code>
+	</method>
+	
+	<method id="getServerData" returnType="Object">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		if (dataMapAccessor==null) {
+			return null;
+		}
+		
+		return dataMapAccessor.getData(name, facesContext);
+		</code>		
+	</method>
+	
+	
+	<method id="getServerDataValueExpression" returnType="javax.el.ValueExpression">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" /> <!-- FIXME 12|21 -->
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		if (dataMapAccessor==null) {
+			return null;
+		}
+		
+		return dataMapAccessor.getValueExpression(name);
+		</code>		
+	</method>
+	
+	
+	<method id="listServerDataKeys" returnType="String[]">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(null, "serverData", false);
+		if (dataMapAccessor==null) {
+			return ComponentTools.STRING_EMPTY_ARRAY;
+		}
+		
+		return dataMapAccessor.listDataKeys(facesContext);
+		</code>		
+	</method>
+	
+	<method id="listServerDataKeys" returnType="String[]">
+		<code>
+			return listServerDataKeys(null);
+		</code>		
+	</method>
+
+
+	<method id="getServerDataMap" returnType="java.util.Map">
+		<code>
+		return getServerDataMap(null);
+		</code>		
+	</method>
+
+	<method id="getServerDataMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>java.util.Collections</import>
+		<import>org.rcfaces.core.internal.Constants</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "serverData", false);
+ 		if (dataMapAccessor==null) {
+			return Collections.EMPTY_MAP;
+		}
+            
+		Map map=dataMapAccessor.getDataMap(facesContext);
+		if (Constants.READ_ONLY_COLLECTION_LOCK_ENABLED) {
+			if (map.isEmpty()) {
+				return Collections.EMPTY_MAP;
+			}
+			map=Collections.unmodifiableMap(map);
+		}
+		return map;
+		</code>		
+	</method>
+
+	<method id="getLocalValue" returnType="Object">
+		<code>
+		return engine.getLocalValue(Properties.VALUE);
+		</code>
+	</method>
+
+	<method id="listClientValidators" returnType="org.rcfaces.core.component.iterator.IClientValidatorIterator">
+		<import>org.rcfaces.core.internal.tools.ClientValidatorTools</import>
+		<code>
+		return ClientValidatorTools.listClientValidators(this);
+		</code>
+	</method>
+	
+	<method id="listCards" returnType="org.rcfaces.core.component.iterator.ICardIterator">
+		<import>org.rcfaces.core.internal.tools.CardBoxTools</import>
+		<code>
+		return CardBoxTools.listCards(this);
+		</code>
+	</method>
+	
+	<method id="getSelectedCard" returnType="CardComponent">
+		<import>org.rcfaces.core.internal.tools.CardBoxTools</import>
+		<code>
+		return CardBoxTools.getSelectedCard(this);
+		</code>
+	</method>
+	
+	<method id="getSelectedCard" returnType="CardComponent">
+		<import>org.rcfaces.core.internal.tools.CardBoxTools</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		return CardBoxTools.getSelectedCard(this);
+		</code>
+	</method>
+	
+	<method id="setItemValue">
+		<parameter type="javax.faces.el.ValueBinding" name="itemValue" />
+		<code>
+			setValueBinding("itemValue", itemValue);
+		</code>
+	</method>
+	
+	<method id="setItemLabel">
+		<parameter type="javax.faces.el.ValueBinding" name="itemLabel" />
+		<code>
+			setValueBinding("itemLabel", itemLabel);
+		</code>
+	</method>
+	
+	<method id="setItemDescription">
+		<parameter type="javax.faces.el.ValueBinding" name="itemDescription" />
+		<code>
+			setValueBinding("itemDescription", itemDescription);
+		</code>
+	</method>
+	
+	<method id="setItemDisabled">
+		<parameter type="javax.faces.el.ValueBinding" name="itemDisabled" />
+		<code>
+			setValueBinding("itemDisabled", itemDisabled);
+		</code>
+	</method>
+	
+	<method id="setFor">
+		<parameter type="javax.faces.el.ValueBinding" name="forVal" />
+		<code>
+			setValueBinding("for", forVal);
+		</code>
+	</method>
+	
+	<method id="setGlobalOnly">
+		<parameter type="javax.faces.el.ValueBinding" name="globalOnly" />
+		<code>
+			setValueBinding("globalOnly", globalOnly);
+		</code>
+	</method>
+	
+	<method id="setShowDetail">
+		<parameter type="javax.faces.el.ValueBinding" name="showDetail" />
+		<code>
+			setValueBinding("showDetail", showDetail);
+		</code>
+	</method>
+	
+	<method id="setShowSummary">
+		<parameter type="javax.faces.el.ValueBinding" name="showSummary" />
+		<code>
+			setValueBinding("showSummary", showSummary);
+		</code>
+	</method>
+	
+	<method id="getHiddenMode" returnType="int">
+		<import>javax.faces.FacesException</import>
+		<parameter type="javax.faces.FacesException" name="facesContext" />
+		<code>
+			int hiddenMode=engine.getIntProperty(Properties.HIDDEN_MODE, facesContext);
+			if (hiddenMode!=0) {
+				return hiddenMode;
+			}
+			return IVisibilityCapability.DEFAULT_HIDDEN_MODE;
+		</code>
+	</method>
+
+	
+	<method id="listToolFolders" returnType="org.rcfaces.core.component.iterator.IToolFolderIterator">
+		<import>org.rcfaces.core.internal.tools.ToolBarTools</import>
+		<code>
+		return ToolBarTools.listToolFolders(this);
+		</code>
+	</method>
+	
+	<method id="getToolBar" returnType="org.rcfaces.core.component.ToolBarComponent">
+		<import>org.rcfaces.core.internal.tools.ToolBarTools</import>
+		<code>
+		return (ToolBarComponent)getParent();
+		</code>
+	</method>
+	
+	<method id="listToolItems" returnType="org.rcfaces.core.component.iterator.IToolItemIterator">
+		<code>
+		return ToolBarTools.listToolItems(this);
+		</code>
+	</method>
+	
+	<method id="getToolFolder" returnType="org.rcfaces.core.component.ToolFolderComponent">
+		<code>
+		return (ToolFolderComponent)getParent();
+		</code>
+	</method>
+	<method id="setImmediate(javax.faces.el.ValueBinding)">
+		<parameter type="javax.faces.el.ValueBinding" name="immediate" />
+		<code>
+			setValueBinding("immediate", immediate);
+		</code>
+	</method>
+
+	<method id="setAscending">
+		<import>org.rcfaces.core.internal.converter.OrderConverter</import>
+		<parameter type="String" name="order" />
+		<code>
+			setAscending(((Boolean)OrderConverter.SINGLETON.getAsObject(null, this, order)).booleanValue());
+		</code>
+	</method>
+
+	<method id="setTextPosition">
+		<parameter type="String" name="textPosition" />
+		<code>
+			setTextPosition(((Integer)getTextPositionConverter().getAsObject(null, this, textPosition)).intValue());
+		</code>
+	</method>
+	<method id="setHiddenMode">
+		<import>org.rcfaces.core.internal.converter.HiddenModeConverter</import>
+		<parameter type="String" name="hiddenMode" />
+		<code>
+			setHiddenMode(((Integer)HiddenModeConverter.SINGLETON.getAsObject(null, this, hiddenMode)).intValue());
+		</code>
+	</method>
+	<method id="setItemHiddenMode">
+		<import>org.rcfaces.core.internal.converter.HiddenModeConverter</import>
+		<parameter type="String" name="hiddenMode" />
+		<code>
+			setItemHiddenMode(((Integer)HiddenModeConverter.SINGLETON.getAsObject(null, this, hiddenMode)).intValue());
+		</code>
+	</method>
+	<method id="setDragEffects">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dragEffects" />
+		<code>
+			setDragEffects(((Integer)DragDropEffectsConverter.SINGLETON.getAsObject(null, this, dragEffects)).intValue());
+		</code>
+	</method>
+	<method id="setDropEffects">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dropEffects" />
+		<code>
+			setDropEffects(((Integer)DragDropEffectsConverter.SINGLETON.getAsObject(null, this, dropEffects)).intValue());
+		</code>
+	</method>
+	<method id="setDragTypes">
+		<import>org.rcfaces.core.internal.converter.DragDropTypesConverter</import>
+		<parameter type="String" name="dragTypes" />
+		<code>
+			setDragTypes((String[])DragDropTypesConverter.SINGLETON.getAsObject(null, this, dragTypes));
+		</code>
+	</method>
+	<method id="setDropTypes">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dropTypes" />
+		<code>
+			setDropTypes((String[])DragDropTypesConverter.SINGLETON.getAsObject(null, this, dropTypes));
+		</code>
+	</method>
+	<method id="setRowDragEffects">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dragEffects" />
+		<code>
+			setRowDragEffects(((Integer)DragDropEffectsConverter.SINGLETON.getAsObject(null, this, dragEffects)).intValue());
+		</code>
+	</method>
+	<method id="setRowDropEffects">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dropEffects" />
+		<code>
+			setRowDropEffects(((Integer)DragDropEffectsConverter.SINGLETON.getAsObject(null, this, dropEffects)).intValue());
+		</code>
+	</method>
+	<method id="setRowDragTypes">
+		<import>org.rcfaces.core.internal.converter.DragDropTypesConverter</import>
+		<parameter type="String" name="dragTypes" />
+		<code>
+			setRowDragTypes((String[])DragDropTypesConverter.SINGLETON.getAsObject(null, this, dragTypes));
+		</code>
+	</method>
+	<method id="setRowDropTypes">
+		<import>org.rcfaces.core.internal.converter.DragDropEffectsConverter</import>
+		<parameter type="String" name="dropTypes" />
+		<code>
+			setRowDropTypes((String[])DragDropTypesConverter.SINGLETON.getAsObject(null, this, dropTypes));
+		</code>
+	</method>
+	<method id="setInputType">
+		<import>org.rcfaces.core.internal.converter.InputTypeConverter</import>
+		<parameter type="String" name="inputType" />
+		<code>
+			setInputType(((Integer)InputTypeConverter.SINGLETON.getAsObject(null, this, inputType)).intValue());
+		</code>
+	</method>
+	<method id="setAsyncRenderMode">
+		<import>org.rcfaces.core.internal.converter.AsyncRenderModeConverter</import>
+		<parameter type="String" name="asyncRenderMode" />
+		<code>
+			setAsyncRenderMode(((Integer)AsyncRenderModeConverter.SINGLETON.getAsObject(null, this, asyncRenderMode)).intValue());
+		</code>
+	</method>
+	<method id="setAsyncDecodeMode">
+		<import>org.rcfaces.core.internal.converter.AsyncDecodeModeConverter</import>
+		<parameter type="String" name="asyncDecodeMode" />
+		<code>
+			setAsyncDecodeMode(((Integer)AsyncDecodeModeConverter.SINGLETON.getAsObject(null, this, asyncDecodeMode)).intValue());
+		</code>
+	</method>
+	<method id="setCheckCardinality">
+		<import>org.rcfaces.core.internal.converter.CheckCardinalityConverter</import>
+		<parameter type="String" name="cardinality" />
+		<code>
+			setCheckCardinality(((Integer)CheckCardinalityConverter.SINGLETON.getAsObject(null, this, cardinality)).intValue());
+		</code>
+	</method>
+	<method id="setSelectionCardinality">
+		<import>org.rcfaces.core.internal.converter.SelectionCardinalityConverter</import>
+		<parameter type="String" name="cardinality" />
+		<code>
+			setSelectionCardinality(((Integer)SelectionCardinalityConverter.SINGLETON.getAsObject(null, this, cardinality)).intValue());
+		</code>
+	</method>
+	<method id="setAdditionalInformationCardinality">
+		<import>org.rcfaces.core.internal.converter.AdditionalInformationCardinalityConverter</import>
+		<parameter type="String" name="cardinality" />
+		<code>
+			setAdditionalInformationCardinality(((Integer)AdditionalInformationCardinalityConverter.SINGLETON.getAsObject(null, this, cardinality)).intValue());
+		</code>
+	</method>
+
+	
+	<method id="setVirtualKey">
+		<import>org.rcfaces.core.internal.converter.VirtualKeyConverter</import>
+		<import>javax.faces.FacesException</import>
+		<parameter type="String" name="virtualKeyName" />
+		<code>
+			if (virtualKeyName==null) {
+				setVirtualKey(0);
+				return;
+			}
+			
+			Integer virtualKey=(Integer)VirtualKeyConverter.SINGLETON.getAsObject(null, this, virtualKeyName);
+			if (virtualKey==null) {
+				throw new FacesException("Unknown virtual key '"+virtualKeyName+"'.");
+			}
+			setVirtualKey(virtualKey.intValue());
+		</code>
+	</method>
+	
+	<method id="setKeyFlags">
+		<import>org.rcfaces.core.internal.converter.KeyFlagsConverter</import>
+		<import>javax.faces.FacesException</import>
+		<parameter type="String" name="flagNames" />
+		<code>
+			if (flagNames==null) {
+				setKeyFlags(0);
+				return;
+			}
+			
+			Integer keyFlags=(Integer)KeyFlagsConverter.SINGLETON.getAsObject(null, this, flagNames);
+			if (keyFlags==null) {
+				throw new FacesException("Unknown key flags '"+flagNames+"'.");
+			}
+			setKeyFlags(keyFlags.intValue());
+		</code>
+	</method>
+
+<!--	
+	<method id="isVisible" returnType="boolean">
+		<import>org.rcfaces.core.internal.tools.VisibilityTools</import>
+		<code>
+		return VisibilityTools.isVisible(this);
+		</code>
+	</method>
+-->
+	<method id="setRows">
+		<parameter type="javax.faces.el.ValueBinding" name="rows" />
+		<code>
+			super.setValueBinding("rows", rows);
+		</code>
+	</method>
+	<method id="setFirst">
+		<parameter type="javax.faces.el.ValueBinding" name="first" />
+		<code>
+			super.setValueBinding("first", first);
+		</code>
+	</method>
+	<method id="setVar">
+		<parameter type="javax.faces.el.ValueBinding" name="var" />
+		<code>
+			super.setValueBinding("var", var);
+		</code>
+	</method>
+		
+	<method id="setSuggestionConverter">
+		<parameter type="String" name="converterId" />
+		<code>			
+			setSuggestionConverter(converterId, null);
+		</code>
+	</method>
+			
+	<method id="setSuggestionConverter">
+		<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+		<import>javax.faces.convert.Converter</import>
+		<parameter type="String" name="converterId" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			Converter converter=ComponentTools.createConverter(facesContext, converterId);
+
+			setSuggestionConverter(converter);
+		</code>
+	</method>
+
+
+	<method id="isRowAvailable" returnType="boolean">
+		<code>
+			return isRowAvailable(null);
+		</code>
+	</method>
+
+
+	<method id="isRowAvailable" returnType="boolean">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			return getDataModel(facesContext).isRowAvailable();
+		</code>
+	</method>
+
+		<method id="getRowCount" returnType="int">
+			<code>
+				 return getDataModel(null).getRowCount();
+			</code>
+		</method>       
+
+		<method id="getRowData" returnType="Object">
+			<code>
+				 return getDataModel(null).getRowData();
+			</code>
+		</method>       
+
+		<method id="getDataModel" returnType="javax.faces.model.DataModel">
+			<import>org.rcfaces.core.internal.tools.GridTools</import>
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				if (dataModel!=null) {
+					return dataModel;
+				}
+				
+				Object value=getValue(facesContext);
+				dataModel=GridTools.getDataModel(value, this, facesContext);
+				
+				return dataModel;
+			</code>
+		</method>       
+		
+		<method id="getDataModelValue" returnType="javax.faces.model.DataModel">
+			<code>
+				return getDataModel(null);
+			</code>
+		</method>       
+
+		<method id="setMargins" >
+			<import>org.rcfaces.core.internal.tools.MarginTools</import>
+			<parameter type="String" name="margins" />
+			<code>
+				MarginTools.setMargins(this, margins);
+			</code>
+		</method>       
+
+
+	<method id="getValidationParameter" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		 return getValidationParameter(name, null);
+		</code>
+	</method>
+	
+	<method id="getValidationParameter" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		if (facesContext==null) {
+			facesContext=getFacesContext();
+		}
+
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", false);
+		if (dataMapAccessor==null) {
+			return null;
+		}
+            
+		return (String)dataMapAccessor.getData(name, facesContext);
+		</code>		
+	</method>
+
+	<method id="getValidationParametersCount" returnType="int">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		if (facesContext==null) {
+			facesContext=getFacesContext();
+		}
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", false);
+		if (dataMapAccessor==null) {
+			return 0;
+		}
+		 
+		return dataMapAccessor.getDataCount();
+		</code>
+	</method>
+	
+	<method id="getValidationParametersCount" returnType="int">
+		<code>		 
+		 return getValidationParametersCount(null);
+		</code>
+	</method>
+
+	<method id="getValidationParametersMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<code>
+		return getValidationParametersMap(null);
+		</code>		
+	</method>
+
+	<method id="getClientValidationParametersMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<code>
+		return getClientValidationParametersMap(null);
+		</code>		
+	</method>
+
+	<method id="getValidationParametersMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>java.util.Collections</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+		if (facesContext==null) {
+			facesContext=getFacesContext();
+		}
+		
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", false);
+		if (dataMapAccessor==null) {
+			return Collections.EMPTY_MAP;
+		}
+            
+		return dataMapAccessor.getDataMap(facesContext);
+		</code>		
+	</method>
+
+	<method id="getClientValidationParametersMap" returnType="java.util.Map">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<import>org.rcfaces.core.internal.Constants</import>
+		<import>java.util.Collections</import>
+		<import>java.util.HashMap</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code><![CDATA[
+		if (facesContext==null) {
+			facesContext=getFacesContext();
+		}
+		
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", false);
+		if (dataMapAccessor==null) {
+			return Collections.EMPTY_MAP;
+		}
+            
+		Map map=dataMapAccessor.getDataMap(facesContext);
+		if (map.isEmpty()) {
+			return Collections.EMPTY_MAP;
+		}
+		
+		IDataMapAccessor clientMapAccessor=getDataMapAccessor(facesContext, "ClientValidationParameter", false);
+		if (clientMapAccessor==null) {
+			if (Constants.READ_ONLY_COLLECTION_LOCK_ENABLED) {
+				map=Collections.unmodifiableMap(map);
+			}
+			return map;
+		}
+		
+		Map client=clientMapAccessor.getDataMap(facesContext);
+		if (client==null || client.isEmpty()) {
+		
+			if (Constants.READ_ONLY_COLLECTION_LOCK_ENABLED) {
+				map=Collections.unmodifiableMap(map);
+			}
+			return map;
+		}
+		
+		Map fmap=new HashMap(map);
+		if (map.keySet().removeAll(client.keySet())==false) {
+			if (Constants.READ_ONLY_COLLECTION_LOCK_ENABLED) {
+				map=Collections.unmodifiableMap(map);
+			}
+			return map;
+		}
+		
+		if (fmap.isEmpty()) {
+			return Collections.EMPTY_MAP;
+		}
+		
+		if (Constants.READ_ONLY_COLLECTION_LOCK_ENABLED) {
+			fmap=Collections.unmodifiableMap(fmap);
+		}
+		
+		return fmap;
+		]]></code>		
+	</method>
+
+
+	<method id="isClientSideValidationParameter" returnType="boolean">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		return isClientSideValidationParameter(name, null);
+		</code>
+	</method>
+
+	<method id="isClientSideValidationParameter" returnType="boolean">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code><![CDATA[
+		if (facesContext==null) {
+			facesContext=getFacesContext();
+		}
+		
+		IDataMapAccessor clientMapAccessor=getDataMapAccessor(facesContext, "ClientValidationParameter", false);
+		if (clientMapAccessor==null) {
+			return false;
+		}
+		return (clientMapAccessor.getData(name, facesContext)==null);
+		]]></code>		
+	</method>
+
+	<method id="setValidationParameter" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="String" name="value" />
+		<parameter type="boolean" name="client" />
+		<code>
+		return (String)setValidationParameterData(name, value, client);
+		</code>
+	</method>
+
+	<method id="setValidationParameter">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="javax.faces.el.ValueBinding" name="value" />
+		<parameter type="boolean" name="client" />
+		<code>
+		setValidationParameterData(name, value, client);
+		</code>
+	</method>
+
+
+	<method id="setValidationParameterData" modifier="private" returnType="Object"> 
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<parameter type="Object" name="value" />
+		<parameter type="boolean" name="client" />
+		<code>
+		FacesContext facesContext=getFacesContext();
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", true);
+		if (client) {
+			// On retire la limitation au niveau client si besoin !
+			IDataMapAccessor clientMapAccessor=getDataMapAccessor(facesContext, "ClientValidationParameter", false);
+			if (clientMapAccessor!=null) {
+				clientMapAccessor.removeData(name, facesContext);
+			}
+		} else {
+			IDataMapAccessor clientMapAccessor=getDataMapAccessor(facesContext, "ClientValidationParameter", true);
+			clientMapAccessor.setData(name, Boolean.FALSE, facesContext);
+		}
+            
+		return dataMapAccessor.setData(name, value, facesContext);
+		</code>
+	</method>
+
+	<method id="removeValidationParameter" returnType="String">
+		<import>org.rcfaces.core.internal.component.IDataMapAccessor</import>
+		<parameter type="String" name="name" />
+		<code>
+		FacesContext facesContext=getFacesContext();
+
+		IDataMapAccessor dataMapAccessor=getDataMapAccessor(facesContext, "ValidationParameter", false);
+		if (dataMapAccessor==null) {
+			return null;
+		}
+ 
+ 		IDataMapAccessor clientMapAccessor=getDataMapAccessor(facesContext, "ClientValidationParameter", false);
+		if (clientMapAccessor!=null) {
+			clientMapAccessor.removeData(name, facesContext);
+		}
+            
+		return (String)dataMapAccessor.removeData(name, facesContext);
+		</code>
+	</method>
+
+	<method id="setDisabledWeekDays" returnType="void">
+		<parameter type="String" name="disabledWeekDays" />
+		<import>org.rcfaces.core.internal.converter.WeekDaysConverter</import>
+		<code>
+		setDisabledWeekDays(((Integer)WeekDaysConverter.SINGLETON.getAsObject(null, this, disabledWeekDays)).intValue());
+		</code>
+	</method>
+
+	<method id="setLiteralLocale" returnType="void">
+		<parameter type="String" name="locale" />
+		<import>org.rcfaces.core.internal.converter.LocaleConverter</import>
+		<import>java.util.Locale</import>
+		<code>
+		setLiteralLocale((Locale)LocaleConverter.SINGLETON.getAsObject(null, this, locale));
+		</code>
+	</method>
+
+	<method id="setComponentLocale" returnType="void">
+		<parameter type="String" name="locale" />
+		<import>org.rcfaces.core.internal.converter.LocaleConverter</import>
+		<import>java.util.Locale</import>
+		<code>
+		setComponentLocale((Locale)LocaleConverter.SINGLETON.getAsObject(null, this, locale));
+		</code>
+	</method>
+
+
+	<method id="setLiteralTimeZone" returnType="void">
+		<parameter type="String" name="timeZone" />
+		<import>org.rcfaces.core.internal.converter.TimeZoneConverter</import>
+		<import>java.util.TimeZone</import>
+		<code>
+		setLiteralTimeZone((TimeZone)TimeZoneConverter.SINGLETON.getAsObject(null, this, timeZone));
+		</code>
+	</method>
+
+	<method id="setComponentTimeZone" returnType="void">
+		<parameter type="String" name="timeZone" />
+		<import>org.rcfaces.core.internal.converter.TimeZoneConverter</import>
+		<import>java.util.TimeZone</import>
+		<code>
+		setComponentTimeZone((TimeZone)TimeZoneConverter.SINGLETON.getAsObject(null, this, timeZone));
+		</code>
+	</method>
+
+	<method id="setMaxDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.MAX_DATE, date);
+		</code>
+	</method>
+	<method id="getMaxDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.MAX_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setTwoDigitYearStart" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.TWO_DIGIT_YEAR_START, date);
+		</code>
+	</method>
+	<method id="getTwoDigitYearStart" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralTwoDigitYearConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.TWO_DIGIT_YEAR_START, facesContext);
+			if (value instanceof String) {
+				value=LiteralTwoDigitYearConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setMinDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.MIN_DATE, date);
+		</code>
+	</method>
+	<method id="getMinDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.MIN_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setCursorDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.CURSOR_DATE, date);
+		</code>
+	</method>
+	<method id="getCursorDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.CURSOR_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setDefaultItemInputType">
+		<import>org.rcfaces.core.internal.converter.InputTypeConverter</import>
+		<parameter type="String" name="inputType" />
+		<code>
+			setDefaultItemInputType(((Integer)InputTypeConverter.SINGLETON.getAsObject(null, this, inputType)).intValue());
+		</code>
+	</method>
+	<method id="setDateBegin" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.DATE_BEGIN, date);
+		</code>
+	</method>
+	<method id="getDateBegin" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.DATE_BEGIN, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setPeriodBegin" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.PERIOD_BEGIN, date);
+		</code>
+	</method>
+	<method id="getPeriodBegin" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.PERIOD_BEGIN, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setPeriodEnd" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.PERIOD_END, date);
+		</code>
+	</method>
+	<method id="getPeriodEnd" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.PERIOD_END, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setDefaultDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.DEFAULT_DATE, date);
+		</code>
+	</method>
+	<method id="getDefaultDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.DEFAULT_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setHomeDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.HOME_DATE, date);
+		</code>
+	</method>
+	<method id="getHomeDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.HOME_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setDefaultSelectedDate" returnType="void">
+		<parameter type="String" name="date" />
+		<code>
+			engine.setProperty(Properties.DEFAULT_SELECTED_DATE, date);
+		</code>
+	</method>
+	<method id="getDefaultSelectedDate" returnType="java.util.Date">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>java.util.Date</import>
+		<import>org.rcfaces.core.internal.converter.LiteralDateConverter</import>
+		<code>
+			Object value=engine.getProperty(Properties.DEFAULT_SELECTED_DATE, facesContext);
+			if (value instanceof String) {
+				value=LiteralDateConverter.SINGLETON.getAsObject(facesContext, this, (String)value);
+			}
+			
+			return (Date)value;
+		</code>
+	</method>
+	<method id="setClientDatesStrategy" returnType="void">
+		<parameter type="String" name="strategy" />
+		<import>org.rcfaces.core.internal.converter.ClientDatesStrategyConverter</import>
+		<code>
+			setClientDatesStrategy(((Integer)ClientDatesStrategyConverter.SINGLETON.getAsObject(null, this, strategy)).intValue());
+		</code>
+	</method>
+	<method id="getGroupValue" returnType="Object">
+		<import>org.rcfaces.core.internal.tools.RadioButtonTools</import>
+		<code>
+			return RadioButtonTools.getGroupValue(this);
+		</code>
+	</method>
+	<method id="setGroupValue" returnType="void">
+		<parameter type="Object" name="value" />
+		<import>org.rcfaces.core.internal.tools.RadioButtonTools</import>
+		<code>
+			RadioButtonTools.setGroupValue(engine, this, value);
+		</code>
+	</method>
+	<method id="setMinTime" returnType="void">
+		<parameter type="String" name="time" />
+		<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+		<import>org.rcfaces.core.lang.Time</import>
+		<code>
+			Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+			setMinTime(timeValue);
+		</code>
+	</method>
+	<method id="setMaxTime" returnType="void">
+		<parameter type="String" name="time" />
+		<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+		<import>org.rcfaces.core.lang.Time</import>
+		<code>
+			Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+			setMaxTime(timeValue);
+		</code>
+	</method>
+	<method id="setDefaultTime" returnType="void">
+		<parameter type="String" name="time" />
+		<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+		<import>org.rcfaces.core.lang.Time</import>
+		<code>
+			Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+			setDefaultTime(timeValue);
+		</code>
+	</method>
+	<method id="setTime" returnType="void">
+		<parameter type="String" name="time" />
+		<import>org.rcfaces.core.internal.converter.LiteralTimeConverter</import>
+		<import>org.rcfaces.core.lang.Time</import>
+		<code>
+			Time timeValue=(Time)LiteralTimeConverter.SINGLETON.getAsObject(null, this, time);
+			setTime(timeValue);
+		</code>
+	</method>
+	<method id="setMinimum" returnType="void">
+		<parameter type="String" name="number" />
+		<import>org.rcfaces.core.internal.converter.LiteralNumberConverter</import>
+		<code>
+			Number numberObject=(Number)LiteralNumberConverter.SINGLETON.getAsObject(null, this, number);
+			setMinimum(numberObject);
+		</code>
+	</method>
+	<method id="setMaximum" returnType="void">
+		<parameter type="String" name="number" />
+		<import>org.rcfaces.core.internal.converter.LiteralNumberConverter</import>
+		<code>
+			Number numberObject=(Number)LiteralNumberConverter.SINGLETON.getAsObject(null, this, number);
+			setMaximum(numberObject);
+		</code>
+	</method>
+	<method id="setDefaultNumber" returnType="void">
+		<parameter type="String" name="number" />
+		<import>org.rcfaces.core.internal.converter.LiteralNumberConverter</import>
+		<code>
+			Number numberObject=(Number)LiteralNumberConverter.SINGLETON.getAsObject(null, this, number);
+			setDefaultNumber(numberObject);
+		</code>
+	</method>
+
+	<method id="getImageAccessors" returnType="org.rcfaces.core.component.familly.IContentAccessors">
+		<code>
+			return getImageAccessors(null);
+		</code>
+	</method>
+
+	<method id="getImageAccessors" returnType="org.rcfaces.core.component.familly.IContentAccessors">
+		<import>org.rcfaces.core.internal.tools.ImageAccessorTools</import>
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			return ImageAccessorTools.createImageAccessors(facesContext, this, engine);
+		</code>
+	</method>
+
+
+	<method id="setConverter">
+		<parameter type="String" name="converterId" />
+		<code>
+			 setConverter(null, converterId);
+		</code>
+	</method>
+
+	<method id="setConverter">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<parameter type="String" name="converterId" />
+		<import>javax.faces.convert.Converter</import>
+		<code>
+			if (facesContext==null) {
+				facesContext=FacesContext.getCurrentInstance();
+			}
+			Converter converter = facesContext.getApplication().createConverter(converterId);
+            this.setConverter(converter);
+		</code>
+	</method>
+
+	<method id="setConverter">
+		<parameter type="javax.faces.convert.Converter" name="converter" />
+		<code>
+        	engine.setProperty("converter", converter);
+		</code>
+	</method>
+
+
+	<method id="getConverter" returnType="javax.faces.convert.Converter">
+		<code>
+        	return (Converter)engine.getProperty("converter", null);
+		</code>
+	</method>
+
+	<method id="getConverter" returnType="javax.faces.convert.Converter">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+        	return (Converter)engine.getProperty("converter", facesContext);
+		</code>
+	</method>
+
+
+	<method id="getVisibleState" returnType="Boolean">
+		<code>
+			return getVisibleState(null);
+		</code>
+	</method>
+
+	<method id="getVisibleState" returnType="Boolean" final="false">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			if (engine.isPropertySetted(Properties.VISIBLE)==false) {
+				return null;
+			}
+			
+			return Boolean.valueOf(isVisible(facesContext));
+		</code>
+	</method>
+
+
+	<method id="isPagedSetted" returnType="boolean">
+		<code>
+			return engine.isPropertySetted(Properties.PAGED);
+		</code>
+	</method>
+	
+	<method id="getSelectedValuesCount" returnType="int">
+		<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+		<code>
+			return SelectionTools.getCount(getSelectedValues());
+		</code>
+	</method>
+	<method id="getFirstSelectedValue" returnType="Object">
+		<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+		<code>
+			return SelectionTools.getFirst(getSelectedValues(), getValue());
+		</code>
+	</method>
+	<method id="listSelectedValues" returnType="Object[]">
+		<import>org.rcfaces.core.internal.tools.SelectionTools</import>
+		<code>
+			return SelectionTools.listValues(getSelectedValues(), getValue());
+		</code>
+	</method>
+
+
+	<method id="getCheckedValuesCount" returnType="int">
+		<import>org.rcfaces.core.internal.tools.CheckTools</import>
+		<code>
+			return CheckTools.getCount(getCheckedValues());
+		</code>
+	</method>
+	<method id="getFirstCheckedValue" returnType="Object">
+		<import>org.rcfaces.core.internal.tools.CheckTools</import>
+		<code>
+			return CheckTools.getFirst(getCheckedValues(), getValue());
+		</code>
+	</method>
+
+	<method id="listCheckedValues" returnType="Object[]">
+		<import>org.rcfaces.core.internal.tools.CheckTools</import>
+		<code>
+			return CheckTools.listValues(getCheckedValues(), getValue());
+		</code>
+	</method>
+
+	<method id="getExpandedValuesCount" returnType="int">
+		<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+		<code>
+			return ExpansionTools.getCount(this, getExpandedValues());
+		</code>
+	</method>
+	
+	<method id="listExpandedValues" returnType="Object[]">
+		<import>org.rcfaces.core.internal.tools.ExpansionTools</import>
+		<code>
+			return ExpansionTools.listValues(this, getExpandedValues(), getValue());
+		</code>
+	</method>
+	
+	<method id="setRowValueConverter">
+		<parameter type="String" name="converterId" />
+		<code>			
+			setRowValueConverter(converterId, null);
+		</code>
+	</method>
+			
+	<method id="setRowValueConverter">
+		<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+		<import>javax.faces.convert.Converter</import>
+		<parameter type="String" name="converterId" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			Converter converter=ComponentTools.createConverter(facesContext, converterId);
+
+			setRowValueConverter(converter);
+		</code>
+	</method>
+
+	<method id="setSelectionValueConverter">
+		<parameter type="String" name="converterId" />
+		<code>			
+			setSelectionValueConverter(converterId, null);
+		</code>
+	</method>
+			
+	<method id="setSelectionValueConverter">
+		<import>org.rcfaces.core.internal.tools.ComponentTools</import>
+		<import>javax.faces.convert.Converter</import>
+		<parameter type="String" name="converterId" />
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<code>
+			Converter converter=ComponentTools.createConverter(facesContext, converterId);
+
+			setSelectionValueConverter(converter);
+		</code>
+	</method>
+			
+	<method id="setCalendarLayout">
+		<import>org.rcfaces.core.internal.converter.CalendarLayoutConverter</import>
+		<parameter type="String" name="layout" />
+		<code>
+			setCalendarLayout(((Integer)CalendarLayoutConverter.SINGLETON.getAsObject(null, this, layout)).intValue());
+		</code>
+	</method>
+			
+	<method id="setClientSelectionFullState">
+		<import>org.rcfaces.core.internal.converter.ClientFullStateConverter</import>
+		<parameter type="String" name="state" />
+		<code>
+			setClientSelectionFullState(((Integer)ClientFullStateConverter.SINGLETON.getAsObject(null, this, state)).intValue());
+		</code>
+	</method>
+			
+	<method id="setClientCheckFullState">
+		<import>org.rcfaces.core.internal.converter.ClientFullStateConverter</import>
+		<parameter type="String" name="state" />
+		<code>
+			setClientCheckFullState(((Integer)ClientFullStateConverter.SINGLETON.getAsObject(null, this, state)).intValue());
+		</code>
+	</method>
+			
+	<method id="setClientAdditionalInformationFullState">
+		<import>org.rcfaces.core.internal.converter.ClientFullStateConverter</import>
+		<parameter type="String" name="state" />
+		<code>
+			setClientAdditionalInformationFullState(((Integer)ClientFullStateConverter.SINGLETON.getAsObject(null, this, state)).intValue());
+		</code>
+	</method>
+	
+					
+	<method id="setFilterProperties" returnType="void">
+		<import>org.rcfaces.core.internal.converter.FilterPropertiesConverter</import>
+		<import>org.rcfaces.core.model.IFilterProperties</import>
+		<parameter type="java.lang.String" name="properties" />
+		
+		<code>
+			IFilterProperties filterProperties=(IFilterProperties)FilterPropertiesConverter.SINGLETON.getAsObject(null, this, properties);
+			
+			setFilterProperties(filterProperties);
+		</code>
+	</method>
+			
+		   
+ 	<method id="processEngineUpdates" returnType="void" modifier="protected">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+ 		<code>
+	    	engine.processUpdates(facesContext);
+    	</code>
+    </method>
+			
+	<method id="getContainerClientId" returnType="java.lang.String" modifier="public">
+		<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+		<import>javax.faces.component.UIComponent</import>
+		<import>javax.faces.component.NamingContainer</import>
+		<code>
+	        if (this.isPrependId()) {
+    	        return super.getContainerClientId(facesContext);
+        	}
+            UIComponent parent = this.getParent();
+            while (parent != null) {
+                if (parent instanceof NamingContainer) {
+                    return parent.getContainerClientId(facesContext);
+                }
+                parent = parent.getParent();
+            }        
+        	return null;
+		</code>	
+	</method>
+	<method id="setAlignment" returnType="void" modifier="public">
+		<parameter type="java.lang.String" name="alignment" />
+		<import>org.rcfaces.core.internal.converter.AlignmentNormalizer</import>
+ 		<code>
+			engine.setProperty(Properties.ALIGNMENT, AlignmentNormalizer.normalize(alignment));
+    	</code>
+	</method>
+
+	<method id="setLayoutType">
+		<import>org.rcfaces.core.internal.converter.LayoutManagerTypeConverter</import>
+		<parameter type="String" name="type" />
+		<code>
+			setLayoutType(((Integer)LayoutManagerTypeConverter.SINGLETON.getAsObject(null, this, type)).intValue());
+		</code>
+	</method>
+
+	<method id="listToolTips" returnType="org.rcfaces.core.component.iterator.IToolTipIterator">
+		<import>org.rcfaces.core.internal.tools.ToolTipTools</import>
+		<code>
+			return ToolTipTools.listToolTips(this);
+		</code>
+	</method>
+</camelia-components>
+	

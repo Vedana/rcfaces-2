@@ -1,0 +1,92 @@
+/*
+ * $Id: CameliaComponents.template,v 1.1 2011/04/12 09:25:48 oeuillot Exp $
+ */
+package org.rcfaces.core.internal.generator;
+
+import java.util.Iterator;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.render.Renderer;
+
+import org.rcfaces.core.internal.renderkit.IRendererExtension;
+
+/**
+ * @author Olivier Oeuillot
+ * @version $Revision: 1.1 $
+ */
+class CameliaComponents {
+
+	public static final String FAMILY = "camelia";
+
+	public static void processDecodes(FacesContext context, UIComponent component,
+			Renderer renderer) {
+		if (context == null) {
+			throw new NullPointerException();
+		}
+		/*
+		 * // Skip processing if our rendered flag is false if (!isRendered()) {
+		 * return; }
+		 * 
+		 * Renderer renderer = component.getRenderer(context);
+		 */
+		if (renderer != null && (renderer instanceof IRendererExtension)) {
+			IRendererExtension rendererExtension = (IRendererExtension) renderer;
+
+			try {
+				renderer.decode(context, component);
+
+			} catch (RuntimeException e) {
+				context.renderResponse();
+				throw e;
+			}
+
+			if (rendererExtension.getDecodesChildren()) {
+				try {
+					rendererExtension.decodeChildren(context, component);
+
+				} catch (RuntimeException e) {
+					context.renderResponse();
+					throw e;
+				}
+
+			} else {
+				Iterator kids = component.getFacetsAndChildren();
+				while (kids.hasNext()) {
+					UIComponent kid = (UIComponent) kids.next();
+					kid.processDecodes(context);
+				}
+			}
+
+			try {
+				rendererExtension.decodeEnd(context, component);
+
+			} catch (RuntimeException e) {
+				context.renderResponse();
+				throw e;
+			}
+
+			return;
+		}
+
+		// Process all facets and children of this component
+		Iterator kids = component.getFacetsAndChildren();
+		while (kids.hasNext()) {
+			UIComponent kid = (UIComponent) kids.next();
+			kid.processDecodes(context);
+		}
+
+		if (renderer == null) {
+			return;
+		}
+
+		// Process this component itself
+		try {
+			renderer.decode(context, component);
+
+		} catch (RuntimeException e) {
+			context.renderResponse();
+			throw e;
+		}
+	}
+}

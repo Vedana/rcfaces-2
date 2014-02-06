@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcfaces-config>
+	<providers>
+  		<provider>
+  			<provider-id>org.rcfaces.core.ADAPTER_MANAGER</provider-id>
+  			<provider-class>org.rcfaces.core.internal.adapter.AdapterManagerImpl</provider-class>
+  		</provider>
+  	</providers>
+</rcfaces-config>

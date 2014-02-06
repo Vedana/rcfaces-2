@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcfaces-config>
+	<providers>
+   		<provider>
+  			<provider-id>org.rcfaces.core.CONTENT_STORAGE_ACCESSOR_HANDLER</provider-id>
+  			<provider-class>org.rcfaces.core.internal.contentStorage.ContentStorageAccessorHandler</provider-class>
+  			<requires>org.rcfaces.core.CONTENT_ACCESSOR_REGISTRY</requires>
+  		</provider>
+  		<provider>
+  			<provider-id>org.rcfaces.core.CONTENT_STORAGE_ENGINE</provider-id>
+  			<provider-class>org.rcfaces.core.internal.contentStorage.ContentStorageEngineImpl</provider-class>
+  		</provider>
+  	</providers>
+</rcfaces-config>
