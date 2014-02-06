@@ -1,0 +1,1978 @@
+/*
+ * $Id: GanymedeDocGenerator._java,v 1.1 2010/05/20 12:07:25 oeuillot Exp $
+ */
+package com.vedana.camelia.generator.js.parser;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Map.Entry;
+
+import javax.crypto.spec.IvParameterSpec;
+
+import org.apache.commons.digester.Digester;
+import org.apache.commons.digester.Rule;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import com.vedana.js.Context;
+import com.vedana.js.IComment;
+import com.vedana.js.Operation;
+import com.vedana.js.Parser;
+import com.vedana.js.RuntimeVisitors;
+import com.vedana.js.TokenStream;
+import com.vedana.js.Visitors;
+import com.vedana.js.RuntimeVisitors.IRuntimeProblemHandler;
+import com.vedana.js.dom.ASTNode;
+import com.vedana.js.dom.Assignment;
+import com.vedana.js.dom.Block;
+import com.vedana.js.dom.BreakStatement;
+import com.vedana.js.dom.ContinueStatement;
+import com.vedana.js.dom.DefName;
+import com.vedana.js.dom.Document;
+import com.vedana.js.dom.Expression;
+import com.vedana.js.dom.FalseLiteral;
+import com.vedana.js.dom.FieldAccess;
+import com.vedana.js.dom.FunctionDeclaration;
+import com.vedana.js.dom.ICopyContext;
+import com.vedana.js.dom.InfixExpression;
+import com.vedana.js.dom.MethodInvocation;
+import com.vedana.js.dom.NodeList;
+import com.vedana.js.dom.NullLiteral;
+import com.vedana.js.dom.NumberLiteral;
+import com.vedana.js.dom.Parameter;
+import com.vedana.js.dom.PrefixExpression;
+import com.vedana.js.dom.RefName;
+import com.vedana.js.dom.ReturnStatement;
+import com.vedana.js.dom.Statement;
+import com.vedana.js.dom.StringLiteral;
+import com.vedana.js.dom.ThisLiteral;
+import com.vedana.js.dom.TrueLiteral;
+import com.vedana.js.dom.UndefinedLiteral;
+import com.vedana.js.dom.Value;
+import com.vedana.js.dom.VarExpression;
+
+/**
+ * @author Olivier Oeuillot
+ * @version $Revision: 1.1 $
+ */
+public class GanymedeDocGenerator {
+
+    private static boolean DEBUG_GENERATION = false;
+
+    private static boolean PROFILER_GENERATION = false;
+
+    // Pas bon pour l'UTF8
+    // �����������������������������������������������������";
+
+    private static boolean SIMPLIFY_NAMES = true;
+
+    private static boolean SIMPLIFY_AST = true;
+
+    // __ simplify ___
+
+    private static boolean MERGE_IF_CASACADES = true;
+
+    private static boolean SIMPLIFY_EXPRESSION = true;
+
+    private static boolean SIMPLIFY_EMPTY_FINALLY = true;
+
+    private static boolean REMOVE_ABSTRACT = true;
+
+    private static boolean REMOVE_LOGS = true;
+
+    private static boolean REMOVE_VERIFY_PROPERTIES = true;
+
+    private static boolean REPLACE_TRUE_FALSE = true;
+
+    private static boolean REPLACE_NEW_OBJECT_ARRAY = true;
+
+    private static boolean SIMPLIFY_IF_BLOCKS = true;
+
+    private static boolean SIMPLIFY_FUNCTION_PARAMETERS = true;
+
+    private static boolean SIMPLIFY_FOR_BLOCKS = true;
+
+    private static boolean SIMPLIFY_THIS = true;
+
+    private static boolean CONCAT_VAR_TO_BEGIN = true;
+
+    private static boolean CONCAT_VAR_MID = true;
+
+    private static boolean GROUP_ASSIGNMENT_LITERALS = true;
+
+    private static boolean MERGE_IF_CONDITIONS = true;
+
+    private static boolean GROUP_CLASS_ACCESS = true;
+
+    private static boolean GROUP_LITERALS = true;
+
+    private static boolean REPLACE_CONSTANTS = true;
+
+    private static boolean SIMPLIFY_USED_CONSTANTS = true;
+
+    private static boolean MOVE_MEMBERS_STATICS = true;
+
+    private static boolean REMOVE_UNDEFINED_VALUES = true;
+
+    private static boolean SEARCH_USELESS_EXPRESSION = true;
+
+    private static boolean VERIFY_VARIABLES = false;
+
+    private static boolean MERGE_RETURN_ASSIGNMENTS = true;
+
+    private static boolean MERGE_DOUBLE_ASSIGNMENTS = true;
+
+    // Level 2
+
+    private static boolean MERGE_VARIABLES = false;
+
+    private static boolean RESOLVE_SUPER = false;
+
+    private static boolean INLINE_ASPECTS = false;
+
+    // Level 3 (multi window)
+
+    private static boolean MULTI_WINDOW = false;
+
+    //
+
+    private static final Set coreClasses = new HashSet();
+
+    public static final String FINAL_VALUE_PROPERTY = "value.final";
+
+    public static final String MEMBER_PROPERTY = "member";
+
+    private static final String DONT_INLINE_META = "dontInline";
+
+    private static final String INDIRECT_CLASS_PROPERTY = "indirectClass";
+
+    private static final String WINDOW_INDEPENDANT_PROPERTY = "windowIndependant";
+
+    private static final boolean VERIFY_JS_ONLISTENERS = true;
+
+    private static int INDEX_INCLUSIONS = 0;
+
+    private static String COMPILATION_LABEL;
+
+    private static String COMPILATION_VERSION;
+
+    private static String COMPILED_EXTENSION = "jsc";
+
+    private static final Set JAVASCRIPT_EVENT_HANDLERS = new HashSet();
+
+    static {
+        JAVASCRIPT_EVENT_HANDLERS.add("onmousedown");
+        JAVASCRIPT_EVENT_HANDLERS.add("onmouseup");
+        JAVASCRIPT_EVENT_HANDLERS.add("onmouseover");
+        JAVASCRIPT_EVENT_HANDLERS.add("onmouseout");
+        JAVASCRIPT_EVENT_HANDLERS.add("onkeydown");
+        JAVASCRIPT_EVENT_HANDLERS.add("onkeyup");
+        JAVASCRIPT_EVENT_HANDLERS.add("onkeypress");
+        JAVASCRIPT_EVENT_HANDLERS.add("onclick");
+        JAVASCRIPT_EVENT_HANDLERS.add("onchange");
+        JAVASCRIPT_EVENT_HANDLERS.add("onfocus");
+        JAVASCRIPT_EVENT_HANDLERS.add("onblur");
+        JAVASCRIPT_EVENT_HANDLERS.add("onreset");
+        JAVASCRIPT_EVENT_HANDLERS.add("onsubmit");
+        JAVASCRIPT_EVENT_HANDLERS.add("ondblclick");
+        JAVASCRIPT_EVENT_HANDLERS.add("onload");
+        JAVASCRIPT_EVENT_HANDLERS.add("onunload");
+        JAVASCRIPT_EVENT_HANDLERS.add("onreadystatechange");
+
+    }
+
+    public static void main(String args[]) throws Exception {
+        // expression();
+        files(args);
+    }
+
+    private static void files(String args[]) throws Exception {
+
+        File base = new File(
+                "w:/Workspace CAMELIA/org.rcfaces.renderkit.html/src/org/rcfaces/renderkit/html/internal/javascript/");
+
+        File outputBase = new File(
+                "w:/Workspace CAMELIA/org.rcfaces.renderkit.html/src-generated/org/rcfaces/renderkit/html/internal/javascript/");
+
+        for (int i = 0; i < args.length;) {
+            String s = args[i++];
+
+            if (s.equals("-source")) {
+                base = new File(args[i++]);
+                continue;
+            }
+
+            if (s.equals("-dest")) {
+                outputBase = new File(args[i++]);
+                continue;
+            }
+
+            if (s.startsWith("+") || s.startsWith("-")) {
+                boolean enable = s.startsWith("+");
+
+                StringBuffer sb = new StringBuffer();
+
+                int pos = 1;
+                int last = pos;
+                for (; pos < s.length(); pos++) {
+                    if (pos < 2
+                            || Character.isUpperCase(s.charAt(pos)) == false) {
+                        continue;
+                    }
+
+                    String token = s.substring(last, pos).toUpperCase();
+                    if (sb.length() > 0) {
+                        sb.append('_');
+                    }
+
+                    sb.append(token);
+                    last = pos;
+                }
+
+                if (last < pos) {
+                    String token = s.substring(last, pos).toUpperCase();
+                    if (sb.length() > 0) {
+                        sb.append('_');
+                    }
+
+                    sb.append(token);
+                }
+
+                String fieldName = sb.toString();
+
+                Field field = GanymedeDocGenerator.class
+                        .getDeclaredField(fieldName);
+
+                field.set(null, Boolean.valueOf(enable));
+
+                continue;
+            }
+        }
+
+        files(base, outputBase);
+    }
+
+    public static void files(File base, File outputBase) throws Exception {
+
+        JsStats stats = new JsStats(new ErrorLog());
+
+        readRepository(new File(base, "repository.xml"), stats);
+
+        Context context = new Context(Context.VERSION_1_4);
+
+        long total = 0;
+
+        List fileNodes = new ArrayList();
+
+        File files[] = listFiles(base);
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+
+            if (file.getName().endsWith(".js") == false) {
+                continue;
+            }
+            if (file.getName().startsWith("vfv-")) {
+                continue;
+            }
+            if (file.getName().startsWith("f_vx")) {
+                continue;
+            }
+            if (file.getName().equals("fa_test.js")) {
+                continue;
+            }
+
+            /*
+             * if (file.getName().startsWith("vfa-readOnly") == false) {
+             * continue; }
+             * 
+             * 
+             * 
+             * File f2 = new File(file.getAbsolutePath() + "c"); if
+             * (f2.exists()) { f2.delete(); } continue; } }
+             */
+
+            String fn = file.getName();
+            int idx = fn.lastIndexOf('.');
+            stats.addStaticObject(fn.substring(0, idx));
+
+            total += file.length();
+
+            Reader reader = new InputStreamReader(new FileInputStream(file),
+                    "UTF-8");
+
+            System.out.println("Read #" + i + " : " + file.getName());
+
+            TokenStream stream = new TokenStream(reader, file.getName(), 0,
+                    context);
+
+            Parser parser = new Parser();
+
+            fileNodes.add(file);
+
+            Document document = parser.parse(stream);
+            NodeList nodeList = document.getStatements();
+            fileNodes.add(nodeList);
+
+            IComment comments[] = stream.listComments();
+
+            List cs = new ArrayList();
+            for (int j = 0; j < comments.length; j++) {
+                JsComment cc = JsComment.createCommentContent(comments[j],
+                        nodeList, stats, fn);
+
+                if (cc == null) {
+                    continue;
+                }
+
+                cs.add(cc);
+            }
+
+            fileNodes.add(cs.toArray(new JsComment[cs.size()]));
+
+            reader.close();
+        }
+
+        List commentsList = new ArrayList();
+
+        for (Iterator it = fileNodes.iterator(); it.hasNext();) {
+            File file = (File) it.next();
+            NodeList nodes = (NodeList) it.next();
+            JsComment comments[] = (JsComment[]) it.next();
+
+            parseMembers(file, nodes, comments, stats);
+
+            commentsList.addAll(Arrays.asList(comments));
+        }
+
+        computeModifiers(stats);
+
+        File output = new File(outputBase, "RCFaces.js");
+        output.getParentFile().mkdirs();
+
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(output), "UTF-8"));
+
+        List cs = new ArrayList();
+
+        for (Iterator it = stats.classesRepository.entrySet().iterator(); it
+                .hasNext();) {
+            Map.Entry entry = (Entry) it.next();
+
+            String name = (String) entry.getKey();
+            IJsClass clazz = (IJsClass) entry.getValue();
+
+            cs.add(clazz);
+        }
+
+        Collections.sort(cs, new Comparator() {
+
+            public int compare(Object c0, Object c1) {
+                return computeDepth((IJsClass) c0)
+                        - computeDepth((IJsClass) c1);
+            }
+
+            private int computeDepth(IJsClass jsc) {
+                if (jsc.getParent() == null) {
+                    return 0;
+                }
+
+                return computeDepth(jsc.getParent()) + 1;
+            }
+
+        });
+
+        for (Iterator it = cs.iterator(); it.hasNext();) {
+            IJsClass clazz = (IJsClass) it.next();
+
+            writeDoc(writer, clazz, stats);
+
+            // Writer writer = new OutputStreamWriter(new
+            // FileOutputStream("c:\\temp\\O2\\"+file.getName()+ "c"), "UTF-8");
+        }
+
+        writer.close();
+
+    }
+
+    private static void writeDoc(PrintWriter writer, IJsClass clazz,
+            JsStats stats) {
+
+        List members = new ArrayList();
+
+        members.addAll(Arrays.asList(clazz.listMembers()));
+
+        IJsClass aspects[] = clazz.listAspects();
+        for (int i = 0; i < aspects.length; i++) {
+            addAspectMembers(members, aspects[i]);
+        }
+
+        JsMethod constructor = null;
+        int methods = 0;
+        int fields = 0;
+        boolean onlyStatic = true;
+        for (Iterator it = members.iterator(); it.hasNext();) {
+            JsMember member = (JsMember) it.next();
+
+            if (member.modifier.isPublic() == false) {
+                it.remove();
+                continue;
+            }
+
+            if (member.modifier.name.equals("f_finalize")) {
+                it.remove();
+                continue;
+            }
+
+            if (member.modifier.isMethodType()) {
+
+                if (clazz.isAspect() && member.modifier.isStatic() == false) {
+                    continue;
+                }
+
+                methods++;
+
+                if (member.modifier.name.equals(clazz.getName())) {
+                    constructor = (JsMethod) member;
+                }
+
+                if (member.modifier.isStatic() == false) {
+                    onlyStatic = false;
+                }
+                continue;
+            }
+
+            if (member.modifier.isFieldType()) {
+
+                if (clazz.isAspect() && member.modifier.isStatic() == false) {
+                    continue;
+                }
+
+                fields++;
+
+                if (member.modifier.isStatic() == false) {
+                    onlyStatic = false;
+                }
+                continue;
+            }
+        }
+
+        if (methods == 0 && fields == 0) {
+            return;
+        }
+
+        if (constructor != null) {
+            writeConstructor(writer, clazz, constructor);
+
+        } else {
+
+            writer.println("/**");
+            writer.println(" * Object " + clazz.getName() + "()");
+            writer.println(" *");
+            writer.println(" * @constructor");
+            writer.println(" * @class " + clazz.getName());
+            if (clazz.getParent() != null) {
+                writer.println(" * @extends " + clazz.getParent().getName());
+            } else {
+                writer.println(" * @extends Object");
+            }
+            writer.println(" */");
+
+            writer.print("function " + clazz.getName() + "(){};");
+            writer.println();
+        }
+
+        if (onlyStatic == false) {
+            if (clazz.getParent() != null) {
+                writer.println(clazz.getName() + ".prototype = new "
+                        + clazz.getParent().getName() + "();");
+                writer.println();
+            } else {
+                writer.println(clazz.getName() + ".prototype = new Object();");
+                writer.println();
+            }
+        }
+
+        for (Iterator it = members.iterator(); it.hasNext();) {
+            JsMember member = (JsMember) it.next();
+
+            if (member == constructor) {
+                continue;
+            }
+
+            if (member.modifier.isPublic() == false) {
+                continue;
+            }
+
+            if (member.modifier.isMethodType()) {
+                writeMethod(writer, clazz, (JsMethod) member, stats);
+                continue;
+            }
+
+            if (member.modifier.isFieldType()) {
+                writeField(writer, clazz, (JsField) member, stats);
+                continue;
+            }
+        }
+    }
+
+    private static void addAspectMembers(List members, IJsClass aspect) {
+        JsMember ms[] = aspect.listMembers();
+
+        for (int i = 0; i < ms.length; i++) {
+            JsMember m = ms[i];
+
+            if (m.modifier.isPublic() == false) {
+                continue;
+            }
+
+            if (m.modifier.name.equals(aspect.getName())) {
+                continue;
+            }
+            if (m.modifier.isAfter() || m.modifier.isBefore()) {
+                continue;
+            }
+
+            if (m.modifier.name.equals("f_finalize")) {
+                continue;
+            }
+
+            members.add(m);
+        }
+
+        IJsClass aspects[] = aspect.listAspects();
+        for (int i = 0; i < aspects.length; i++) {
+            addAspectMembers(members, aspects[i]);
+        }
+    }
+
+    private static void writeField(PrintWriter writer, IJsClass clazz,
+            JsField field, JsStats stats) {
+
+        String literalValue = null;
+        String type = null;
+        String fieldTitle = null;
+
+        JsComment comment = field.getComment();
+        if (comment != null) {
+            fieldTitle = comment.getTitle();
+
+            if ("field".equals(comment.getType())) {
+
+                ASTNode value = field.value;
+                if (value instanceof NumberLiteral) {
+                    type = "Number";
+
+                    double d = ((NumberLiteral) value).getNumber();
+
+                    if (Math.floor(d) == d) {
+                        literalValue = String.valueOf((long) d);
+
+                    } else {
+                        literalValue = String.valueOf(d);
+                    }
+
+                } else if (value instanceof TrueLiteral) {
+                    type = "Boolean";
+                    literalValue = "true";
+
+                } else if (value instanceof FalseLiteral) {
+                    type = "Boolean";
+                    literalValue = "false";
+
+                } else if (value instanceof NullLiteral) {
+                    type = "Object";
+                    literalValue = "null";
+
+                } else if (value instanceof StringLiteral) {
+                    type = "String";
+                    literalValue = encodeJavaScriptString(((StringLiteral) value)
+                            .getString());
+                } else if ((value instanceof PrefixExpression)
+                        && ((PrefixExpression) value).getOperation().equals(
+                                Operation.NEGATIVE)
+                        && (((PrefixExpression) value).getExpression() instanceof NumberLiteral)) {
+
+                    type = "Number";
+
+                    double d = ((NumberLiteral) ((PrefixExpression) value)
+                            .getExpression()).getNumber();
+
+                    if (Math.floor(d) == d) {
+                        literalValue = "-" + String.valueOf((long) d);
+
+                    } else {
+                        literalValue = "-" + String.valueOf(d);
+                    }
+                } else if ((value instanceof InfixExpression)
+                        && ((InfixExpression) value).getOperation().equals(
+                                Operation.LEFT_SHIFT)) {
+                    type = "Number";
+
+                    literalValue = ((int) ((NumberLiteral) ((InfixExpression) value)
+                            .getLeft()).getNumber())
+                            + "<<"
+                            + ((int) ((NumberLiteral) ((InfixExpression) value)
+                                    .getRight()).getNumber());
+                } else {
+                    System.out.println("??? " + value);
+                }
+            }
+        }
+
+        writer.println("/**");
+
+        if (field.modifier.isStatic()) {
+            if (fieldTitle != null) {
+                writer.println(" * " + fieldTitle);
+
+            } else {
+                writer.print(" * Constant " + clazz.getName() + "."
+                        + field.modifier.name);
+                if (literalValue != null) {
+                    String l = literalValue;
+
+                    l = literalValue.replace("*", "&#42;");
+
+                    writer.print("=" + l);
+                }
+
+                writer.println();
+            }
+
+        } else {
+            writer.println(" * Property " + field.modifier.name);
+        }
+
+        writer.println(" *");
+
+        if (field.modifier.isFinal()) {
+            writer.println(" * @final");
+        }
+
+        if (type != null) {
+            writer.println(" * @type " + type);
+        }
+
+        writer.println(" * @class " + clazz.getName());
+        writer.println(" */");
+
+        writer.print(clazz.getName());
+        if (field.modifier.isStatic() == false) {
+            writer.print(".prototype");
+        }
+
+        if (literalValue == null) {
+            literalValue = "undefined";
+        }
+        writer.print("." + field.modifier.name + "=" + literalValue + ";");
+        writer.println();
+    }
+
+    private static void writeConstructor(PrintWriter writer, IJsClass clazz,
+            JsMethod constructor) {
+
+        writer.println("/**");
+        writer.println(" *");
+        writer.println(" * @constructor");
+        writer.println(" * @class " + clazz.getName());
+        if (clazz.getParent() != null) {
+            writer.println(" * @extends " + clazz.getParent().getName());
+        } else {
+            writer.println(" * @extends Object");
+        }
+        writer.println(" */");
+
+        writer.println();
+        writer.print("function " + clazz.getName() + "(){};");
+        writer.println();
+    }
+
+    private static void writeMethod(PrintWriter writer, IJsClass clazz,
+            JsMethod method, JsStats stats) {
+
+        List params = null;
+        Map typeOfParams = null;
+        Map docOfParams = null;
+        List additionalComments = null;
+        String returnDoc = null;
+        String returnType = null;
+        String methodTitle = null;
+
+        ASTNode v = method.definition;
+        if (v instanceof Value) {
+            v = ((Value) v).getRight();
+        } else if (v instanceof Assignment) {
+            v = ((Assignment) v).getRight();
+        } else if (v instanceof FieldAccess) {
+            v = ((FieldAccess) v).getObject();
+        }
+
+        if (v instanceof FunctionDeclaration) {
+            FunctionDeclaration fd = (FunctionDeclaration) v;
+
+            params = new ArrayList();
+
+            NodeList parameters = fd.getParameters();
+            if (parameters != null && parameters.size() > 0) {
+                for (int i = 0; i < parameters.size(); i++) {
+                    params.add(((Parameter) parameters.get(i)).getName());
+                }
+            }
+        }
+
+        JsComment comment = method.getComment();
+        if (comment != null) {
+            if (method.getReturnType() != null) {
+                returnType = translateType(method.getReturnType());
+            }
+
+            methodTitle = comment.getTitle();
+
+            String decls[] = comment.listDeclarations();
+            for (int i = 0; i < decls.length;) {
+                String nd = decls[i++];
+                String d = decls[i++];
+
+                if (nd.equals("see") || nd.equals("link") || nd.equals("since")) {
+                    if (additionalComments == null) {
+                        additionalComments = new ArrayList();
+                    }
+
+                    additionalComments.add("@" + nd + " " + d);
+                    continue;
+                }
+
+                if (nd.equals("return")) {
+                    StringTokenizer st = new StringTokenizer(d, " ");
+
+                    if (st.countTokens() < 2) {
+                        continue;
+                    }
+
+                    st.nextToken();
+                    returnDoc = st.nextToken("\n").trim();
+                    continue;
+                }
+
+                if (nd.equals("param") == false) {
+                    continue;
+                }
+
+                StringTokenizer st = new StringTokenizer(d);
+
+                if (st.hasMoreTokens() == false) {
+                    continue;
+                }
+
+                boolean hidden = false;
+                boolean optional = false;
+                String type = null;
+                for (;;) {
+                    type = st.nextToken();
+                    if ("hidden".equals(type)) {
+                        hidden = true;
+                        continue;
+                    }
+                    if ("optional".equals(type)) {
+                        optional = true;
+                        continue;
+                    }
+                    break;
+                }
+
+                if (st.hasMoreTokens() == false) {
+                    continue;
+                }
+                String name = st.nextToken();
+
+                if (hidden) {
+                    if (params != null) {
+                        params.remove(name);
+                    }
+                    continue;
+                }
+
+                if (params == null) {
+                    params = new ArrayList();
+                }
+
+                if (params.indexOf(name) < 0) {
+                    params.add(name);
+                }
+
+                if (typeOfParams == null) {
+                    typeOfParams = new HashMap();
+                }
+                typeOfParams.put(name, translateType(type));
+
+                if (st.hasMoreTokens()) {
+                    if (docOfParams == null) {
+                        docOfParams = new HashMap();
+                    }
+                    docOfParams.put(name, st.nextToken("\n").trim());
+                }
+            }
+        }
+
+        writer.println("/**");
+        if (methodTitle != null) {
+            writer.println(" * " + methodTitle);
+        }
+        writer.println(" *");
+        // writer.println(" * @type function");
+        writer.println(" * @class " + clazz.getName());
+
+        if (params != null) {
+            for (Iterator it = params.iterator(); it.hasNext();) {
+                String param = (String) it.next();
+
+                String type = null;
+                if (typeOfParams != null) {
+                    type = (String) typeOfParams.get(param);
+                }
+
+                writer.print(" * @param " + param);
+                if (type != null) {
+                    writer.print(" " + type);
+                }
+
+                String doc = null;
+                if (docOfParams != null) {
+                    doc = (String) docOfParams.get(param);
+                }
+
+                if (doc != null) {
+                    if (type == null) {
+                        writer.print(" undefined");
+                    }
+
+                    writer.print(" " + doc);
+                }
+
+                writer.println();
+            }
+        }
+
+        if (returnType != null) {
+            writer.println(" * @type " + returnType);
+
+        }
+        if (returnDoc != null) {
+            writer.println(" * @return " + returnDoc);
+
+        } else if (returnType != null) {
+            writer.println(" * @return " + returnType);
+        }
+
+        if (additionalComments != null) {
+            for (Iterator it = additionalComments.iterator(); it.hasNext();) {
+                String c = (String) it.next();
+
+                writer.println(" * " + c);
+            }
+        }
+
+        writer.println(" */");
+
+        writer.print(clazz.getName());
+        if (method.modifier.isStatic() == false) {
+            writer.print(".prototype");
+        }
+
+        writer.print("." + method.modifier.name + "=function(");
+
+        if (params != null) {
+            boolean first = true;
+            for (Iterator it = params.iterator(); it.hasNext();) {
+                if (first) {
+                    first = false;
+                } else {
+                    writer.print(", ");
+                }
+
+                writer.print(it.next());
+            }
+        }
+
+        writer.println("){}");
+
+        writer.println();
+    }
+
+    private static String translateType(String returnType) {
+        if ("any".equals(returnType)) {
+            return returnType;
+        }
+
+        if ("HTMLElement".equalsIgnoreCase(returnType)) {
+            return "Element";
+        }
+
+        if ("HTMLFormElement".equalsIgnoreCase(returnType)) {
+            return "Element";
+        }
+
+        if ("HTMLDocument".equalsIgnoreCase(returnType)) {
+            return "Document";
+        }
+
+        if (returnType.indexOf('_') >= 0) {
+            return returnType;
+        }
+        return Character.toUpperCase(returnType.charAt(0))
+                + returnType.substring(1);
+    }
+
+    private static String encodeJavaScriptString(String str) {
+
+        char escape;
+
+        if (str.indexOf('\"') < 0) {
+            escape = '\"';
+
+        } else if (str.indexOf('\'') < 0) {
+            escape = '\'';
+
+        } else {
+            escape = '\"';
+        }
+
+        StringBuffer sb = new StringBuffer(str.length() * 2);
+
+        sb.append(escape);
+
+        char chs[] = str.toCharArray();
+        for (int i = 0; i < chs.length; i++) {
+            char c = chs[i];
+
+            if (c == '\n') {
+                sb.append("\\n");
+                continue;
+            }
+            if (c == '\r') {
+                sb.append("\\r");
+                continue;
+            }
+            if (c == escape) {
+                sb.append('\\');
+                sb.append(escape);
+                continue;
+            }
+            if (c == '\t') {
+                sb.append("\\t");
+                continue;
+            }
+            if (c == '\\') {
+                sb.append("\\\\");
+                continue;
+            }
+
+            sb.append(c);
+        }
+
+        sb.append(escape);
+
+        return sb.toString();
+    }
+
+    private static boolean isUndefinedLiteral(Expression object) {
+
+        if (object instanceof UndefinedLiteral) {
+            return true;
+        }
+
+        Class cls = (Class) object.getProperty(FINAL_VALUE_PROPERTY);
+
+        if (UndefinedLiteral.class.equals(cls)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean isThisLiteral(Expression object) {
+
+        if (object instanceof ThisLiteral) {
+            return true;
+        }
+
+        Class cls = (Class) object.getProperty(FINAL_VALUE_PROPERTY);
+
+        if (ThisLiteral.class.equals(cls)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void readRepository(File repository, final JsStats stats)
+            throws IOException, SAXException {
+
+        Digester digester = new Digester();
+
+        final boolean core[] = new boolean[1];
+
+        digester.addRule("repository/module", new Rule() {
+            public void begin(String namespace, String name,
+                    Attributes attributes) throws Exception {
+
+                String className = attributes.getValue("id");
+
+                core[0] = "core".equals(className);
+            }
+
+            public void end(String namespace, String name) throws Exception {
+                core[0] = false;
+            }
+        });
+        digester.addRule("repository/module/file/class", new Rule() {
+            public void begin(String namespace, String name,
+                    Attributes attributes) throws Exception {
+
+                String className = attributes.getValue("name");
+
+                if (core[0]) {
+                    coreClasses.add(className);
+                }
+
+                boolean isAspect = className.startsWith("fa_");
+
+                JsClass repositoryClass = new JsClass(className, isAspect);
+
+                stats.classesRepository.put(className, repositoryClass);
+
+                super.digester.push(repositoryClass);
+            }
+
+            public void end(String namespace, String name) throws Exception {
+                super.digester.pop();
+            }
+        });
+
+        digester.addRule("repository/module/file/class/required-class",
+                new Rule() {
+                    public void begin(String namespace, String name,
+                            Attributes attributes) throws Exception {
+
+                        String className = attributes.getValue("name");
+
+                        JsClass repositoryClass = (JsClass) super.digester
+                                .peek();
+
+                        repositoryClass.addDependency(className);
+                    }
+                });
+
+        digester.parse(repository);
+    }
+
+    private static File[] listFiles(File base) {
+        List l = new ArrayList();
+
+        File fs[] = base.listFiles();
+
+        for (int i = 0; i < fs.length; i++) {
+            File f = fs[i];
+
+            if (f.isDirectory()) {
+                File ret[] = listFiles(f);
+
+                l.addAll(Arrays.asList(ret));
+                continue;
+            }
+
+            if (f.getName().endsWith("js") == false) {
+                continue;
+            }
+
+            l.add(f);
+        }
+
+        return (File[]) l.toArray(new File[l.size()]);
+    }
+
+    private static String computeClassName(File file) {
+        String name = file.getName();
+        int idx = name.lastIndexOf('/');
+        if (idx >= 0) {
+            name = name.substring(idx + 1);
+        }
+
+        idx = name.indexOf('.');
+        if (idx >= 0) {
+            name = name.substring(0, idx);
+        }
+
+        return name;
+    }
+
+    private static FunctionDeclaration getParentFunction(ASTNode parent) {
+        FunctionDeclaration fd = null;
+
+        for (; parent != null; parent = parent.getParent()) {
+            if (parent instanceof FunctionDeclaration) {
+                fd = (FunctionDeclaration) parent;
+            }
+        }
+
+        return fd;
+    }
+
+    private static void replaceNode(Statement dest, Statement source) {
+        if (source instanceof Block) {
+            Block block = (Block) source;
+
+            NodeList nl = dest.getParentList();
+            for (int i = 0; i < nl.size(); i++) {
+                ASTNode a = (ASTNode) nl.get(i);
+                if (a != dest) {
+                    continue;
+                }
+
+                nl.remove(i);
+                NodeList n2 = block.getStatements();
+                for (int j = 0; j < n2.size(); j++) {
+                    nl.add(i + j, (ASTNode) n2.get(j));
+                }
+
+                return;
+            }
+        }
+
+        if (dest.getParent() == null) {
+            dest.getParentList().replaceBy(source, dest);
+            return;
+        }
+
+        dest.replaceBy(source);
+    }
+
+    private interface ISetLiteralCondition {
+        boolean testLiteral(Assignment assignment, Assignment original);
+
+        String getLiteralName(Assignment assignment);
+
+        String getName();
+    }
+
+    private static String verifyName(String name) {
+        if (Character.isJavaIdentifierStart(name.charAt(0)) == false
+                || name.charAt(0) > 127 || name.charAt(0) < 32) {
+            throw new IllegalStateException("Illegal name ! (" + name + ")");
+        }
+
+        for (int i = 1; i < name.length(); i++) {
+            if (Character.isJavaIdentifierPart(name.charAt(i)) == false
+                    || name.charAt(i) > 127 || name.charAt(i) < 32) {
+                throw new IllegalStateException("Illegal name ! (" + name + ")");
+            }
+        }
+
+        return name;
+    }
+
+    private static boolean isOnlyDigit(String token) {
+        for (int i = 0; i < token.length(); i++) {
+            if (Character.isDigit(token.charAt(i)) == false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static JsMember searchMember(RefName ref, String className,
+            JsStats stats, Set classNames) {
+        if ((ref.getParent() instanceof FieldAccess) == false) {
+            return null;
+        }
+        FieldAccess fa = (FieldAccess) ref.getParent();
+        if (fa.getProperty() == ref) {
+            if (fa.getObject() instanceof RefName) {
+                RefName rr = (RefName) fa.getObject();
+
+                if (classNames.contains(rr.getName())) {
+                    String key = rr.getName() + "." + ref.getName();
+                    JsMember cst = (JsMember) stats.members.get(key);
+
+                    // System.out.println("S=" + key + " => " + cst);
+                    return cst;
+                }
+
+                if (className.equals("f_class")
+                        && rr.getName().equals("__static")) { // La classe
+                    // f_class
+                    // appelle
+                    // __static._X() privé ?
+
+                    String key = "f_class." + ref.getName();
+                    JsMember cst = (JsMember) stats.members.get(key);
+
+                    // System.out.println("S=" + key + " => " + cst);
+                    return cst;
+                }
+
+            } else if (fa.getObject() instanceof ThisLiteral) {
+                FunctionDeclaration f = getParentFunction(fa);
+                if (f != null && (f.getParent() instanceof Value)) {
+                    Value vf = (Value) f.getParent();
+
+                    if (vf.getLeft() instanceof DefName) {
+                        String name = ((DefName) vf.getLeft()).getName();
+
+                        if (name.equals("Finalizer")
+                                || name.equals("Initializer")) {
+
+                            String key = className + "." + ref.getName();
+                            JsMember cst = (JsMember) stats.members.get(key);
+
+                            return cst;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static JsPrivateStaticMember searchStaticMember(RefName ref,
+            String className, JsStats stats, Set classNames) {
+        if ((ref.getParent() instanceof FieldAccess) == false) {
+            return null;
+        }
+
+        FieldAccess fa = (FieldAccess) ref.getParent();
+        if (fa.getProperty() == ref) {
+
+            String idrClass = (String) fa.getObject().getProperty(
+                    INDIRECT_CLASS_PROPERTY);
+            if (idrClass != null) {
+                String key = idrClass + "." + ref.getName();
+                JsPrivateStaticMember cst = (JsPrivateStaticMember) stats.privateMembers
+                        .get(key);
+                return cst;
+            }
+
+            if (fa.getObject() instanceof FieldAccess) {
+                FieldAccess fa2 = (FieldAccess) fa.getObject();
+
+                RefName rr = fa2.getProperty();
+
+                if (classNames.contains(rr.getName())) {
+                    String key = rr.getName() + "." + ref.getName();
+                    JsPrivateStaticMember cst = (JsPrivateStaticMember) stats.privateMembers
+                            .get(key);
+
+                    // System.out.println("S=" + key + " => " + cst);
+                    return cst;
+                }
+
+            } else if (fa.getObject() instanceof RefName) {
+                RefName rName = (RefName) fa.getObject();
+                String rclassName = rName.getName();
+
+                if (classNames.contains(rclassName)) {
+                    String key = rclassName + "." + ref.getName();
+                    JsPrivateStaticMember cst = (JsPrivateStaticMember) stats.privateMembers
+                            .get(key);
+
+                    // System.out.println("S=" + key + " => " + cst);
+                    return cst;
+                }
+
+                if (className.equals("f_class")
+                        && rclassName.equals("__statics")) { // La classe
+                    // f_class
+                    // appelle
+                    // __static._X() privé ?
+
+                    String key = "f_class." + ref.getName();
+                    JsPrivateStaticMember cst = (JsPrivateStaticMember) stats.privateMembers
+                            .get(key);
+
+                    // System.out.println("S=" + key + " => " + cst);
+                    return cst;
+                }
+
+            } else if (fa.getObject() instanceof ThisLiteral) {
+
+                FunctionDeclaration f = getParentFunction(fa);
+                if (f != null && (f.getParent() instanceof Value)) {
+                    Value vf = (Value) f.getParent();
+
+                    if (vf.getLeft() instanceof DefName) {
+                        String name = ((DefName) vf.getLeft()).getName();
+
+                        IJsClass jsClass = (IJsClass) stats.classesRepository
+                                .get(className);
+                        JsMember jsMember = jsClass.getMember(name);
+
+                        if (jsMember != null && jsMember.modifier.isStatic()) {
+
+                            String key = className + "." + ref.getName();
+                            JsPrivateStaticMember cst = (JsPrivateStaticMember) stats.privateMembers
+                                    .get(key);
+
+                            return cst;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static void replace__SYMBOLS(NodeList nodes, JsStats stats) {
+        RefName names[] = Visitors.visitRefNames(nodes, false);
+        for (int i = 0; i < names.length; i++) {
+            RefName name = names[i];
+
+            if (name.getName().equals("__SYMBOL") == false) {
+                continue;
+            }
+
+            if (name.getParent() instanceof MethodInvocation) {
+                MethodInvocation methodInvocation = (MethodInvocation) name
+                        .getParent();
+
+                NodeList parameters = methodInvocation.getParameters();
+
+                StringLiteral sl = (StringLiteral) parameters.get(0);
+
+                List l = (List) stats.symbols.get(sl.getString());
+                if (l == null) {
+                    l = new ArrayList();
+                    stats.symbols.put(sl.getString(), l);
+                }
+
+                methodInvocation.replaceBy(sl);
+
+                l.add(sl);
+                continue;
+            }
+        }
+
+        DefName dnames[] = Visitors.visitDefNames(nodes, false);
+        nextDef: for (int i = 0; i < dnames.length; i++) {
+            DefName name = dnames[i];
+
+            if (name.getName().equals("__SYMBOL") == false) {
+                continue;
+            }
+
+            if (name.getParent() instanceof Value) {
+                VarExpression var = (VarExpression) name.getParent()
+                        .getParent();
+
+                for (int j = 0; j < nodes.size(); j++) {
+                    if (nodes.get(j) == var) {
+                        nodes.remove(j);
+                        continue nextDef;
+                    }
+                }
+
+                var.replaceBy(null);
+
+                continue;
+            }
+
+            System.err.println("SYMBOLS ?");
+        }
+    }
+
+    private static FunctionDeclaration getParentFunction(
+            FunctionDeclaration function) {
+        for (ASTNode node = function.getParent(); node != null; node = node
+                .getParent()) {
+            if (node instanceof FunctionDeclaration) {
+                return (FunctionDeclaration) node;
+            }
+        }
+
+        return null;
+    }
+
+    static String fillProperty(String params) {
+        StringTokenizer st = new StringTokenizer(params);
+
+        String tok = st.nextToken();
+        if (tok.equalsIgnoreCase("method") || tok.equalsIgnoreCase("field")
+                || tok.equalsIgnoreCase("class")
+                || tok.equalsIgnoreCase("aspect")) {
+            return params.substring(params.indexOf(tok) + tok.length()).trim();
+        }
+
+        return null;
+    }
+
+    static String getPropertyType(String params) {
+        StringTokenizer st = new StringTokenizer(params);
+
+        String tok = st.nextToken();
+        if (tok.equalsIgnoreCase("method") || tok.equalsIgnoreCase("field")
+                || tok.equalsIgnoreCase("class")
+                || tok.equalsIgnoreCase("aspect")) {
+            return tok.toLowerCase();
+        }
+
+        return null;
+    }
+
+    private static final IvParameterSpec getIV() throws Exception {
+        byte[] b = new byte[] { 0, 27, 6, 73, 73, 27, 6, 6, 27, 73, 0, 73, 27,
+                6, 73, 6 };
+
+        return new IvParameterSpec(b);
+    }
+
+    static final class CharCount {
+        final String token;
+
+        int count;
+
+        public CharCount(String token) {
+            this.token = token;
+        }
+    }
+
+    static final class NameCount {
+        public int defs;
+
+        public int refs;
+
+        final String name;
+
+        String alias;
+
+        Set nodes = new HashSet();
+
+        int _static = -1;
+
+        public NameCount(String name) {
+            this.name = name;
+        }
+    }
+
+    static final class ParamCount {
+        final Set nodes = new HashSet();
+    }
+
+    private static void verifyVariables(JsStats stats,
+            FunctionDeclaration function) {
+        Set statics = new HashSet();
+
+        statics.addAll(stats.listStaticObjects());
+        statics.add("arguments");
+        statics.add("window");
+        statics.add("document");
+        statics.add("eval");
+        statics.add("parseInt");
+        statics.add("parseFloat");
+        statics.add("String");
+        statics.add("Date");
+        statics.add("Array");
+        statics.add("Object");
+        statics.add("decodeURIComponent");
+        statics.add("encodeURIComponent");
+        statics.add("decodeURI");
+        statics.add("encodeURI");
+        statics.add("Error");
+        statics.add("Function");
+        statics.add("alert");
+        statics.add("cameliaVersion");
+        statics.add("RegExp");
+        statics.add("Math");
+        statics.add("escape");
+        statics.add("unescape");
+        statics.add("XMLHttpRequest");
+        statics.add("ActiveXObject");
+        statics.add("NaN");
+        statics.add("isNaN");
+        statics.add("__SYMBOL");
+        statics.add("Image");
+        statics.add("DOMParser");
+
+        RuntimeVisitors.searchProblems(function, new IRuntimeProblemHandler() {
+
+            public void duplicateDeclaration(DefName previousName,
+                    DefName newName) {
+                System.err.println("Duplicate ! '" + previousName + "' '"
+                        + newName + "'");
+            }
+
+            public void notDefined(RefName ref) {
+                System.err.println("Not defined node='" + ref + "'");
+                return;
+
+            }
+
+            public void notInitialized(RefName node, DefName def,
+                    boolean interFunction) {
+                System.err.println("Not initialized node='" + node + "' def='"
+                        + def + "' interFunction=" + interFunction);
+            }
+
+            public void alreadyBreaked(ASTNode node,
+                    BreakStatement breakStatements[]) {
+                System.err.println("Already breaked statement node='" + node
+                        + "' break=" + Arrays.asList(breakStatements));
+            }
+
+            public void alreadyContinued(ASTNode node,
+                    ContinueStatement continuedStatement) {
+                System.err.println("Already continued statement node='" + node
+                        + "' continue=" + continuedStatement);
+            }
+
+            public void alreadyReturned(ASTNode node,
+                    ReturnStatement returnedStatements[]) {
+                System.err.println("Already returned statement node='" + node
+                        + "' return=" + Arrays.asList(returnedStatements));
+            }
+
+            public void neverRead(ASTNode lastWrite, ASTNode currentWrite) {
+                System.err.println("Value never read node='" + currentWrite
+                        + "' lastWrite=" + lastWrite);
+            }
+
+            public void possibleAccidentalBooleanAssignment(Assignment operation) {
+                System.err
+                        .println("Possible accidental boolean assignment node="
+                                + operation);
+            }
+
+            public void loopNeverStop(ASTNode node) {
+                System.err.println("Loop never stop. node=" + node);
+            }
+
+        }, statics);
+    }
+
+    private static ASTNode copy(final JsStats stats, ASTNode body,
+            final String defPrefix) {
+        ASTNode node = body.copy(new ICopyContext() {
+
+            private Map names = new HashMap();
+
+            public ASTNode copy(ASTNode node) {
+                if (node instanceof DefName) {
+                    String n = ((DefName) node).getName();
+
+                    String name = (String) names.get(n);
+                    if (name == null) {
+                        name = defPrefix + "_" + names.size();
+                        names.put(n, name);
+                    }
+
+                    if (node instanceof Parameter) {
+                        return new Parameter(name, null);
+                    }
+
+                    return new DefName(name, null);
+
+                } else if (node instanceof RefName) {
+                    String n = ((RefName) node).getName();
+
+                    String name = (String) names.get(n);
+                    if (name != null) {
+                        return new RefName(name, null);
+                    }
+                }
+
+                if (node == null) {
+                    return null;
+                }
+
+                ASTNode c = node.copy(this);
+
+                c.setSourceName(node.getSourceName());
+
+                return c;
+            }
+
+            public List copy(NodeList nodes) {
+                List l = new ArrayList(nodes.size());
+                for (int i = 0; i < nodes.size(); i++) {
+                    ASTNode node = copy((ASTNode) nodes.get(i));
+
+                    l.add(node);
+                }
+
+                return l;
+            }
+
+        });
+
+        node.setSourceName(body.getSourceName());
+
+        return node;
+        /*
+         * List l = new ArrayList();
+         * 
+         * l.add(new RefName("copy", null));
+         * 
+         * return new Block((Statement[]) l.toArray(new Statement[l.size()]),
+         * null);
+         */
+    }
+
+    private static boolean isMethodDecorated(IJsClass cobject, String mname,
+            boolean constructor) {
+
+        IJsClass cs[] = cobject.listAspects();
+        for (int i = 0; i < cs.length; i++) {
+            IJsClass c = cs[i];
+
+            if (constructor) {
+                mname = c.getName();
+            }
+
+            if (c.getMember(mname) != null) {
+                return true;
+            }
+
+            if (isMethodDecorated(c, mname, constructor)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void parseMembers(File file, NodeList nodeList,
+            JsComment[] comments, JsStats stats) {
+
+        String className = null;
+
+        JsComment classComment = JsClass.searchClassComment(stats, file
+                .getName(), comments);
+        if (classComment != null) {
+            className = JsClass.extractClassName(classComment);
+        }
+
+        String bundle = null;
+        if (className == null) {
+            String filename = file.getName();
+            filename = filename.substring(0, filename.lastIndexOf('.'));
+
+            className = computeClassName(file);
+            int idx = className.indexOf('_', 3);
+            if (idx > 0) {
+                bundle = filename.substring(idx + 1);
+                className = filename.substring(0, idx);
+            }
+
+        }
+
+        JsClass jsClass;
+        if (bundle == null) {
+            jsClass = (JsClass) stats.classesRepository.get(className);
+            if (jsClass == null) {
+                jsClass = new JsClass(className, false);
+                stats.classesRepository.put(className, jsClass);
+            }
+        } else {
+            jsClass = (JsClass) stats.classesRepository.get(className);
+
+            JsBundleClass bundleClass = jsClass.getBundle(bundle);
+            if (bundleClass == null) {
+                bundleClass = new JsBundleClass(jsClass, bundle);
+                jsClass.addBundle(bundleClass);
+            }
+
+            jsClass = bundleClass;
+        }
+
+        // Recherche la décalaration de la classe !
+
+        jsClass.parseMembers(stats, nodeList, comments);
+
+        if (false) {
+            jsClass.print();
+        }
+    }
+
+    private static void computeModifiers(JsStats stats) {
+        for (Iterator it = stats.modifiers.entrySet().iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry) it.next();
+
+            String name = (String) entry.getKey();
+            List l = (List) entry.getValue();
+
+            int v = -1;
+            for (Iterator it2 = l.iterator(); it2.hasNext();) {
+                JsModifier mm = (JsModifier) it2.next();
+
+                int mv = mm.getAccessibleModifier();
+                if (v == mv) {
+                    continue;
+                }
+                if (v < 0) {
+                    v = mv;
+                    continue;
+                }
+
+                if (v == Modifier.PUBLIC) {
+                    break;
+                }
+
+                if (v == Modifier.PRIVATE) {
+                    v = mv;
+                    continue;
+                }
+
+                if (v == Modifier.PROTECTED) {
+                    if (mv == Modifier.PUBLIC) {
+                        v = mv;
+                        continue;
+                    }
+                }
+
+                if (v == 0) {
+                    if (mv == Modifier.PUBLIC || mv == Modifier.PROTECTED) {
+                        v = mv;
+                        continue;
+                    }
+                }
+            }
+
+            boolean privateFramework = false;
+            if (v != Modifier.PUBLIC) {
+                if (stats.isCameliaReserved(name)) {
+                    v = Modifier.PUBLIC;
+                    continue;
+                }
+
+                if (stats.isStaticObject(name)) {
+                    continue;
+                }
+
+                stats.canTranslate.add(name);
+                privateFramework = true;
+            }
+
+            for (Iterator it2 = l.iterator(); it2.hasNext();) {
+                JsModifier mm = (JsModifier) it2.next();
+
+                JsMember member = null;
+                ASTNode anode = mm.node;
+                if (anode instanceof Value) {
+
+                    member = new JsMember(null, anode, ((Value) anode)
+                            .getRight(), privateFramework, mm, null);
+
+                    String key = mm.className + "." + name;
+
+                    stats.members.put(key, member);
+
+                    if (anode.getParent().getParent() == null) {
+                        if (name.startsWith("__")) {
+                            member = null;
+                        }
+                    }
+
+                } else if (anode instanceof Assignment) {
+                    member = new JsMember(null, anode, ((Assignment) anode)
+                            .getRight(), privateFramework, mm, null);
+
+                    String key = mm.className + "." + name;
+
+                    stats.members.put(key, member);
+
+                } else if (anode instanceof FunctionDeclaration) {
+                    member = new JsMember(null, anode, (Expression) anode,
+                            privateFramework, mm, null);
+
+                    String key = mm.className + "." + name;
+
+                    stats.members.put(key, member);
+
+                } else {
+                    stats.errorLog.error("Unknown constant type ! (" + anode
+                            + ")", null, mm.className);
+                }
+
+                /*
+                 * if (mm.isStatic() && mm.isFinal() && mm.isFieldType()) {
+                 * 
+                 * if (anode instanceof Value) { JsConstantField constant = new
+                 * JsConstantField(anode, ((Value) anode).getRight(),
+                 * privateFramework, mm);
+                 * 
+                 * String key = mm.className + "." + name;
+                 * 
+                 * stats.staticFinalConstants.put(key, constant); } else if
+                 * (anode instanceof Assignment) { JsConstantField constant =
+                 * new JsConstantField(anode, ((Assignment) anode).getRight(),
+                 * privateFramework, mm);
+                 * 
+                 * String key = mm.className + "." + name;
+                 * 
+                 * stats.staticFinalConstants.put(key, constant); } else if
+                 * (anode instanceof FunctionDeclaration) { JsConstantField
+                 * constant = new JsConstantField(anode, (Expression) anode,
+                 * privateFramework, mm);
+                 * 
+                 * String key = mm.className + "." + name;
+                 * 
+                 * stats.staticFinalConstants.put(key, constant); } else {
+                 * System.err.println("Unknown constant type ! (" + anode +
+                 * ")"); } }
+                 */
+
+                if ((mm.isPrivate() || mm.isHidden()) && mm.isStatic()) {
+
+                    if (anode instanceof Value) {
+                        JsPrivateStaticMember constant = new JsPrivateStaticMember(
+                                null, anode, ((Value) anode).getRight(),
+                                privateFramework, mm, null);
+
+                        String key = mm.className + "." + name;
+
+                        stats.privateMembers.put(key, constant);
+
+                        // System.out.println("Put private members '" + key+
+                        // "'.");
+
+                    } else if (anode instanceof Assignment) {
+                        JsPrivateStaticMember constant = new JsPrivateStaticMember(
+                                null, anode, ((Assignment) anode).getRight(),
+                                privateFramework, mm, null);
+
+                        String key = mm.className + "." + name;
+
+                        stats.privateMembers.put(key, constant);
+
+                        // System.out.println("Put private members '" + key+
+                        // "'.");
+
+                    } else if (anode instanceof FunctionDeclaration) {
+                        JsPrivateStaticMember constant = new JsPrivateStaticMember(
+                                null, anode, (Expression) anode,
+                                privateFramework, mm, null);
+
+                        String key = mm.className + "." + name;
+
+                        stats.privateMembers.put(key, constant);
+
+                    } else {
+                        System.err.println("Unknown member type !");
+                    }
+
+                }
+            }
+        }
+    }
+
+    private static class ErrorLog implements IErrorLog {
+
+        public void error(String message, ASTNode node, String className) {
+            System.err.println("*** Error:" + className + ":" + node + ": "
+                    + message);
+        }
+
+        public void error(String message, ASTNode node, IJsClass clazz) {
+            System.err.println("*** Error:" + clazz.getName() + ": " + message);
+        }
+    }
+
+    private static class VarPos {
+        public boolean readOnly;
+
+        int start = -1;
+
+        int end;
+
+        List access = new ArrayList();
+    }
+
+    private static final String getContextMetaType(JsMember member) {
+        return getContextMeta(member, 0);
+    }
+
+    private static final String getContextMetaParameter(JsMember member) {
+        return getContextMeta(member, 1);
+    }
+
+    private static final Expression getContextMetaRef(JsMember member) {
+        String memberString = getContextMetaParameter(member);
+
+        Context context = new Context(Context.VERSION_1_4);
+
+        TokenStream stream = new TokenStream(new StringReader(memberString),
+                "raw", 0, context);
+
+        Parser parser = new Parser();
+
+        NodeList statements;
+        try {
+            statements = parser.parse(stream).getStatements();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return (Expression) statements.get(0);
+    }
+
+    private static final String getContextMeta(JsMember member, int token) {
+        String context = member.modifier.getMeta("context");
+        if (context == null) {
+            return null;
+        }
+
+        StringTokenizer st = new StringTokenizer(context, " :");
+
+        if (st.countTokens() < token) {
+            return null;
+        }
+
+        for (; token > 0; token--) {
+            st.nextToken();
+        }
+
+        return st.nextToken();
+    }
+
+    private static Expression getThisConstant(JsMember member) {
+
+        return new ThisLiteral(null);
+    }
+
+    protected static int computePosition(ASTNode node, NodeList nodeList) {
+
+        for (int i = 0; i < nodeList.size(); i++) {
+            if (nodeList.get(i) == node) {
+                return i;
+            }
+        }
+
+        if (node.getParent() == null) {
+            return -1;
+        }
+
+        return computePosition(node.getParent(), nodeList);
+    }
+}
