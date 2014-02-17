@@ -90,5 +90,12 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<distributionManagement>
+	  <repository>
+	    <id>vedana-central</id>
+	    <url>http://rcfaces.org/nexus/content/repositories/vedana-central/</url>
+	  </repository>
+ </distributionManagement>
 
 </project>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.vedana.camelia.generators</groupId>
   <artifactId>com.vedana.camelia.generators</artifactId>
-  <version>2.0.0</version>
+  <version>1.0.0</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -29,7 +29,7 @@
   	<dependency>
   		<groupId>com.vedana.rhino</groupId>
   		<artifactId>com.vedana.rhino</artifactId>
-  		<version>2.0.0-SNAPSHOT</version>
+  		<version>1.0.0</version>
   	</dependency>
   	<dependency>
   		<groupId>xerces</groupId>
@@ -52,6 +52,13 @@
   		<version>2.1</version>
   	</dependency>
   </dependencies>
+  
+  <distributionManagement>
+	  <repository>
+	    <id>vedana-central</id>
+	    <url>http://rcfaces.org/nexus/content/repositories/vedana-central/</url>
+	  </repository>
+ </distributionManagement>
   
  
 </project>
