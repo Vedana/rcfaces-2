@@ -154,7 +154,7 @@
   <distributionManagement>
 	  <repository>
 	    <id>vedana-central</id>
-	    <url>http://localhost:8080/nexus-2.7.1-01/content/repositories/vedana-central</url>
+	    <url>http://rcfaces.org/nexus/content/repositories/vedana-central/</url>
 	  </repository>
  </distributionManagement>
   
