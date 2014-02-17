@@ -59,6 +59,12 @@
 			<artifactId>maven-archiver</artifactId>
 			<version>2.5</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>3.0.9</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.vedana.camelia.generators</groupId>
