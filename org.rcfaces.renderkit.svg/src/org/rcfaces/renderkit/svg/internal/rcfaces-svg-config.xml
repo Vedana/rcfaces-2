@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcfaces-config>
+  	
+  	<image-resource-adapters>
+  		<resource-adapter>
+  			<adapter-id>svg</adapter-id>
+  			<adapter-name>SVG converter</adapter-name>
+  			<content-type>image/svg+xml</content-type>
+  			<content-type>image/svg-xml</content-type>
+  			<content-type>image/svg</content-type>
+  			<suffix>svg</suffix>
+  			<adapter-class>
+  				org.rcfaces.renderkit.svg.internal.image.SVGImageResourceAdapter
+  			</adapter-class>
+  		</resource-adapter>
+  	</image-resource-adapters>
+  	
+  	<repositories>
+  		<repository>
+  			<type>javascript</type>
+  			<location>org/rcfaces/renderkit/svg/internal/javascript/repository.xml</location>
+  		</repository>
+  		<repository>
+  			<type>css</type>
+  			<location>org/rcfaces/renderkit/svg/internal/css/repository.xml</location>
+  		</repository>
+  	</repositories>
+
+</rcfaces-config>

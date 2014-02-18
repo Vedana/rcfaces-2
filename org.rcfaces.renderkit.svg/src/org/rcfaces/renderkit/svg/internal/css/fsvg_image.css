@@ -1,0 +1,16 @@
+/*
+ * $Id: fsvg_image.css,v 1.2 2013/11/13 15:52:40 jbmeslin Exp $
+ */
+
+/**
+ *
+ * @class fsvg_image
+ *
+ * @author Olivier Oeuillot (latest modification by $Author: jbmeslin $)
+ * @version $Revision: 1.2 $ $Date: 2013/11/13 15:52:40 $ 
+ */
+ 
+.fsvg_image  {
+	-moz-user-select: none;
+	user-select: none;
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository id="svg" type="css"
+	baseDirectory="org/rcfaces/renderkit/svg/internal/css">
+	<module id="svg">
+		<file name="fsvg_svg.css" />
+		<file name="fsvg_image.css" />
+		<file name="fsvg_imageButton.css" />
+	</module>
+</repository>

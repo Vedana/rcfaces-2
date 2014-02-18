@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<repository id="svg" type="javascript" baseDirectory="org/rcfaces/renderkit/svg/internal/javascript" remapSymbols="false">
+	<module id="svg">
+		<file name="svg/fsvg_svg.js">
+			<class name="fsvg_svg">
+				<required-class name="f_box" />
+
+				<required-class name="fa_items" />
+
+				<required-style name="fsvg_svg.css" />
+			</class>
+		</file>
+		<file name="svg/fsvg_image.js">
+			<class name="fsvg_image">
+				<required-class name="f_image" />
+
+				<required-class name="fa_items" />
+
+				<required-style name="fsvg_image.css" />
+			</class>
+		</file>
+
+		<file name="svg/fsvg_imageButton.js">
+			<class name="fsvg_imageButton">
+				<required-class name="f_component" />
+				<required-class name="fa_readOnly" />
+				<required-class name="fa_disabled" />
+				<required-class name="fa_immediate" />
+				<required-class name="fa_value" />
+				<required-class name="fa_items" />
+
+				<required-style name="fsvg_imageButton.css" />
+			</class>
+		</file>
+	</module>
+</repository>

@@ -1,0 +1,221 @@
+<camelia-components package="svg">	
+
+	<component id="SVG" extends="abstractOutput" renderKit="html">		
+		<capability id="IDisabledCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="IKeyEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IImmediateCapability" />			
+		<capability id="IValidationEventCapability" />		
+		<capability id="ISelectionEventCapability" />
+		<capability id="IFocusStyleClassCapability" />
+	
+		<capability id="IFilterCapability"/>
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+		
+		<attribute id="immediate" type="boolean" writeTag="false" />	
+		<attribute id="svgURL" type="java.lang.String" />	
+
+		<propertyValue>svgURL</propertyValue>
+		<property>value</property>
+	</component>
+
+	<component id="dataSVG" extends="SVG" renderKit="html">		
+		<attribute id="var" type="java.lang.String" />
+		<attribute id="dataModel" type="java.lang.Object" />
+	</component>
+	
+	
+	<component id="SVGDataColumn" extends="cameliaValueColumn" render="false">
+
+		<attribute id="value" type="java.lang.Object"
+			writeComponent="false" />
+		
+		<attribute id="converter" type="javax.faces.convert.Converter" />
+		
+		<method id="setConverter(String)" />
+		<method id="setConverter(javax.faces.context.FacesContext, String)" />
+
+		
+
+		<method id="getLocalValue" returnType="java.lang.Object">
+			<code>
+				return engine.getLocalValue(Properties.VALUE);
+			</code>
+		</method>
+
+		<method id="getValue" returnType="java.lang.Object">
+			<code>
+				return getValue(null);
+			</code>
+		</method>
+		<method id="getValue" returnType="java.lang.Object">
+			<parameter type="javax.faces.context.FacesContext" name="context" />
+			<code>
+				return engine.getValue(Properties.VALUE, context);
+			</code>
+		</method>
+		<method id="setValue">
+			<parameter type="java.lang.Object" name="value" />
+			<code>
+				engine.setValue(Properties.VALUE, value);
+			</code>
+		</method>
+	</component>
+		
+	<component id="image" extends="abstractOutput" renderKit="html">
+		<implements id="org.rcfaces.core.internal.capability.IImageAccessorsCapability" />
+		<capability id="IImageCapability" />
+		<capability id="IImageSizeCapability" />
+		<capability id="IAlternateTextCapability" />
+		<capability id="IFontCapability" />
+	
+		<capability id="IFilterCapability"/>
+		
+		<method id="setFilterProperties(String)" returnType="void" />
+						
+		<method id="getImageAccessors" returnType="org.rcfaces.core.component.familly.IContentAccessors">
+			<import>org.rcfaces.core.internal.tools.ImageAccessorTools</import>
+			<parameter type="javax.faces.context.FacesContext" name="facesContext" />
+			<code>
+				Object value=getLocalValue();
+				if (value==null) {
+					value=getValueBinding(Properties.VALUE);
+				}
+			
+				return ImageAccessorTools.createImageAccessor(facesContext, value);
+			</code>
+		</method>
+		<attribute id="pixelUnitToMillimeter" type="double"/>		
+		<attribute id="curveFlatness" type="double"/>		
+		<attribute id="distanceTolerance" type="double"/>		
+		
+		<propertyValue>imageURL</propertyValue>
+		<property>value</property>
+	</component>
+
+	<component id="imageButton" extends="image" renderKit="html">
+		<capability id="IDisabledCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IFocusBlurEventCapability" />
+		<capability id="IKeyEventCapability" />
+		<capability id="IUnlockedClientAttributesCapability" />
+		<capability id="IImmediateCapability" />			
+		<capability id="IValidationEventCapability" />		
+		<capability id="ISelectionEventCapability" />
+		<capability id="IFocusStyleClassCapability" />
+		
+		<attribute id="immediate" type="boolean" writeTag="false" />	
+				
+	</component>
+
+	<component id="node" abstract="true" renderKit="html" extends="cameliaItem" render="false">
+		<tagAttribute id="targetId" type="java.lang.String" generate="true" required="true"/>
+
+		<capability id="IAlternateTextCapability" />
+		<capability id="IAccessKeyCapability" />
+		<capability id="ITabIndexCapability" />
+		<capability id="IServerDataCapability" />
+		<capability id="IClientDataCapability" />
+
+		<implements id="org.rcfaces.core.internal.manager.IServerDataManager" />
+		<implements id="org.rcfaces.core.internal.manager.IClientDataManager" />
+
+		<binding-alias id="targetId" target="itemValue" />
+		<method id="setTargetId" returnType="void">
+			<parameter type="java.lang.String" name="src" />
+			<code>
+			setItemValue(src);
+			</code>
+		</method>
+		<method id="getTargetId" returnType="String">
+			<code>
+			return (String)getItemValue();
+			</code>
+		</method>
+
+		<attribute id="rendered" type="boolean" default="true"/>		
+		<attribute id="selectable" type="boolean" default="false"/>		
+	
+		<attribute id="itemValue" type="java.lang.String" writeComponent="false"/>
+		<attribute id="itemLabel" type="java.lang.String" writeComponent="false"/>
+		<attribute id="itemDescription" type="java.lang.String" writeComponent="false"/>
+		<attribute id="itemDisabled" type="boolean" writeComponent="false"/>
+	
+		<method id="getClientData(String,javax.faces.context.FacesContext)" />
+		<method id="setClientData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getServerData(String,javax.faces.context.FacesContext)" />
+		<method id="setServerData(String,javax.faces.el.ValueBinding)" />
+
+		<method id="getClientDataMap(javax.faces.context.FacesContext)" />
+		<method id="getServerDataMap(javax.faces.context.FacesContext)" />
+
+		<method id="listClientDataKeys(javax.faces.context.FacesContext)" />
+		<method id="listServerDataKeys(javax.faces.context.FacesContext)" />
+		
+		<property>itemDisabled</property>
+		<property>itemValue</property>
+		<property>itemLabel</property>
+		<property>itemDescription</property>
+
+		
+	</component>
+	
+	<component id="group" extends="node" renderKit="html" render="false">
+	</component>
+	
+	<component id="path" extends="node" renderKit="html" render="false">
+		<attribute id="clip" type="java.lang.String"/>		
+		<attribute id="clipPath" type="java.lang.String"/>		
+		<attribute id="clipRule" type="java.lang.String"/>		
+
+		<attribute id="color" type="java.lang.String"/>		
+
+		<attribute id="display" type="java.lang.String"/>		
+
+		<attribute id="fill" type="java.lang.String"/>		
+		<attribute id="fillRule" type="java.lang.String"/>		
+		<attribute id="fillOpacity" type="java.lang.String"/>		
+
+		<attribute id="fontFamily" type="java.lang.String"/>		
+		<attribute id="fontSize" type="java.lang.String"/>		
+		<attribute id="fontSizeAdjust" type="java.lang.String"/>		
+		<attribute id="fontStretch" type="java.lang.String"/>		
+		<attribute id="fontStyle" type="java.lang.String"/>		
+		<attribute id="fontVariant" type="java.lang.String"/>		
+		<attribute id="fontWeight" type="java.lang.String"/>		
+
+		<attribute id="opacity" type="java.lang.String"/>		
+		<attribute id="overflow" type="java.lang.String"/>		
+
+		<attribute id="stopColor" type="java.lang.String"/>		
+		<attribute id="stopOpacity" type="java.lang.String"/>		
+
+		<attribute id="stroke" type="java.lang.String"/>		
+		<attribute id="strokeDashArray" type="java.lang.String"/>		
+		<attribute id="strokeDashOffset" type="java.lang.String"/>		
+		<attribute id="strokeLineCap" type="java.lang.String"/>		
+		<attribute id="strokeLineJoin" type="java.lang.String"/>		
+		<attribute id="strokeMiterLimit" type="java.lang.String"/>		
+		<attribute id="strokeOpacity" type="java.lang.String"/>		
+		<attribute id="strokeWidth" type="java.lang.String"/>		
+
+		<attribute id="textAlign" type="java.lang.String"/>		
+
+		<attribute id="textAnchor" type="java.lang.String"/>		
+		<attribute id="textDecoration" type="java.lang.String"/>		
+		<attribute id="textRendering" type="java.lang.String"/>		
+
+		<attribute id="visibility" type="java.lang.String"/>		
+		<attribute id="wordSpacing" type="java.lang.String"/>		
+
+		<attribute id="writingMode" type="java.lang.String"/>		
+	
+	</component>
+
+</camelia-components>

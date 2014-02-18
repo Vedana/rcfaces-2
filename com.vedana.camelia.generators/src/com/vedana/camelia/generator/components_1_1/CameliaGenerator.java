@@ -923,7 +923,7 @@ public class CameliaGenerator {
                     if (name.equals("core")) {
                         //mergePropertiesPackage = r;
                     } else {
-                        r.prefix = name;
+                        //r.prefix = name;
                         // ??? r.renderRenderKitsName.add(name);
                     }
                 }

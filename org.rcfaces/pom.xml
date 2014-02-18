@@ -39,7 +39,7 @@
   	<module>../org.rcfaces.image.imageIO</module>
   	<module>../org.rcfaces.jfreechart</module>
   	<module>../org.rcfaces.renderkit.html</module>
-  	<!-- <module>../org.rcfaces.renderkit.svg</module> -->
+  	<module>../org.rcfaces.renderkit.svg</module>
   	
   	
   </modules>
