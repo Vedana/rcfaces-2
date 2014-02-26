@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project basedir="." default="build">
+	<property name="dist"  value="${basedir}/dist"/>
+	<property name="rcfaces-core"  value="${basedir}/../org.rcfaces.core"/>
+	<property name="rcfaces-html"  value="${basedir}/../org.rcfaces.renderkit.html"/>
+	<property name="version"  value="1"/>
+	<property name="minorRelease"  value="0"/>
+	<property name="java.target"  value="1.5"/>
+	<property name="jsf.version"  value="1_2"/>
+	<property name="javacc.home"  value="${basedir}/javacc-5.0"/>
+	
+
+	<target name="build">
+		<buildnumber file="${dist}/build-number"/>
+		<tstamp>
+			<format property="TODAY" pattern="dd/MM/yyyy HH:mm " locale="fr"/>
+		</tstamp>
+
+		<property name="build"  value="${dist}/build"/>
+		
+		<delete dir="${build}" failonerror="false" />
+		<mkdir dir="${build}" />
+		
+		<copy file="${basedir}/META-INF/MANIFEST.MF" toDir="${build}" overwrite="true"/>
+		<manifest file="${build}/MANIFEST.MF" mode="update">
+			<attribute name="Specification-Version" value="${version}"/> 
+			<attribute name="Implementation-Version" value="${version}.${minorRelease}.${build.number}"/> 
+	    	<attribute name="Build-Date" value="${TODAY}"/>
+			
+			<attribute name="Main-Class" value="org.rcfaces.css.internal.CssSteadyStateParser" />
+		</manifest>
+
+		<mkdir dir="${build}/bin" />
+		<javac  debug="true" destdir="${build}/bin" optimize="no" target="${java.target}" encoding="utf-8">
+			<src path="${basedir}/src" />
+			<src path="${basedir}/src-generated" />
+			<classpath location="${rcfaces-core}/bin" />
+			<classpath location="${rcfaces-html}/bin" />
+			<classpath>				
+				<fileset dir="${rcfaces-core}/lib">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${rcfaces-core}/lib/jsf${jsf.version}">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+
+		<delete dir="${dist}/last" failonerror="false" />
+		<mkdir dir="${dist}/last"/>
+		
+		<jar destfile="dist/last/rcfaces-css.jar" manifest="${build}/MANIFEST.MF">
+			<fileset dir="${build}/bin">
+			</fileset>
+			<fileset dir="${basedir}/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</jar>
+		
+		<jar destfile="dist/last/rcfaces-css-src.jar" manifest="${build}/MANIFEST.MF">
+			<fileset dir="${basedir}/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="${basedir}/src-generated">
+			</fileset>
+		</jar>
+
+		<mkdir dir="${dist}/rcfaces-css-I${build.number}"/>
+		<copy file="dist/last/rcfaces-css.jar" tofile="dist/rcfaces-css-I${build.number}/rcfaces-css-I${build.number}.jar"></copy>
+		<copy file="dist/last/rcfaces-css-src.jar" tofile="dist/rcfaces-css-I${build.number}/rcfaces-css-src-I${build.number}.jar"></copy>
+		
+		<copy file="dist/last/rcfaces-css.jar" todir="../org.rcfaces.packager/lib-generator" overwrite="true" />
+	</target>
+		
+	<target name="javacc">
+		<javacc
+		    target="src/com/steadystate/css/parser/SACParserCSS1.jj"
+		    outputdirectory="src-generated/com/steadystate/css/parser/"
+		    javacchome="${javacc.home}"
+		/>
+		<javacc
+		    target="src/com/steadystate/css/parser/SACParserCSS2.jj"
+		    outputdirectory="src-generated/com/steadystate/css/parser/"
+		    javacchome="${javacc.home}"
+		/>
+		<javacc
+		    target="src/com/steadystate/css/parser/SACParserCSS21.jj"
+		    outputdirectory="src-generated/com/steadystate/css/parser/"
+		    javacchome="${javacc.home}"
+		/>
+		<javacc
+		    target="src/com/steadystate/css/parser/SACParserCSS3.jj"
+		    outputdirectory="src-generated/com/steadystate/css/parser/"
+		    javacchome="${javacc.home}"
+		/>
+		<javacc
+		    target="src/com/steadystate/css/parser/SACParserCSSmobileOKBasic1.jj"
+		    outputdirectory="src-generated/com/steadystate/css/parser/"
+		    javacchome="${javacc.home}"
+		/>
+	</target>
+</project>

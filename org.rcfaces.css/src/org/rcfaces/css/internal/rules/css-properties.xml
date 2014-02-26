@@ -1,0 +1,132 @@
+<css-properties>
+	<css-property>
+		<name>box-shadow</name>
+		<user-agent name="ie" version="9" />
+		<user-agent name="firefox" version="3.5" prefix="-moz-" />
+		<user-agent name="firefox" version="4" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="chrome" version="10" />
+		<user-agent name="safari" version="5" prefix="-webkit-" />
+		<user-agent name="safari" version="5.1" />
+		<user-agent name="opera" version="10.5" />
+		<user-agent name="ios" version="4.0" prefix="-webkit-" />
+		<user-agent name="ios" version="5.0" />
+		<user-agent name="android" version="4.0" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>box-sizing</name>
+		<user-agent name="ie" version="8" />
+		<user-agent name="firefox" version="2" prefix="-moz-" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="chrome" version="10" />
+		<user-agent name="safari" version="3.1" prefix="-webkit-" />
+		<user-agent name="safari" version="5.1" />
+		<user-agent name="opera" version="9.5" />
+		<user-agent name="ios" version="3.2" prefix="-webkit-" />
+		<user-agent name="ios" version="5.0" />
+		<user-agent name="android" version="2.1" prefix="-webkit-" />
+		<user-agent name="android" version="4.0" />
+	</css-property>
+	<css-property>
+		<name>border-radius</name>
+		<name>border-top-left-radius</name>
+		<name>border-top-right-radius</name>
+		<name>border-bottom-left-radius</name>
+		<name>border-bottom-right-radius</name>
+		<user-agent name="ie" version="9" />
+		<user-agent name="firefox" version="2" ruleProcessor="org.rcfaces.css.internal.rules.Moz2_BorderRadiusRuleProcessor" />
+		<user-agent name="firefox" version="4" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="chrome" version="5" />
+		<user-agent name="safari" version="3.1" prefix="-webkit-" />
+		<user-agent name="safari" version="5.0" />
+		<user-agent name="opera" version="10.5" />
+		<user-agent name="ios" version="3.2" prefix="-webkit-" />
+		<user-agent name="ios" version="4.0" />
+		<user-agent name="android" version="2.1" prefix="-webkit-" />
+		<user-agent name="android" version="2.2" />
+	</css-property>
+	<css-property>
+		<name>border-image</name>
+		<user-agent name="firefox" version="3.5" prefix="-moz-" />
+		<user-agent name="firefox" version="15" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="chrome" version="16" />
+		<user-agent name="safari" version="3.1" prefix="-webkit-" />
+		<user-agent name="safari" version="6.0" />
+		<user-agent name="opera" version="10.5" />
+		<user-agent name="opera" version="11.0" prefix="-o-" />
+		<user-agent name="ios" version="3.2" prefix="-webkit-" />
+		<user-agent name="android" version="2.1" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>hyphens</name>
+		<user-agent name="ie" version="10" prefix="-ms-" />
+		<user-agent name="firefox" version="6" prefix="-moz-" />
+		<user-agent name="safari" version="5.1" prefix="-webkit-" />
+		<user-agent name="ios" version="4.2" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>text-overflow</name>
+		<user-agent name="ie" version="6"/>
+		<user-agent name="firefox" version="7" />
+		<user-agent name="chrome" version="4" />
+		<user-agent name="safari" version="3.1" />
+		<user-agent name="opera" version="9" prefix="-o-" />
+		<user-agent name="opera" version="11" />
+		<user-agent name="ios" version="3.2" />
+		<user-agent name="android" version="2.1" />
+	</css-property>
+
+	<css-property>
+		<name>transition</name>
+		<name>transition-property</name>
+		<name>transition-duration</name>
+		<name>transition-timing-function</name>
+		<name>transition-delay</name>
+		<user-agent name="ie" version="10" />
+		<user-agent name="firefox" version="4" prefix="-moz-" />
+		<user-agent name="firefox" version="16" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="safari" version="3.1" prefix="-webkit-" />
+		<user-agent name="opera" version="10.5" prefix="-o-" />
+		<user-agent name="opera" version="12.1" />
+		<user-agent name="ios" version="3.2" prefix="-webkit-" />
+		<user-agent name="android" version="2.1" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>user-select</name>
+		<user-agent name="ie" version="10" prefix="-ms-" />
+		<user-agent name="firefox" version="3" prefix="-moz-" />
+		<user-agent name="safari" version="3.0" prefix="-webkit-" />
+		<user-agent name="ios" version="3.0" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>text-stroke</name>
+		<user-agent name="safari" version="3.1" prefix="-webkit-" />
+		<user-agent name="chrome" version="4" prefix="-webkit-" />
+		<user-agent name="ios" version="4.0" prefix="-webkit-" />
+	</css-property>
+	<css-property>
+		<name>opacity</name>
+		<user-agent name="ie" version="5.5" ruleProcessor="org.rcfaces.css.internal.rules.IE567_OpacityRuleProcessor" />
+		<user-agent name="ie" version="8" ruleProcessor="org.rcfaces.css.internal.rules.IE8_OpacityRuleProcessor"/>
+	</css-property>
+	
+	<css-function>
+		<name>linear-gradient</name>
+		<name>repeating-linear-gradient</name>
+
+		<user-agent name="ie" version="10" />
+		<user-agent name="firefox" version="3.6" prefix="-moz-" />
+		<user-agent name="firefox" version="16" />
+		<user-agent name="chrome" version="10" prefix="-webkit-" />
+		<user-agent name="safari" version="5.1" prefix="-webkit-" />
+		<user-agent name="opera" version="11.6" prefix="-o-" />
+		<user-agent name="opera" version="12.1" />
+		<user-agent name="ios" version="5.0" prefix="-webkit-" />
+		<user-agent name="android" version="4.0" prefix="-webkit-" />
+		
+	</css-function>
+
+</css-properties>

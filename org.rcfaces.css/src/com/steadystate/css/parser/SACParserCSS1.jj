@@ -1,0 +1,1043 @@
+/*
+ * CSS Parser Project
+ *
+ * Copyright (C) 1999-2011 David Schweinsberg.  All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * To contact the authors of the library:
+ *
+ * http://cssparser.sourceforge.net/
+ * mailto:davidsch@users.sourceforge.net
+ *
+ */
+
+options {
+    IGNORE_CASE = true;
+    STATIC = false;
+//    UNICODE_INPUT = false;
+    USER_CHAR_STREAM = true;
+//    DEBUG_TOKEN_MANAGER = true;
+//    DEBUG_PARSER = true;
+}
+
+PARSER_BEGIN(SACParserCSS1)
+
+package com.steadystate.css.parser;
+
+import org.w3c.css.sac.CSSParseException;
+import org.w3c.css.sac.Condition;
+import org.w3c.css.sac.LexicalUnit;
+import org.w3c.css.sac.Locator;
+import org.w3c.css.sac.Parser;
+import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SelectorList;
+import org.w3c.css.sac.SimpleSelector;
+
+/**
+ * @author <a href="mailto:davidsch@users.sourceforge.net">David Schweinsberg</a>
+ * @author waldbaer
+ * @author rbri
+ * @version $Id: SACParserCSS1.jj,v 1.6 2010-05-19 13:26:51 waldbaer Exp $
+ */
+public class SACParserCSS1 extends AbstractSACParser implements Parser {
+
+    public SACParserCSS1() {
+        this((CharStream) null);
+    }
+
+    public String getParserVersion() {
+        return "http://www.w3.org/TR/REC-CSS1";
+    }
+
+    protected String getGrammarUri()
+    {
+        return "http://www.w3.org/TR/REC-CSS1#appendix-b";
+    }
+
+    protected Token getToken()
+    {
+        return token;
+    }
+
+    public void mediaList(SACMediaListImpl ml)
+    {
+    }
+
+}
+
+PARSER_END(SACParserCSS1)
+
+TOKEN_MGR_DECLS :
+{
+    private String trimBy(StringBuilder s, int left, int right) {
+        int end = s.length();
+        return s.toString().substring(left, end-right);
+    }
+
+    private String trimUrl(StringBuilder s) {
+        StringBuilder s1 = new StringBuilder( trimBy(s, 4, 1).trim() );
+        if (s1.length() == 0)
+        {
+            return s1.toString();
+        }
+        int end = s1.length() - 1;
+        if ((s1.charAt(0) == '"' && s1.charAt(end) == '"')
+            || (s1.charAt(0) == '\'' && s1.charAt(end) == '\''))
+            return trimBy(s1, 1, 1);
+        else
+           return s1.toString();
+    }
+}
+
+<DEFAULT> TOKEN :
+{
+    < S: ( " "|"\t"|"\r"|"\n"|"\f" )+ >
+}
+
+<DEFAULT> MORE :
+{
+  < "/*" > : COMMENT
+}
+
+<DEFAULT> TOKEN : 
+{
+  < IDENT: <NMSTART> ( <NMCHAR> )* > 
+| < LINK_PSCLASS: ":link" > { matchedToken.image = trimBy(image, 1, 0); }
+| < VISITED_PSCLASS: ":visited" > { matchedToken.image = trimBy(image, 1, 0); }
+| < ACTIVE_PSCLASS: ":active" > { matchedToken.image = trimBy(image, 1, 0); }
+| < FIRST_LINE: ":first-line" > { matchedToken.image = trimBy(image, 1, 0); }
+| < FIRST_LETTER: ":first-letter" > { matchedToken.image = trimBy(image, 1, 0); }
+| < HASH: "#" <NAME> > 
+//| < CLASS: "." <NAME> > 
+}
+
+<DEFAULT> TOKEN :
+{
+  < LBRACE: "{" >
+| < RBRACE: "}" >
+| < COMMA: "," >
+| < DOT: "." >
+| < SEMICOLON: ";" >
+| < COLON: ":" >
+// | < ASTERISK: "*" >
+| < SLASH: "/" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < EQUALS: "=" >
+| < GT: ">" >
+| < LSQUARE: "[" >
+| < RSQUARE: "]" >
+}
+
+<DEFAULT> TOKEN :
+{
+  < STRING: <STRING1> | <STRING2> > { matchedToken.image = trimBy(image, 1, 1); } : DEFAULT
+| < RROUND: ")" >
+}
+
+// TODO: check url
+<DEFAULT> TOKEN :
+{
+//  < #URL: ["!","#","$","%","&","*"-"~"] | <NONASCII> | <ESCAPE> >
+//  < #URL: ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> > 
+ < URL: "url(" ( <S> )* ( <STRING> | ( ["!","#","$","%","&","*"-"[","]"-"~"] | <NONASCII> | <ESCAPE> )* ) ( <S> )* <RROUND> > { matchedToken.image = trimUrl(image); } : DEFAULT
+}
+
+<DEFAULT> TOKEN :
+{
+  < CDO: "<!--" > : DEFAULT
+| < CDC: "-->" > : DEFAULT
+| < IMPORT_SYM: "@import" > : DEFAULT
+| < IMPORTANT_SYM: "!" ( <S> )? "important" > : DEFAULT
+| < ATKEYWORD: "@" <IDENT> >
+| < EMS: <NUM> "em" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < EXS: <NUM> "ex" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PX: <NUM> "px" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_CM: <NUM> "cm" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_MM: <NUM> "mm" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_IN: <NUM> "in" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PT: <NUM> "pt" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < LENGTH_PC: <NUM> "pc" > { matchedToken.image = trimBy(image, 0, 2); } : DEFAULT
+| < PERCENTAGE: <NUM> "%" > { matchedToken.image = trimBy(image, 0, 1); } : DEFAULT
+| < NUMBER: <NUM> > : DEFAULT
+// TODO: check rgb
+| < RGB: "rgb(" > : DEFAULT
+| < #NAME: ( <NMCHAR> )+ > 
+| < #D: ["0"-"9"] > 
+| < NUM: ( <D> )+ | ( <D> )* "." ( <D> )+ > 
+// TODO: check unicoderange
+| < UNICODERANGE: "U+" ( <RANGE> | ( <HNUM> "-" <HNUM> ) ) > 
+| < #RANGE: <Q16> | <H> ( (<Q15>)? | <H> ( (<Q14>)? | <H> ( (<Q13>)? | <H> ( (<Q12>)? | <H> ( (<Q11>)? | <H> ) ) ) ) ) >
+| < #Q16: "?" | "??" | "???" | "????" | "?????" | "??????" >
+| < #Q15: "?" | "??" | "???" | "????" | "?????" >
+| < #Q14: "?" | "??" | "???" | "????" >
+| < #Q13: "?" | "??" | "???" >
+| < #Q12: "?" | "??" >
+| < #Q11: "?" >
+// TODO: check latin1
+| < LATIN1 : ["\u00A1"-"\u00FF"] >
+// < STRINGCHAR : <ESCAPE> | <LATIN1> | [" ","!","#","$","%","&","(", "-", "~"] >
+| < NMCHAR: ["a"-"z","0"-"9","-"] | <LATIN1> | <ESCAPE> >
+| < NMSTART: ["a"-"z"] | <LATIN1> | <ESCAPE> >
+// < NOTNM: ["^", "-", "a-z", "0-9", "\"] | <LATIN1>
+// | < #NMSTART: ["a"-"z"] | <NONASCII> | <ESCAPE> >
+// | < #NMCHAR: ["a"-"z","0"-"9","-"] | <NONASCII> | <ESCAPE> >
+// TODO: check strings
+//| < #STRING1: "\"" ( ["\t"," ","!","#","$","%","&","("-"~"] | "\\" <NL> | "\'" | <NONASCII> | <ESCAPE> )* "\"" >
+//| < #STRING2: "\'" ( ["\t"," ","!","#","$","%","&","("-"~"] | "\\" <NL> | "\"" | <NONASCII> | <ESCAPE> )* "\'" >
+| < #STRING1: "\"" ( ["\t"," ","!","#","$","%","&","("-"[","]"-"~"] | "\\" <NL> | "\'" | <NONASCII> | <ESCAPE> )* "\"" >
+| < #STRING2: "\'" ( ["\t"," ","!","#","$","%","&","("-"[","]"-"~"] | "\\" <NL> | "\"" | <NONASCII> | <ESCAPE> )* "\'" >
+| < #NONASCII: ["\u0080"-"\uFFFF"] >
+// TODO: check escape
+| < #ESCAPE: <UNICODE> | ( "\\" [" "-"~","\u00A1"-"\u00FF"] ) >
+| < #NL: "\n" | "\r\n" | "\r" | "\f" >
+| < #UNICODE: "\\" <HNUM> ( " " | "\t" | "\r" | "\n" | "\f" )? >
+| < #HNUM: <H> | <H><H> | <H><H><H> | <H><H><H><H> | <H><H><H><H><H> | <H><H><H><H><H><H> >
+| < #H: ["0"-"9","a"-"f"] >
+}
+
+<COMMENT> SKIP :
+{
+  < "*/" > : DEFAULT
+}
+
+<COMMENT> MORE :
+{
+  < ~[] > : COMMENT
+}
+
+<*> TOKEN:
+{
+    < UNKNOWN: ~[] >
+    {
+        // System.err.println("Illegal character : " + image.toString());
+    }
+}
+
+//
+// stylesheet
+//  : [S|CDO|CDC]* [ import [S|CDO|CDC]* ]*
+//      [ ruleset [S|CDO|CDC]* ]*
+//  ;
+//
+void styleSheet() :
+{
+}
+{
+    try
+    {
+        { handleStartDocument(); }
+        styleSheetRuleList()
+        <EOF>
+    }
+    finally
+    {
+        handleEndDocument();
+    }
+}
+
+// Although the grammar does not include [S|CDO|CDC] but [CDO|CDC], white space
+// should be allowed
+void styleSheetRuleList() :
+{
+  boolean ruleFound = false;
+}
+{
+    ( <S> | <CDO> | <CDC> )*
+    (
+        (
+            importRule(ruleFound)
+            |
+            (
+	            styleRule() | unknownRule()
+	        )
+            {
+                ruleFound = true;
+            }
+        )
+        ( <S> | <CDO> | <CDC> )*
+    )*
+}
+
+//
+// This is used by ASTStyleSheet.insertRule to parse a single rule
+//
+void styleSheetRuleSingle() :
+{
+}
+{
+  ( <S> )*
+  ( importRule(false) | styleRule() | unknownRule() )
+}
+
+void unknownRule() :
+{
+    Token t;
+    String s;
+    Locator locator;
+}
+{
+    try
+    {
+        t = <ATKEYWORD>
+        {
+            locator = getLocator();
+            s = skip();
+            handleIgnorableAtRule(s, locator);
+        }
+    }
+    catch (ParseException e)
+    {
+        getErrorHandler().error(toCSSParseException("invalidUnknownRule", e));
+    }
+}
+
+//
+// import
+//   : IMPORT_SYM S*
+//     [STRING|URI] ';' S*
+//   ;
+//
+void importRule(final boolean nonImportRuleFoundBefore) :
+{
+    Token t;
+    Locator locator;
+}
+{
+    try
+    {
+        {
+            ParseException e = null;
+            if (nonImportRuleFoundBefore)
+            {
+                e = generateParseException();
+            }
+        }
+        <IMPORT_SYM>
+        {
+            locator = getLocator();
+        }
+        ( <S> )*
+        ( t = <STRING> | t = <URL> ) ( <S> )*
+        <SEMICOLON>
+        {
+            if (nonImportRuleFoundBefore)
+            {
+                getErrorHandler().error(toCSSParseException("invalidImportRuleIgnored", e));
+            }
+            else
+            {
+                handleImportStyle(unescape(t.image, false), new SACMediaListImpl(), null, locator);
+            }
+        }
+    }
+    catch (CSSParseException e)
+    {
+        getErrorHandler().error(e);
+        error_skipAtRule();
+    }
+    catch (ParseException e)
+    {
+        getErrorHandler().error(toCSSParseException("invalidImportRule", e));
+        error_skipAtRule();
+    }
+}
+
+//
+// medium
+//   : IDENT S*
+//   ;
+//
+String medium() :
+{
+  Token t;
+}
+{
+    t = <IDENT> ( <S> )*
+    {
+        handleMedium(t.image, createLocator(t));
+        return t.image;
+    }
+}
+
+//
+// operator
+//  : '/' | ',' | /* empty */
+//  ;
+//
+LexicalUnit operator(LexicalUnit prev) :
+{
+  Token t;
+}
+{
+  t = <SLASH> ( <S> )*   { return new LexicalUnitImpl(prev, LexicalUnit.SAC_OPERATOR_SLASH); }
+  | t = <COMMA> ( <S> )* { return LexicalUnitImpl.createComma(prev); }
+}
+
+//
+// unary_operator
+//   : '-' | '+'
+//   ;
+//
+char unaryOperator() :
+{
+}
+{
+  ( <MINUS> { return '-'; } | <PLUS> { return '+'; } )
+}
+
+//
+// property
+//   : IDENT S*
+//   ;
+//
+String property() :
+{
+    Token t;
+}
+{
+    t = <IDENT> ( <S> )*
+    { return unescape(t.image, false); }
+}
+
+//
+// ruleset
+//   : selector [ ',' S* selector ]*
+//     '{' S* declaration [ ';' S* declaration ]* '}' S*
+//   ;
+//
+void styleRule() :
+{
+    SelectorList selList = null;
+    boolean start = false;
+    Token t;
+}
+{
+    try {
+        {
+            t = getToken();
+        } 
+        selList = selectorList()
+        <LBRACE> ( <S> )*
+        {
+            start = true;
+            handleStartSelector(selList, createLocator(t.next));
+        }
+        styleDeclaration()
+        <RBRACE>
+    }
+    catch(CSSParseException e)
+    {
+        getErrorHandler().error(e);
+        error_skipblock();
+    }
+    catch(ParseException e)
+    {
+        getErrorHandler().error(toCSSParseException("invalidStyleRule", e));
+        error_skipblock();
+    }
+    finally {
+        if (start) {
+            handleEndSelector(selList);
+        }
+    }
+}
+
+SelectorList parseSelectorsInternal() :
+{
+    SelectorList selectors;
+}
+{
+    ( <S> )*
+    selectors = selectorList()
+    <EOF>
+    {
+        return selectors;
+    }
+}
+
+SelectorList selectorList() :
+{
+    SelectorListImpl selList = new SelectorListImpl();
+    Selector sel;
+}
+{
+    sel = selector()
+    {
+        if (sel instanceof Locatable)
+        {
+            ((Locatable) selList).setLocator(((Locatable) sel).getLocator());
+        }
+    }
+    ( <COMMA> ( <S> )* { selList.add(sel); } sel = selector() )* ( <S> )*
+    {
+        selList.add(sel);
+        return selList;
+    }
+}
+
+//
+// selector
+//   : simple_selector+ [ pseudo_element ]? 
+//   ;
+//
+Selector selector() :
+{
+    Selector sel;
+    SimpleSelector pseudoElementSel = null;
+}
+{
+    try {
+        sel = simpleSelector(null, ' ')
+        ( LOOKAHEAD(2) <S> sel = simpleSelector(sel, ' ') )*
+        ( pseudoElementSel = pseudoElement() )? 
+        {
+            if (pseudoElementSel != null)
+            {
+                sel = getSelectorFactory().createDescendantSelector(sel, pseudoElementSel);
+            }
+            handleSelector(sel);
+            return sel;
+        }
+    } catch (ParseException e) {
+        throw toCSSParseException("invalidSelector", e);
+        //skipSelector();
+    }
+}
+
+//
+// simple_selector
+//  : element_name id? class? pseudo_class?    /* eg: H1.subject */
+//  | class? pseudo_class?        /* eg: #xyz33 */
+//  | pseudo_class?            /* eg: .author */
+//  ;
+//
+Selector simpleSelector(Selector sel, char comb) :
+{
+    SimpleSelector simpleSel = null;
+    Condition c = null;
+}
+{
+    try
+    {
+        (
+            ( simpleSel = elementName()
+                ( c = hash(c) )? 
+                ( c = _class(c) )? 
+                ( c = pseudoClass(c) )? 
+            )
+            | 
+            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
+                ( 
+                    ( c = hash(c) ) 
+                    ( c = _class(c) )? 
+                    ( c = pseudoClass(c) )? 
+                )
+            ) 
+            | 
+            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
+                ( 
+                    ( c = _class(c) ) 
+                    ( c = pseudoClass(c) )? 
+                )
+            ) 
+            | 
+            ( { simpleSel = getSelectorFactory().createElementSelector(null, null); }
+                ( 
+                    ( c = pseudoClass(c) ) 
+                )
+            ) 
+        )
+
+        {
+            if (c != null) {
+                simpleSel = getSelectorFactory().createConditionalSelector(simpleSel, c);
+            }
+
+            if (sel != null) {
+                switch (comb) {
+                case ' ':
+                    sel = getSelectorFactory().createDescendantSelector(sel, simpleSel);
+                    break;
+                }
+            } else {
+                sel = simpleSel;
+            }
+
+            return sel;
+        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidSimpleSelector", e);
+    }
+}
+
+//
+// class
+//   : '.' IDENT
+//   ;
+//
+Condition _class(Condition pred) :
+{
+    Token t;
+    Locator locator;
+}
+{
+    try
+    {
+        <DOT>
+        {
+            locator = getLocator();
+        }
+        t = <IDENT>
+        {
+            Condition c = getConditionFactory().createClassCondition(null, t.image);
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(locator);
+            }
+            return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
+        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidClassSelector", e);
+    }
+}
+
+//
+// element_name
+//   : IDENT 
+//   ;
+//
+SimpleSelector elementName() :
+{
+    Token t;
+    SimpleSelector sel;
+}
+{
+    try
+    {
+        t=<IDENT>
+        {
+            sel = getSelectorFactory().createElementSelector(null, unescape(t.image, false));
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(getLocator());
+            }
+            return sel;
+        }
+//        | <ASTERISK>
+//        {
+//            sel = getSelectorFactory().createElementSelector(null, null);
+//            if (sel instanceof Locatable)
+//            {
+//                ((Locatable) sel).setLocator(getLocator());
+//            }
+//            return sel;
+//        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidElementName", e);
+    }
+}
+
+//
+// solitary_pseudo_class                /* as in:  :link */
+//  : LINK_PSCLASS
+//  | VISITED_PSCLASS
+//  | ACTIVE_PSCLASS
+//  ;
+//
+Condition pseudoClass(Condition pred) :
+{
+    Condition c;
+    Token t;
+}
+{
+    try
+    {
+        ( t = <LINK_PSCLASS> 
+          | t = <VISITED_PSCLASS> 
+          | t = <ACTIVE_PSCLASS>
+        )
+        {
+            String s = t.image;
+            c = getConditionFactory().createPseudoClassCondition(null, s);
+            if (c instanceof Locatable)
+               {
+                   ((Locatable) c).setLocator(getLocator());
+               }
+            return (pred == null)
+                ? c
+                : getConditionFactory().createAndCondition(pred, c);
+        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidPseudoClass", e);
+    }
+}
+
+//
+// pseudo_element                  /* as in:  P:first-line */
+//  : FIRST_LETTER_AFTER_IDENT
+//  | FIRST_LINE_AFTER_IDENT
+//  ;
+//
+SimpleSelector pseudoElement() :
+{
+    SimpleSelector sel;
+    Token t;
+}
+{
+    try
+    {
+        ( t = <FIRST_LETTER> 
+          | t = <FIRST_LINE>
+        ) 
+        {
+            String s = t.image;
+            sel = getSelectorFactory().createPseudoElementSelector(null, s);
+            if (sel instanceof Locatable)
+            {
+                ((Locatable) sel).setLocator(getLocator());
+            }
+            return sel;
+        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidPseudoElement", e);
+    }
+}
+
+Condition hash(Condition pred) :
+{
+    Token t;
+}
+{
+    try
+    {
+        t = <HASH>
+        {
+            Condition c = getConditionFactory().createIdCondition(unescape(t.image.substring(1), false));
+            if (c instanceof Locatable)
+            {
+                ((Locatable) c).setLocator(getLocator());
+            }
+            return (pred == null) ? c : getConditionFactory().createAndCondition(pred, c);
+        }
+    }
+    catch (ParseException e)
+    {
+        throw toCSSParseException("invalidHash", e);
+    }
+}
+
+
+void styleDeclaration()  :
+{
+}
+{
+    try
+    {
+        ( declaration() )?
+        ( <SEMICOLON> ( <S> )* ( declaration() )? )*
+    }
+    catch (ParseException ex)
+    {
+        getErrorHandler().error(toCSSParseException("invalidDeclaration", ex));
+        error_skipdecl();
+    }
+}
+
+//
+// declaration
+//   : property ':' S* expr prio?
+//   |
+//   ;
+//
+void declaration() :
+{
+  String p;
+  LexicalUnit e;
+  boolean priority = false;
+  Locator locator = null;
+}
+{
+    try
+    {
+        p = property()
+        {
+            locator = getLocator();
+        }
+        <COLON> ( <S> )*
+        e = expr()
+        ( priority = prio() )?
+        {
+            handleProperty(p, e, priority, locator);
+        }
+    }
+    catch (CSSParseException ex)
+    {
+        getErrorHandler().error(ex);
+        error_skipdecl();
+    }
+    catch (ParseException ex)
+    {
+        getErrorHandler().error(toCSSParseException("invalidDeclaration", ex));
+        error_skipdecl();
+    }
+}
+
+//
+// prio
+//   : IMPORTANT_SYM S*
+//   ;
+//
+boolean prio() :
+{
+}
+{
+  <IMPORTANT_SYM> ( <S> )*
+  { return true; }
+}
+
+//
+// expr
+//   : term [ operator term ]*
+//   ;
+//
+// TODO: Deal with the operator
+//
+LexicalUnit expr() :
+{
+    LexicalUnit head;
+    LexicalUnit body;
+}
+{
+    try
+    {
+        head = term(null) { body = head; }
+        ( ( body = operator(body) )? body = term(body) )*
+        { return head; }
+    }
+    catch (ParseException ex)
+    {
+        throw toCSSParseException("invalidExpr", ex);
+    }
+}
+
+//
+// term
+//   : unary_operator?
+//     [ NUMBER | PERCENTAGE | LENGTH | EMS | EXS ]
+//   | STRING | IDENT| URL | UNICODERANGE | RGB | hexcolor
+//  S*
+//   ;
+//
+LexicalUnit term(LexicalUnit prev) :
+{
+  Token t;
+  char op = ' ';
+  String s;
+  LexicalUnit value = null;
+  Locator locator = null;
+}
+{
+    ( op = unaryOperator() )?
+    {
+        if (op != ' ')
+        {
+            locator = getLocator();
+        }
+    }
+    (
+        ( t = <NUMBER>
+        {
+            try
+            {
+                value = LexicalUnitImpl.createNumber(prev, intValue(op, t.image));
+            }
+            catch (NumberFormatException e)
+            {
+                value = LexicalUnitImpl.createNumber(prev, floatValue(op, t.image));
+            }
+        }
+        | t = <PERCENTAGE>  { value = LexicalUnitImpl.createPercentage(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PX>   { value = LexicalUnitImpl.createPixel(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_CM>   { value = LexicalUnitImpl.createCentimeter(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_MM>   { value = LexicalUnitImpl.createMillimeter(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_IN>   { value = LexicalUnitImpl.createInch(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PT>   { value = LexicalUnitImpl.createPoint(prev, floatValue(op, t.image)); }
+        | t = <LENGTH_PC>   { value = LexicalUnitImpl.createPica(prev, floatValue(op, t.image)); }
+        | t = <EMS>         { value = LexicalUnitImpl.createEm(prev, floatValue(op, t.image)); }
+        | t = <EXS>         { value = LexicalUnitImpl.createEx(prev, floatValue(op, t.image)); }
+        )
+    | t = <STRING>          { value = LexicalUnitImpl.createString(prev, t.image); }
+    | t = <IDENT>           { value = LexicalUnitImpl.createIdent(prev, t.image); }
+    | t = <URL>             { value = LexicalUnitImpl.createURI(prev, t.image); }
+    | t = <UNICODERANGE>    { value = new LexicalUnitImpl(prev, LexicalUnit.SAC_UNICODERANGE, t.image); }
+    | value = rgb(prev)
+    | value = hexcolor(prev)
+    )
+    {
+        if (locator == null)
+        {
+            locator = getLocator();
+        }
+    }
+    ( <S> )*
+    {
+        if (value instanceof Locatable)
+        {
+            ((Locatable) value).setLocator(locator);
+        }
+        return value;
+    }
+}
+
+
+//
+// rgb
+//   : RGB S* expr ')' S*
+//   ;
+//
+LexicalUnit rgb(LexicalUnit prev) :
+{
+    Token t;
+    LexicalUnit params;
+}
+{
+    t = <RGB> ( <S> )*
+    params = expr()
+    <RROUND>
+    {
+        return LexicalUnitImpl.createRgbColor(prev, params);
+    }
+}
+
+//
+// hexcolor
+//   : HASH
+//   ;
+//
+LexicalUnit hexcolor(LexicalUnit prev) :
+{
+    Token t;
+}
+{
+    t = <HASH>
+    {
+        return hexcolorInternal(prev, t);
+    }
+}
+
+JAVACODE
+void skipSelector() {
+    Token t = getToken(1);
+    while (t.kind != COMMA && t.kind != SEMICOLON && t.kind != LBRACE && t.kind != EOF ) {
+        getNextToken();
+        t = getToken(1);
+    }
+}
+
+JAVACODE
+String skip() {
+  StringBuilder sb = new StringBuilder();
+  int nesting = 0;
+  Token t = getToken(0);
+  if (t.image != null) {
+    sb.append(t.image);    
+  }
+  do {
+    t = getNextToken();
+    if (t.kind == EOF)
+      break;
+    sb.append(t.image);
+    if (t.kind == LBRACE)
+      nesting++;
+    else if (t.kind == RBRACE)
+      nesting--;
+    else if (t.kind == SEMICOLON && nesting <= 0)
+      break;
+  }
+  while ((t.kind != RBRACE) || (nesting > 0));
+
+  return sb.toString();
+}
+
+JAVACODE
+void error_skipblock()
+{
+    Token t;
+    int nesting = 0;
+    do
+    {
+        t = getNextToken();
+        if (t.kind == LBRACE)
+        {
+            nesting++;
+        }
+        else if (t.kind == RBRACE)
+        {
+            nesting--;
+        }
+        else if (t.kind == EOF)
+        {
+            break;
+        }
+    }
+    while ((t.kind != RBRACE) || (nesting > 0));
+}
+
+JAVACODE
+void error_skipdecl()
+{
+    int nesting = 0;
+    Token t = getToken(1);
+    if (t.kind == LBRACE)
+    {
+        error_skipblock();
+    }
+    else
+    {
+        Token oldToken = t;
+        while (t.kind != SEMICOLON && t.kind != RBRACE && t.kind != EOF )
+        {
+            oldToken = t;
+            t = getNextToken();
+        }
+        if (t.kind == RBRACE)
+        {
+            token = oldToken;
+        }
+    }
+}
+
+JAVACODE
+void error_skipAtRule()
+{
+    Token t = null;
+    do
+    {
+        t = getNextToken();
+    }
+    while (t.kind != SEMICOLON && t.kind != EOF);
+}
