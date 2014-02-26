@@ -3,6 +3,58 @@
   <groupId>org.rcfaces</groupId>
   <artifactId>org.rcfaces.css</artifactId>
   <version>1.0.0</version>
+  
+   <build>
+    <sourceDirectory>src</sourceDirectory>
+    
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src-generated</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+         	<source>1.6</source>
+			<target>1.6</target>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>build-helper-maven-plugin</artifactId>
+		<version>1.8</version>
+		<executions>
+			<execution>
+				<phase>generate-sources</phase>
+				<goals>
+					<goal>add-source</goal>
+				</goals>
+				<configuration>
+					<sources>
+						<source>src</source>
+						<source>src-generated</source>
+					</sources>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+      
+    </plugins>
+  </build>
+  
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
@@ -85,31 +137,5 @@
       <version>2.2.0</version>
     </dependency>
   </dependencies>
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-    <resources>
-      <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>src-generated</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-         	<source>1.6</source>
-			<target>1.6</target>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+ 
 </project>
