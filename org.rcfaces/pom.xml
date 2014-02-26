@@ -8,6 +8,59 @@
 
   <name>org.rcfaces</name>
   <url>http://www.rcfaces.org</url>
+  
+  <description>RC Faces or Rich Client Faces is a JavaServerFaces library that provides a component set for building next generation Web applications. RC Faces use AJAX technologies and an object-oriented JavaScript API to build highly dynamic pages.</description>
+  
+    <developers>
+      <developer>
+         <id>dmoise</id>
+         <name>Didier Moise</name>
+         <email>Didier.Moise@vedana.com</email>
+         <roles>
+            <role>Director</role>
+         </roles>
+         <organization>Vedana.com</organization>
+         <organizationUrl>http://www.vedana.com</organizationUrl>
+         <timezone>+1</timezone>
+       </developer>        
+      <developer>
+         <id>oeuillot</id>
+         <name>Olivier Oeuillot</name>
+         <email>Olivier.Oeuillot@vedana.com</email>
+         <roles>
+            <role>Project Manager</role>
+            <role>Architect</role>
+            <role>Developer</role>
+         </roles>
+         <organization>Vedana.com</organization>
+         <organizationUrl>http://www.vedana.com</organizationUrl>
+         <timezone>+1</timezone>
+       </developer>        
+      <developer>
+         <id>fredll</id>
+         <name>Fred Lefévère-Laoide</name>
+         <email>Frederic.Lefevere-Laoide@vedana.com</email>
+         <roles>
+            <role>Technical Writer, Tester</role>
+         </roles>
+         <organization>Vedana.com</organization>
+         <organizationUrl>http://www.vedana.com</organizationUrl>
+         <timezone>+1</timezone>
+       </developer>        
+       <developer>
+         <id>jbmeslin</id>
+         <name>Jean-Baptiste Meslin</name>
+         <email>Jean-Baptiste.Meslin@vedana.com</email>
+         <roles>
+            <role>Contributor</role>
+
+			<role>Technical Writer, Tester</role>
+         </roles>
+         <organization>Vedana.com</organization>
+         <organizationUrl>http://www.vedana.com</organizationUrl>
+         <timezone>+1</timezone>
+       </developer>
+   </developers>
  
   <properties>
   	<tag>RELEASE</tag>
