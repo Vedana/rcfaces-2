@@ -86,14 +86,33 @@
 				<version>0.0.1</version>
 				<executions>
 					<execution>
+					 	<id>parse-css</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			              <goal>parsecss</goal>
+			            </goals>
+			             <configuration>
+							<cssInputDirectory>${basedir}/src/org/rcfaces/renderkit/html/internal/css/</cssInputDirectory>
+							<cssOutputDirectory>${project.build.directory}/classes/org/rcfaces/renderkit/html/internal/css/</cssOutputDirectory>
+						</configuration>
+			         </execution>
+					<execution>
+						<id>optimize</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
 						<configuration>
 							<levels>c1, c2, c3</levels>
 							<sources>org/rcfaces/renderkit/html/internal/javascript/</sources>
 						</configuration>
-						<goals>
-							<goal>jar</goal>
-						</goals>
 					</execution>
+					<execution>
+					 	<id>create-jsdoc</id>
+			            <phase>package</phase>
+			            <goals>
+			              <goal>jsdoc</goal>
+			            </goals>
+			         </execution>
 				</executions>
 			</plugin>
 		</plugins>
@@ -105,7 +124,7 @@
 			<artifactId>org.rcfaces.core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.vedana.camelia.generators</groupId>
 			<artifactId>com.vedana.camelia.generators</artifactId>
