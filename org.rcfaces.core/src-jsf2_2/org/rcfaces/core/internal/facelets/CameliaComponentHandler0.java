@@ -52,7 +52,7 @@ public class CameliaComponentHandler0 extends ComponentHandler {
                 componentLifeCycle
                         .initializePhase(ctx.getFacesContext(), false);
                 
-                componentLifeCycle.settedPhase(ctx.getFacesContext());
+                //componentLifeCycle.settedPhase(ctx.getFacesContext());
             }
 
             if (debugEnabled) {
@@ -73,7 +73,7 @@ public class CameliaComponentHandler0 extends ComponentHandler {
             componentLifeCycle.initializePhase(ctx.getFacesContext(),
                     bindingValue != null);
             
-            componentLifeCycle.settedPhase(ctx.getFacesContext());
+            //componentLifeCycle.settedPhase(ctx.getFacesContext());
         }
 
         if (debugEnabled) {
@@ -81,6 +81,20 @@ public class CameliaComponentHandler0 extends ComponentHandler {
                     + getComponentConfig().getTagId() + "' returns '"
                     + component + "'.");
         }
+    }
+    
+    @Override
+    public void onComponentPopulated(FaceletContext ctx, UIComponent component,
+    		UIComponent parent) {
+    	super.onComponentPopulated(ctx, component, parent);
+    	
+    	if (component instanceof IComponentLifeCycle) {
+            IComponentLifeCycle componentLifeCycle = (IComponentLifeCycle) component;
+            
+            componentLifeCycle.settedPhase(ctx.getFacesContext());
+        }
+
+    	
     }
 
     protected static void actionApplyMetaData(final FaceletContext ctx,
