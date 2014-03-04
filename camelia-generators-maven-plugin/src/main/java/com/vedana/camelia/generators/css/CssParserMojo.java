@@ -1,6 +1,5 @@
 package com.vedana.camelia.generators.css;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;

@@ -59,6 +59,7 @@ public class JsOptimizerMojo extends AbstractMojo {
 
 	
 	private final static String C3_CLASSIFIER = "c3";
+	private final static String C2_CLASSIFIER = "c2";
 
 	/**
 	 * Specifies the directory where the generated jar file will be put.
@@ -155,10 +156,14 @@ public class JsOptimizerMojo extends AbstractMojo {
 		arguments.add("-label");
 		arguments.add("level-"+classifier);
 		
-		if(classifier.equals(C3_CLASSIFIER)) {
+		if(classifier.equals(C3_CLASSIFIER) || classifier.equals(C2_CLASSIFIER)) {
 			arguments.add("+mergeVariables");
 			arguments.add("+resolveSuper");
 			arguments.add("+inlineAspects");
+			
+		}
+		
+		if(classifier.equals(C3_CLASSIFIER)) {
 			arguments.add("+multiWindow");
 		}
 		
