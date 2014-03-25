@@ -275,7 +275,7 @@ public class Attribute2_2 extends Attribute1_2 {
                 out.println(" \t\t\t || getStateHelper().get(Properties."
                         + CameliaGenerator2_2
                                 .convertAttributeName(propertyName)
-                        + ".toString())!=null;");
+                        + ")!=null;");
                 
                 out.println("\t}\n");
             }
