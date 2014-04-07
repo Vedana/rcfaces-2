@@ -136,6 +136,11 @@
       <artifactId>org.rcfaces.renderkit.html</artifactId>
       <version>2.2.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.rcfaces</groupId>
+      <artifactId>org.rcfaces.core</artifactId>
+      <version>2.2.0</version>
+    </dependency>
   </dependencies>
  
 </project>

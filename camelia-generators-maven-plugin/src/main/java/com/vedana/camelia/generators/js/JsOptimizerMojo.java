@@ -36,8 +36,8 @@ public class JsOptimizerMojo extends AbstractMojo {
 	@Parameter(defaultValue = "c1", required = true)
 	protected String levels;
 	
-	@Parameter(defaultValue = "2.2.4", required = true)
-	protected String jsfVersfion;
+	@Parameter(defaultValue = JSF_VERSION_22, required = true)
+	protected String jsfVersion;
 	
 	@Parameter(required = true)
 	protected String sources;
@@ -57,6 +57,8 @@ public class JsOptimizerMojo extends AbstractMojo {
 	@Parameter( defaultValue = "${basedir}/src/META-INF/MANIFEST.MF", required = true)
 	private File defaultManifestFile;
 
+	private final static String JSF_VERSION_12 = "1.2";
+	private final static String JSF_VERSION_22 = "2.2.4";
 	
 	private final static String C3_CLASSIFIER = "c3";
 	private final static String C2_CLASSIFIER = "c2";
@@ -213,7 +215,11 @@ public class JsOptimizerMojo extends AbstractMojo {
 			archive.setAddMavenDescriptor(false);
 			
 			HashMap<String, String> entries = new HashMap<String, String>();
-			entries.put("jsfVersion", jsfVersfion);
+			entries.put("jsfVersion", jsfVersion);
+			
+			if(jsfVersion.equals(JSF_VERSION_12)) {
+				entries.put("Build-Jdk", "1.5");
+			}
 			
 			archive.addManifestEntries(entries);
 			archiver.createArchive(null, project, archive);
