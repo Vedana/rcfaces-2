@@ -50,7 +50,7 @@ public class AliasDictionnary {
                 if (c1 == c2) {
                     return 0;
                 }
-                if (c1 == null) {
+                if (c1 == null ) {
                     return 1;
                 }
                 if (c2 == null) {
@@ -81,15 +81,31 @@ public class AliasDictionnary {
         NameCount ncs[] = namesCount;
 
         int oneChar = charsCount.length; // 53
-
+        
+        Set<String> lokedCc = new HashSet<String>();
+        for (int i = 0; i< ncs.length; i++) {
+        	if(ncs[i].locked) {
+        		lokedCc.add(ncs[i].alias);
+        	}
+        }
+        
         int idx = 0;
+        
+    	   for(; idx < ncs.length && ncs[idx].locked ;idx++);
+        
         for (int i = 0; i < oneChar && idx < ncs.length; i++) {
+        	
             CharCount cc = charsCount[i];
             if (cc == null) {
                 continue;
             }
 
             String n = cc.token;
+            
+            if (lokedCc.contains(n)) {
+            	continue;
+            }
+            
             if (Character.isJavaIdentifierStart(n.charAt(0)) == false
                     || n.charAt(0) == '_') {
                 continue;
@@ -100,8 +116,11 @@ public class AliasDictionnary {
             }
 
             ncs[idx++].alias = verifyName(n);
+            
+        	  for(; idx < ncs.length && ncs[idx].locked ;idx++);
         }
 
+          for(; idx < ncs.length && ncs[idx].locked ;idx++);
         for (int i = 0; idx < ncs.length; i++) {
             CharCount cc = charsCount[i];
             if (cc == null) {
@@ -109,6 +128,10 @@ public class AliasDictionnary {
             }
 
             String n = cc.token;
+            if (lokedCc.contains(n)) {
+            	continue;
+            }
+            
             if (Character.isJavaIdentifierStart(n.charAt(0))
                     && n.charAt(0) != '_') {
 
@@ -116,6 +139,7 @@ public class AliasDictionnary {
 
                     if (i >= oneChar) {
                         ncs[idx++].alias = verifyName(n);
+                           for(; idx < ncs.length && ncs[idx].locked ;idx++);
                     }
                 }
             }
@@ -127,11 +151,15 @@ public class AliasDictionnary {
                 }
 
                 String p = n + cc2.token;
+                if (lokedCc.contains(p)) {
+                	continue;
+                }
                 if (Character.isJavaIdentifierStart(p.charAt(0))
                         && p.charAt(0) != '_') {
 
                     if (stats.isLanguageReserved(p) == false) {
                         ncs[idx++].alias = verifyName(p);
+                           for(; idx < ncs.length && ncs[idx].locked ;idx++);
                     }
                 }
 
@@ -146,6 +174,7 @@ public class AliasDictionnary {
 
                         if (stats.isLanguageReserved(p) == false) {
                             ncs[idx++].alias = verifyName(p);
+                               for(; idx < ncs.length && ncs[idx].locked ;idx++);
                         }
                     }
                 }
@@ -156,6 +185,7 @@ public class AliasDictionnary {
         ncs = _namesCount;
 
         idx = 0;
+        for(; idx < ncs.length && ncs[idx].locked ;idx++);
         for (int i = 0; i < oneChar && idx < ncs.length; i++) {
             CharCount cc = charsCount[i];
             if (cc == null) {
@@ -167,8 +197,12 @@ public class AliasDictionnary {
             }
 
             String n = "_" + cc.token;
+            if (lokedCc.contains(n)) {
+            	continue;
+            }
 
             ncs[idx++].alias = verifyName(n);
+               for(; idx < ncs.length && ncs[idx].locked ;idx++);
         }
 
         for (int i = 0; idx < ncs.length; i++) {
@@ -178,10 +212,14 @@ public class AliasDictionnary {
             }
 
             String n = cc.token;
+            if (lokedCc.contains(n)) {
+            	continue;
+            }
 
             if (i >= oneChar) {
                 if (Tools.isOnlyDigit(cc.token) == false) {
                     ncs[idx++].alias = verifyName("_" + n);
+                       for(; idx < ncs.length && ncs[idx].locked ;idx++);
                 }
             }
 
@@ -192,9 +230,13 @@ public class AliasDictionnary {
                 }
 
                 String p = n + cc2.token;
+                if (lokedCc.contains(p)) {
+                	continue;
+                }
 
                 if (Tools.isOnlyDigit(cc.token) == false) {
                     ncs[idx++].alias = verifyName("_" + p);
+                       for(; idx < ncs.length && ncs[idx].locked ;idx++);
                 }
 
                 if (idx >= ncs.length) {
@@ -209,6 +251,7 @@ public class AliasDictionnary {
 
                     if (Tools.isOnlyDigit(cc.token) == false) {
                         ncs[idx++].alias = verifyName("_" + p);
+                           for(; idx < ncs.length && ncs[idx].locked ;idx++);
                     }
                 }
             }
@@ -216,9 +259,13 @@ public class AliasDictionnary {
             for (int j = 0; j < 10 && idx < ncs.length; j++) {
 
                 String p = n + (char) ('0' + j);
-
+                if (lokedCc.contains(p)) {
+                	continue;
+                }
+                
                 if (Tools.isOnlyDigit(cc.token) == false) {
                     ncs[idx++].alias = verifyName("_" + p);
+                       for(; idx < ncs.length && ncs[idx].locked ;idx++);
                 }
 
                 if (idx >= ncs.length) {
@@ -229,6 +276,7 @@ public class AliasDictionnary {
 
                 if (Tools.isOnlyDigit(cc.token) == false) {
                     ncs[idx++].alias = verifyName("_" + p);
+                       for(; idx < ncs.length && ncs[idx].locked ;idx++);
                 }
             }
         }
@@ -332,7 +380,7 @@ public class AliasDictionnary {
         for (int i = 0; i < namesCount.length; i++) {
             NameCount nc = namesCount[i];
 
-            if (nc.name.charAt(0) == '#') {
+            if (nc.name.charAt(0) == '#' || nc.locked) {
                 continue;
             }
 
@@ -341,7 +389,7 @@ public class AliasDictionnary {
         for (int i = 0; i < _namesCount.length; i++) {
             NameCount nc = _namesCount[i];
 
-            if (nc.name.charAt(0) == '#') {
+            if (nc.name.charAt(0) == '#' || nc.locked) {
                 continue;
             }
             props.setProperty(nc.name, nc.alias);

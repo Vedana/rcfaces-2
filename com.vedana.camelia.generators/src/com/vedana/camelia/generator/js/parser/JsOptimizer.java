@@ -285,7 +285,7 @@ public class JsOptimizer {
         List<File> links = new ArrayList<File>();
 
         Set<Target> targets = new HashSet<JsOptimizer.Target>();
-
+        File symbols = null;
         for (int i = 0; i < args.length;) {
             String s = args[i++];
 
@@ -348,6 +348,12 @@ public class JsOptimizer {
 
             if (s.equals("-target")) {
                 targets.add(Target.valueOf(args[i++]));
+                continue;
+            }
+            
+           
+            if (s.equals("-symbols")) {
+            	symbols = new File(args[i++]);
                 continue;
             }
 
@@ -414,19 +420,19 @@ public class JsOptimizer {
 
         AliasDictionnary aliasDictionnary = files(
                 c.toArray(new Output[outputs.size()]),
-                links.toArray(new File[links.size()]), null, null);
+                links.toArray(new File[links.size()]), null, null, symbols);
         for (Target target : targets) {
             files(c.toArray(new Output[outputs.size()]),
                     links.toArray(new File[links.size()]), target,
-                    aliasDictionnary);
+                    aliasDictionnary, null);
         }
 
     }
 
     public AliasDictionnary files(Output outputs[], File[] links,
-            Target target, AliasDictionnary aliasDictionnary) throws Exception {
+            Target target, AliasDictionnary aliasDictionnary, File symbols) throws Exception {
 
-        JsStats stats = new JsStats(new ErrorLog());
+        JsStats stats = new JsStats(new ErrorLog(), symbols);
 
         fillSet(stats.forceDirectStaticMembersClassType,
                 FORCE_DIRECT_STATIC_MEMBERS_CLASS_TYPE);

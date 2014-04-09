@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.rcfaces.renderkit.svg</groupId>
 	<artifactId>org.rcfaces.renderkit.svg</artifactId>
 	<parent>
 		<groupId>org.rcfaces</groupId>
@@ -29,11 +28,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -65,6 +59,7 @@
 				<executions>
 					<execution>
 						<configuration>
+							<symbols>org.rcfaces.renderkit.html</symbols>
 							<levels>c1, c2, c3</levels>
 							<sources>org/rcfaces/renderkit/svg/internal/javascript/</sources>
 						</configuration>

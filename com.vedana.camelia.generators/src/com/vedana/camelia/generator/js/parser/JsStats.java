@@ -3,6 +3,12 @@
  */
 package com.vedana.camelia.generator.js.parser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import com.vedana.camelia.generator.js.parser.JsOptimizer.JsFile;
@@ -110,11 +117,43 @@ public class JsStats {
 
     private Map<JsFile, Target> targetedFile = new HashMap<JsFile, Target>();
 
-    public JsStats(IErrorLog log) {
+    public JsStats(IErrorLog log, File symbols) {
         errorLog = log;
+        
+        if(symbols != null) {
+        	loadsymbolsFile(symbols);
+        }
     }
 
-    public void addPrivateMember(Name ref, JsPrivateStaticMember cst,
+    private void loadsymbolsFile(File symbols) {
+    	 Properties props = new Properties();
+    	 FileInputStream fis= null;
+		try {
+			if (symbols.exists() && symbols.isFile()) {
+				fis = new FileInputStream(symbols);
+				 props.load(fis);
+				
+				for (Object key : props.keySet()) {
+					if(key.toString().contains(".")){
+						continue;
+					} else {
+						NameCount nc = new NameCount(key.toString());
+						nc.alias = props.getProperty(key.toString());
+						nc.locked = true ;
+						nameCount.put(key.toString(),nc);
+						
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+    	
+	}
+
+	public void addPrivateMember(Name ref, JsPrivateStaticMember cst,
             boolean isRef) {
 
         String cname = cst.getJsClass().getName();
@@ -399,6 +438,8 @@ public class JsStats {
         public Set<ASTNode> nodes = new HashSet<ASTNode>();
 
         public int _static = -1;
+        
+        public boolean locked;
 
         public NameCount(String name) {
             this.name = name;

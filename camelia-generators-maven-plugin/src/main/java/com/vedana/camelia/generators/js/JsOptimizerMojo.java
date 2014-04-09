@@ -42,6 +42,9 @@ public class JsOptimizerMojo extends AbstractMojo {
 	@Parameter(required = true)
 	protected String sources;
 	
+	@Parameter()
+	protected String symbols;
+	
 	@Parameter(defaultValue = "${basedir}/src/")
 	protected String sourceDirectory;
 
@@ -157,6 +160,12 @@ public class JsOptimizerMojo extends AbstractMojo {
 		
 		arguments.add("-label");
 		arguments.add("level-"+classifier);
+		
+		if(symbols != null) {
+			arguments.add("-symbols");
+			arguments.add("../"+symbols +"/target/generated-sources/src-" 
+					+classifier+"/"+symbols.replace('.', '/')+"/internal/javascript/symbols" );
+		}
 		
 		if(classifier.equals(C3_CLASSIFIER) || classifier.equals(C2_CLASSIFIER)) {
 			arguments.add("+mergeVariables");
