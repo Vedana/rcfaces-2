@@ -437,7 +437,7 @@ public class Tools {
             } else if (fa.getObject() instanceof RefName) {
                 RefName rName = (RefName) fa.getObject();
                 String rclassName = rName.getName();
-
+                
                 if (classNames.contains(rclassName)) {
                     JsPrivateStaticMember cst = stats.getPrivateStaticMember(
                             rclassName, ref.getName());
@@ -452,7 +452,7 @@ public class Tools {
                     // appelle
                     // __static._X() privé ?
 
-                    JsPrivateStaticMember cst = stats.getPrivateStaticMember(
+                	JsPrivateStaticMember cst = stats.getPrivateStaticMember(
                             "f_class", ref.getName());
 
                     // System.out.println("S=" + key + " => " + cst);

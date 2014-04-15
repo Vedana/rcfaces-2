@@ -45,7 +45,7 @@ public class RCFacesJSCSGenerator extends JsOptimizer {
     @Override
     protected AliasDictionnary process(JsStats stats, List<JsFile> jsFiles,
             long total, List<JsFile> linkFiles, Target target,
-            AliasDictionnary aliasDictionnary)
+            AliasDictionnary aliasDictionnary, String renderkit)
             throws UnsupportedEncodingException, FileNotFoundException {
         List<JsComment> commentsList = new ArrayList<JsComment>();
 

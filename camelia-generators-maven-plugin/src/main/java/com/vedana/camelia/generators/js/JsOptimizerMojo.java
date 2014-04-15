@@ -45,6 +45,9 @@ public class JsOptimizerMojo extends AbstractMojo {
 	@Parameter()
 	protected String symbols;
 	
+	@Parameter(defaultValue="html")
+	protected String renderkit;
+	
 	@Parameter(defaultValue = "${basedir}/src/")
 	protected String sourceDirectory;
 
@@ -149,11 +152,14 @@ public class JsOptimizerMojo extends AbstractMojo {
 	private void optimize(String classifier) throws Exception {
 		ArrayList<String> arguments = new ArrayList<String>();
 		
-		arguments.add("-source:html");
+		arguments.add("-source:"+renderkit);
 		arguments.add(sourceDirectory+sources);
 		
-		arguments.add("-dest:html");
+		arguments.add("-dest:"+renderkit);
 		arguments.add(outputDirectory.getPath()+classifier+"/"+sources);
+		
+		arguments.add("-renderkit");
+		arguments.add(renderkit);
 		
 		arguments.add("-extension");
 		arguments.add("js");
@@ -169,8 +175,11 @@ public class JsOptimizerMojo extends AbstractMojo {
 		
 		if(classifier.equals(C3_CLASSIFIER) || classifier.equals(C2_CLASSIFIER)) {
 			arguments.add("+mergeVariables");
-			arguments.add("+resolveSuper");
-			arguments.add("+inlineAspects");
+			if (renderkit.equals("html")) {
+				arguments.add("+resolveSuper");
+				arguments.add("+inlineAspects");
+			}
+			
 			
 		}
 		

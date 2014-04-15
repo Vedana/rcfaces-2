@@ -286,15 +286,17 @@ public class JsOptimizer {
 
         Set<Target> targets = new HashSet<JsOptimizer.Target>();
         File symbols = null;
+        String renderkit = null;
+        
         for (int i = 0; i < args.length;) {
             String s = args[i++];
 
             if (s.startsWith("-source:")) {
                 String name = s.substring(s.indexOf(':') + 1);
+                
                 Output output = outputs.get(name);
                 if (output == null) {
                     output = new Output(name);
-
                     outputs.put(name, output);
                 }
 
@@ -317,6 +319,11 @@ public class JsOptimizer {
 
             if (s.equals("-label")) {
                 COMPILATION_LABEL = args[i++];
+                continue;
+            }
+            
+            if (s.equals("-renderkit")) {
+            	renderkit = args[i++];
                 continue;
             }
 
@@ -420,17 +427,17 @@ public class JsOptimizer {
 
         AliasDictionnary aliasDictionnary = files(
                 c.toArray(new Output[outputs.size()]),
-                links.toArray(new File[links.size()]), null, null, symbols);
+                links.toArray(new File[links.size()]), null, null, symbols, renderkit);
         for (Target target : targets) {
             files(c.toArray(new Output[outputs.size()]),
                     links.toArray(new File[links.size()]), target,
-                    aliasDictionnary, null);
+                    aliasDictionnary, symbols, renderkit);
         }
 
     }
 
     public AliasDictionnary files(Output outputs[], File[] links,
-            Target target, AliasDictionnary aliasDictionnary, File symbols) throws Exception {
+            Target target, AliasDictionnary aliasDictionnary, File symbols, String renderkit) throws Exception {
 
         JsStats stats = new JsStats(new ErrorLog(), symbols);
 
@@ -602,14 +609,14 @@ public class JsOptimizer {
         }
 
         AliasDictionnary dict = process(stats, jsFiles, total, jsLinkFiles,
-                target, aliasDictionnary);
+                target, aliasDictionnary,renderkit);
 
         return dict;
     }
 
     protected AliasDictionnary process(JsStats stats, List<JsFile> jsFiles,
             long total, List<JsFile> linkFiles, Target target,
-            AliasDictionnary aliasDictionnary) throws Exception {
+            AliasDictionnary aliasDictionnary, String renderkit) throws Exception {
 
         /*
          * Pas bon pour le GZIP ! String
@@ -656,7 +663,12 @@ public class JsOptimizer {
         }
 
         Set<String> classNames = new HashSet<String>();
-
+        
+        Map<String, JsPrivateStaticMember> symbolsMembers = stats.getPrivateStaticMemberList();
+        
+        for (String key : symbolsMembers.keySet()) {
+        	classNames.add(symbolsMembers.get(key).getJsClass().getName());
+		}
         if (INLINE_ASPECTS) {
             for (IJsClass jsClass : stats.listClasses()) {
                 if (jsClass.isAspect() == false) {
@@ -977,9 +989,9 @@ public class JsOptimizer {
         for (JsFile jsFile : jsFiles) {
             Output output = jsFile.output;
 
-            if (output.name.equals("html")) {
-                htmlOutputFile = output.outputFolder;
-            }
+            //if (output.name.equals("html")) {
+            htmlOutputFile = output.outputFolder;
+            //}
 
             String ap = jsFile.file.getAbsolutePath().toString();
             int dotAp = ap.lastIndexOf('.');
@@ -1098,7 +1110,15 @@ public class JsOptimizer {
         int totalGzip = buf.size();
 
         htmlOutputFile.mkdirs();
-
+        String destdir = "";
+        if (renderkit.equals("html")){
+        	
+        } else{
+        	destdir = "/"+renderkit;
+        	new File(htmlOutputFile.getPath()+destdir).mkdirs();
+        }
+        
+        
         if (SIMPLIFY_NAMES && target == null) {
             Properties props = aliasDictionnary.listProperties(stats);
 
@@ -1170,15 +1190,17 @@ public class JsOptimizer {
             writer.close();
 
             byte buffer[] = writer.toByteArray();
-
+            jsFiles.hashCode();
+            
+            
             FileOutputStream fw = new FileOutputStream(
-                    htmlOutputFile.getAbsolutePath() + "/symbols");
+                    htmlOutputFile.getAbsolutePath() + destdir +"/symbols");
             fw.write(buffer);
             fw.close();
 
         } else if (SIMPLIFY_NAMES == false) {
             FileOutputStream fw = new FileOutputStream(
-                    htmlOutputFile.getAbsolutePath() + "/symbols");
+                    htmlOutputFile.getAbsolutePath() + destdir + "/symbols");
             fw.close();
         }
 
