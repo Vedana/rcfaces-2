@@ -398,7 +398,7 @@ public class AliasDictionnary {
 		for (int i = 0; i < namesCount.length; i++) {
 			NameCount nc = namesCount[i];
 
-			if (nc.name.charAt(0) == '#') {
+			if (nc.name.charAt(0) == '#' || nc.locked) {
 				continue;
 			}
 
@@ -407,7 +407,7 @@ public class AliasDictionnary {
 		for (int i = 0; i < _namesCount.length; i++) {
 			NameCount nc = _namesCount[i];
 
-			if (nc.name.charAt(0) == '#') {
+			if (nc.name.charAt(0) == '#' || nc.locked) {
 				continue;
 			}
 			props.setProperty(nc.name, nc.alias);
