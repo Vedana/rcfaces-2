@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<repository id="svg" type="javascript" baseDirectory="org/rcfaces/renderkit/svg/internal/javascript" remapSymbols="false">
+<repository id="svg" type="javascript" baseDirectory="org/rcfaces/renderkit/svg/internal/javascript" symbolsPath="/svg/symbols" remapSymbols="false">
 	<module id="svg">
 		<file name="svg/fsvg_svg.js">
 			<class name="fsvg_svg">

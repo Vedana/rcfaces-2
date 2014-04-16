@@ -4,6 +4,7 @@
  */
 package org.rcfaces.renderkit.html.internal.javascript;
 
+import java.util.List;
 import java.util.Map;
 
 import org.rcfaces.core.internal.renderkit.IProcessContext;
@@ -21,6 +22,8 @@ public interface IJavaScriptRepository extends IHierarchicalRepository {
     String getBaseURI(IProcessContext context);
 
     IClass getClassByName(String className);
+    
+    List<ISymbolFile> listSymbolsFiles();
 
     public interface IClassFile extends IHierarchicalFile {
         IClass[] listClasses();
@@ -43,5 +46,11 @@ public interface IJavaScriptRepository extends IHierarchicalRepository {
         IHierarchicalFile[] listRequiredResources(String requiredId);
 
         String getResourceBundleName();
+    }
+    
+    public interface ISymbolFile {
+        String getSymbolsPath();
+
+        String getBaseDirectory();
     }
 }

@@ -302,7 +302,10 @@ public class BasicHierarchicalRepository extends AbstractRepository implements
         IHierarchicalFile f = createFile(module, rname, name, name, contentRef,
                 depends, contentProvider);
 
-        filesByName.put(name, f);
+        IFile old = filesByName.put(name, f);
+        if (old != null) {
+            LOG.debug("Alreay defined ? " + old);
+        }
         resourcesByName.put(rname, f);
 
         return f;

@@ -189,7 +189,12 @@ public class AliasDictionnary {
 
 		// Les ___
 		ncs = _namesCount;
-
+		lokedCc = new HashSet<String>();
+		for (int i = 0; i < ncs.length; i++) {
+			if (ncs[i].locked) {
+				lokedCc.add(ncs[i].alias);
+			}
+		}
 		idx = 0;
 		for (; idx < ncs.length && ncs[idx].locked; idx++)
 			;

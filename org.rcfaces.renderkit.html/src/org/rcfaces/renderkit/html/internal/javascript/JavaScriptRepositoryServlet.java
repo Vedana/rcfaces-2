@@ -61,6 +61,7 @@ import org.rcfaces.renderkit.html.internal.agent.ClientBrowserFactory;
 import org.rcfaces.renderkit.html.internal.agent.IUserAgent;
 import org.rcfaces.renderkit.html.internal.javascript.IJavaScriptRepository.IClass;
 import org.rcfaces.renderkit.html.internal.javascript.IJavaScriptRepository.IClassFile;
+import org.rcfaces.renderkit.html.internal.javascript.IJavaScriptRepository.ISymbolFile;
 import org.rcfaces.renderkit.html.internal.util.UserAgentCriteria;
 
 /**
@@ -136,6 +137,8 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
     private String mainRepositoryURI;
 
     private String htmlRCFacesBuildId;
+    
+    private List<IFile> symbolsFiles = null;
 
     private boolean enableSymbols = false;
 
@@ -360,25 +363,39 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
         // Resolve
         repository.resolveDependencies();
 
-        IFile file = null;
-        try {
-            file = repository.declareFile(SYMBOLS_FILENAME,
-                    getMainRepositoryDirectoryLocation(), null, null,
-                    container, null);
+        List<IFile> symbolsFiles = new ArrayList<IFile>();
+        for (Iterator<ISymbolFile> it = repository.listSymbolsFiles()
+                .iterator(); it.hasNext();) {
+            ISymbolFile symbolFile = it.next();
 
-            if (file != null) {
-                LOG.info("Javascript symbols detected.");
+            String baseDirectory = symbolFile.getBaseDirectory();
+            if (baseDirectory.endsWith("/")) {
+                baseDirectory = baseDirectory.substring(0,
+                        baseDirectory.length() - 1);
             }
 
-        } catch (IllegalArgumentException ex) {
-            LOG.trace("Can not load symbols file", ex);
+            IFile file = null;
+            try {
+                file = repository.declareFile(symbolFile.getSymbolsPath(),
+                        baseDirectory, null, null, container, null);
+
+                if (file != null) {
+                    LOG.info("Javascript symbols detected.");
+
+                    symbolsFiles.add(file);
+                }
+
+            } catch (IllegalArgumentException ex) {
+                LOG.trace("Can not load symbols file", ex);
+            }
         }
 
-        if (file == null) {
+        if (symbolsFiles.isEmpty()) {
+            this.symbolsFiles = null;
             return repository;
         }
 
-        enableSymbols = true;
+        this.symbolsFiles = symbolsFiles;
         reloadSymbols(repository);
 
         return repository;
@@ -504,7 +521,7 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
 
             IContentRef urls[] = file.getContentReferences(criteria);
 
-            if (enableSymbols == false) {
+            if (symbolsFiles == null) {
                 return urls;
             }
 
@@ -568,16 +585,13 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
             String fileName = getFile().getFilename();
 
             prolog = null;
-            if (enableSymbols) {
-                if (SYMBOLS_FILENAMES.contains(fileName) == false) {
-                    JavaScriptRepositoryServlet.this
-                            .reloadSymbols(getRepository());
-                }
+            if (symbolsFiles != null && symbolsFiles.contains(fileName)) {
+                JavaScriptRepositoryServlet.this.reloadSymbols(getRepository());
             }
 
             String content = new String(buffer, getInputCharset());
 
-            if (enableSymbols) {
+            if (symbolsFiles != null) {
                 content = ((IClassFile) file).convertSymbols(getSymbols(),
                         content);
             }
@@ -750,8 +764,8 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
         sb.append(furi);
         sb.append('\"');
 
-        Map symbols = null;
-        if (enableSymbols) {
+        Map<String, String> symbols = null;
+        if (symbolsFiles != null) {
             symbols = getSymbols();
         }
 
@@ -769,7 +783,7 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
 
             String className = clazz.getName();
             if (symbols != null) {
-                String cn = (String) symbols.get(className);
+            	 String cn = symbols.get(className);
 
                 if (cn != null) {
                     className = cn;
@@ -831,35 +845,43 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
 
     @SuppressWarnings("null")
     private void reloadSymbols(IRepository repository) throws IOException {
-        IFile file = repository.getFileByName(SYMBOLS_FILENAME);
 
-        byte buffer[] = null;
+        Map<String, String> symbols = new HashMap<String, String>(4096);
 
-        Record record = getFileRecord(file, SYMBOL_CRITERIA);
-        if (record != null) {
-            if (symbolsLastModified == record.getLastModificationDate()) {
-                return;
+        long symbolsLastModified = 0;
+
+        for (Iterator<IFile> it = this.symbolsFiles.iterator(); it.hasNext();) {
+            IFile file = it.next();
+
+            byte buffer[] = null;
+
+            Record record = getFileRecord(file, SYMBOL_CRITERIA);
+            if (record != null) {
+                buffer = record.getBuffer();
             }
 
-            buffer = record.getBuffer();
+            if (buffer == null || buffer.length == 0) {
+                continue;
+            }
+
+            loadSymbols(symbols, buffer);
+            if (record.getLastModificationDate() > this.symbolsLastModified) {
+                symbolsLastModified = record.getLastModificationDate();
+            }
         }
 
-        if (buffer == null || buffer.length == 0) {
-            symbolsLastModified = 0;
-            getServletContext().removeAttribute(JAVASCRIPT_SYMBOLS_PARAMETER);
+        if (symbolsLastModified == 0) {
+            // No modifications !
             return;
         }
-
-        Map symbols = loadSymbols(buffer);
-        symbolsLastModified = record.getLastModificationDate();
+        this.symbolsLastModified = symbolsLastModified;
 
         getServletContext().setAttribute(JAVASCRIPT_SYMBOLS_PARAMETER, symbols);
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> loadSymbols(byte[] buffer) throws IOException {
-        Map<String, String> symbols = new HashMap<String, String>(
-                buffer.length / 16);
+    private void loadSymbols(Map<String, String> symbols, byte[] buffer)
+            throws IOException {
 
         InputStream bin = new ByteBufferInputStream(buffer);
 
@@ -872,7 +894,6 @@ public class JavaScriptRepositoryServlet extends HierarchicalRepositoryServlet {
         Map propertiesMap = properties;
         symbols.putAll(propertiesMap);
 
-        return symbols;
     }
 
     protected void service(HttpServletRequest request,

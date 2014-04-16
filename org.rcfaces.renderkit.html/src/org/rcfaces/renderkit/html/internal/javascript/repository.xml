@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<repository id="core" type="javascript" baseDirectory="org/rcfaces/renderkit/html/internal/javascript" remapSymbols="false" resourcesBundleBaseName="org.rcfaces.renderkit.html.internal.LocalStrings">
+<repository id="core" type="javascript" baseDirectory="org/rcfaces/renderkit/html/internal/javascript" symbolsPath="/symbols" remapSymbols="false" resourcesBundleBaseName="org.rcfaces.renderkit.html.internal.LocalStrings">
 	<module id="core" defaultCoreModule="true">
 		<file name="boot.js">
 		</file>

@@ -71,12 +71,18 @@ public class JavaScriptRepository extends BasicHierarchicalRepository implements
     private final Map<String, Object> applicationParameters;
 
     private boolean hasResourceBundleName;
+    
+    private List<ISymbolFile> symbolsFiles = new ArrayList<ISymbolFile>();
 
     public JavaScriptRepository(String servletURI, String repositoryVersion,
             Map<String, Object> applicationParameters) {
         super(servletURI, repositoryVersion);
 
         this.applicationParameters = applicationParameters;
+    }
+    
+    public List<ISymbolFile> listSymbolsFiles() {
+        return symbolsFiles;
     }
 
     @Override
@@ -292,6 +298,14 @@ public class JavaScriptRepository extends BasicHierarchicalRepository implements
 
                 if (parsingBundleBaseName != null) {
                     hasResourceBundleName = true;
+                }
+                
+                String baseDirectory = attributes.getValue("baseDirectory");
+
+                String symbolsPath = attributes.getValue("symbolsPath");
+                if (symbolsPath != null && baseDirectory != null) {
+                    symbolsFiles
+                            .add(new SymbolFile(symbolsPath, baseDirectory));
                 }
             }
 
@@ -799,6 +813,25 @@ public class JavaScriptRepository extends BasicHierarchicalRepository implements
                 String uri, IContentRef noCriteriaContentLocation) {
             super(file, contentProvider, criteria, uri,
                     noCriteriaContentLocation);
+        }
+    }
+    
+    public class SymbolFile implements ISymbolFile {
+        private final String path;
+
+        private final String baseDirectory;
+
+        public SymbolFile(String symbolsPath, String baseDirectory) {
+            this.path = symbolsPath;
+            this.baseDirectory = baseDirectory;
+        }
+
+        public String getSymbolsPath() {
+            return path;
+        }
+
+        public String getBaseDirectory() {
+            return baseDirectory;
         }
     }
 }

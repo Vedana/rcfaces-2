@@ -59,6 +59,7 @@
 				<executions>
 					<execution>
 						<configuration>
+							<renderkit>svg</renderkit>
 							<symbols>org.rcfaces.renderkit.html</symbols>
 							<levels>c1, c2, c3</levels>
 							<sources>org/rcfaces/renderkit/svg/internal/javascript/</sources>
