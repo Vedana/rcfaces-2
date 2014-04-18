@@ -178,13 +178,21 @@ public class JsOptimizerMojo extends AbstractMojo {
 			if (renderkit.equals("html")) {
 				arguments.add("+resolveSuper");
 				arguments.add("+inlineAspects");
+			} else {
+				arguments.add("-resolveSuper");
+				arguments.add("-inlineAspects");
 			}
 			
-			
+		} else {
+			arguments.add("-mergeVariables");
+			arguments.add("-resolveSuper");
+			arguments.add("-inlineAspects");
 		}
 		
 		if(classifier.equals(C3_CLASSIFIER)) {
 			arguments.add("+multiWindow");
+		} else {
+			arguments.add("-multiWindow");
 		}
 		
 		new JsOptimizer().files(arguments.toArray(new String[0]));
